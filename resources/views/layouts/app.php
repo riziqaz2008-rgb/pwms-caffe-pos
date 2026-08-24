@@ -32,7 +32,7 @@ $content = ob_get_clean();
         
     </head>
     <body>
-        <main>
+        <main x-data="{ sidebarOpen: $persist(false), Menu: $persist(false), Pengguna: $persist(false), dashboardOpen3: $persist(false) }">
             <section id="MainContent">
                 <div class="flex flex-row">
                     <?php include ('../partials/sidebar.php') ?>
