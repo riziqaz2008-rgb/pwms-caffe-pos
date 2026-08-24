@@ -727,7 +727,7 @@
             <input
                 type="number"
                 x-model.number="qty"
-                @input="if (qty > 9999) qty = 9999; if (qty < 1 || isNaN(qty)) qty = 1;"
+                @input="if (qty > 99) qty = 99; if (qty < 1 || isNaN(qty)) qty = 1;"
                 min="1"
                 max="9999"
                 class="w-14 text-center text-sm font-black text-gray-800 dark:text-white bg-transparent border border-gray-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary py-0.5 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
@@ -1155,7 +1155,7 @@
                                         <input
                                             type="number"
                                             x-model.number="qty"
-                                            @input="if (qty > 9999) qty = 9999; if (qty < 1 || isNaN(qty)) qty = 1;"
+                                            @input="if (qty > 99) qty = 99; if (qty < 1 || isNaN(qty)) qty = 1;"
                                             min="1"
                                             max="9999"
                                             class="w-14 text-center text-sm font-black text-gray-800 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-primary py-1 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"

@@ -327,6 +327,17 @@
                                 px-5 py-4
                             "
                         >
+                            Total
+                        </th>
+
+                        <th
+                            class="
+                                text-left
+                                font-bold
+                                text-slate-500 dark:text-slate-400
+                                px-5 py-4
+                            "
+                        >
                             Pembayaran
                         </th>
 
@@ -338,7 +349,7 @@
                                 px-5 py-4
                             "
                         >
-                            Total
+                            Status
                         </th>
 
                         <th
@@ -514,19 +525,19 @@
 
                         </td> -->
 
-                        <td colspan="7">
+                        <td colspan="8">
                                 <div class="flex flex-col items-center justify-center py-12 px-4 text-center bg-gray-50">
                                     <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4 border border-gray-200/80">
-                                        <i class="bx bx-credit-card text-4xl text-gray-300"></i>
+                                        <i class="bx bx-report text-4xl text-gray-300"></i>
                                     </div>
                                     <h3 class="text-base font-black text-slate-800 mb-1">Riwayat Transaksi Belum Tersedia</h3>
                                     <p class="text-xs text-gray-400 max-w-sm mb-5">
                                         Belum ada data transaksi yang ditambahkan atau hasil pencarian tidak cocok.
                                     </p>
-                                    <button type="button"  @click="TambahMetode = true" class="px-4 py-3 bg-primary text-white text-sm font-bold rounded-xl hover:opacity-90 transition-all flex items-center gap-2">
+                                    <a href="?route=kasir" class="px-4 py-3 bg-primary text-white text-sm font-bold rounded-xl hover:opacity-90 transition-all flex items-center gap-2">
                                         <i class="bx bxs-plus text-base"></i>
                                         <span>Tambah Transaksi</span>
-                                    </button>
+                                    </a>
                                 </div>
                             </td>
 
