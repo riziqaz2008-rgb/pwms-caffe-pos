@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+@theme {
+    --color-primary: #2563eb;
+    --color-secondary: #334155;
+    --color-danger: #ef4444;
+
+    --color-hover-primary: #E11D48;
+    --color-primary-active: #2563eb;
+}
+
+[x-cloak] { 
+        display: none !important; 
+    }
