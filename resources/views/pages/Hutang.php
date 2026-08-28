@@ -10,72 +10,47 @@
             <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 dark:border-slate-800 gap-4">
                 <div class="flex items-center gap-4 min-w-0">
                     <div class="flex w-13 h-13 rounded-lg bg-primary border border-indigo-100/80 items-center justify-center shrink-0 border border-gray-200/80">
-                        <i class="bx bxs-credit-card text-2xl text-white"></i>
+                        <i class="bx bxs-note text-2xl text-white"></i>
                     </div>
                     <div class="min-w-0">
                         <div class="flex items-center gap-3 flex-wrap">
                             <h1 class="text-black dark:text-white font-black text-2xl">
-                                Metode Pembayaran
+                                Kelola Hutang
                             </h1>
                         </div>
                         <p class="text-sm text-gray-500 font-medium mt-1">
-                            Kelola metode pembayaran yang tersedia pada pembayaran cafe.
+                            Kelola hutang yang tersedia pada pembayaran cafe.
                         </p>
                     </div>
-                </div>
-                <div class="flex flex-row gap-3 mt-1">
-                    <button type="button"  @click="FilterMetode = true"
-                        class="w-full sm:w-auto flex items-center justify-center gap-2 text-gray-700 font-bold px-5 py-3 border border-gray-200 rounded-lg  hover:bg-slate-50 active:scale-95 transition-all duration-200">
-                            <i class="bx bxs-filter text-md"></i>
-                        <span>Filter</span>
-                    </button>
-                    <button type="button" @click="TambahMetode = true"
-                        class="w-full sm:w-auto flex items-center justify-center gap-2 bg-primary text-white font-bold px-6 py-3 rounded-lg hover:bg-blue-700 active:scale-95 transition-all duration-200">
-                            <i class="bx bxs-plus text-xl"></i>
-                        <span>Tambah Metode</span>
-                    </button>
                 </div>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-7">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-7">
 
             <div class="relative bg-white dark:bg-slate-900 border-e border-gray-200/80 dark:border-slate-700 rounded-lg p-3 flex items-center justify-between overflow-hidden group transition-all duration-300">
                 <div>
-                    <p class="text-[10px] uppercase tracking-wider font-black text-gray-400">Total Tersedia</p>
+                    <p class="text-[10px] uppercase tracking-wider font-black text-gray-400">Total Piutang</p>
                     <div class="flex items-end gap-2 mt-1">
-                        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white leading-none">0</h2>
-                        <span class="text-xs font-bold text-gray-400">metode</span>
+                        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white leading-none">Rp.0</h2>
+                        <span class="text-xs font-bold text-gray-400">piutang</span>
                     </div>
                 </div>
                 <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-primary text-white group-hover:scale-110 transition-transform duration-300 shrink-0">
-                    <i class="bx bxs-credit-card text-2xl"></i>
-                </div>
-            </div>
-
-            <div class="relative bg-white dark:bg-slate-900 border-e border-gray-200/80 dark:border-slate-700 rounded-lg p-3 flex items-center justify-between overflow-hidden group transition-all duration-300">
-                <div>
-                    <p class="text-[10px] uppercase tracking-wider font-black text-gray-400">Metode Aktif</p>
-                    <div class="flex items-end gap-2 mt-1">
-                        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white leading-none">0</h2>
-                        <span class="text-xs font-bold text-gray-400">aktif</span>
-                    </div>
-                </div>
-                <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-primary text-white dark:text-emerald-400 group-hover:scale-110 transition-transform duration-300 shrink-0">
-                    <i class="bx bx-check-circle text-2xl"></i>
+                    <i class="bx bxs-wallet-note text-2xl"></i>
                 </div>
             </div>
 
             <div class="relative bg-white dark:bg-slate-900  dark:border-slate-700 rounded-lg p-3 flex items-center justify-between overflow-hidden group transition-all duration-300 col-span-full lg:col-span-1">
                 <div>
-                    <p class="text-[10px] uppercase tracking-wider font-black text-gray-400">Metode Nonaktif</p>
+                    <p class="text-[10px] uppercase tracking-wider font-black text-gray-400">Belum Lunas</p>
                     <div class="flex items-end gap-2 mt-1">
                         <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white leading-none">0</h2>
-                        <span class="text-xs font-bold text-gray-400">nonaktif</span>
+                        <span class="text-xs font-bold text-gray-400">Belum</span>
                     </div>
                 </div>
                 <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-primary text-white dark:text-amber-400 group-hover:scale-110 transition-transform duration-300 shrink-0">
-                    <i class="bx bx-block text-2xl"></i>
+                    <i class="bx bxs-alert-triangle text-2xl"></i>
                 </div>
             </div>
 
@@ -87,12 +62,12 @@
                     <div class="flex items-center gap-2">
                         <div class="w-1.5 h-5 rounded-full bg-primary"></div>
                         <h2 class="text-xl font-black text-slate-800 dark:text-white">
-                            Daftar Metode pembayaran
+                            Daftar Hutang
                         </h2>
                     </div>
 
                     <p class="text-xs font-medium text-slate-400 mt-1 ml-3.5">
-                        Kelola metode pembayaran yang tersedia di CaffePW.
+                        Kelola hutang yang tersedia di KedaiKu.
                     </p>
                 </div>
                 <div class="flex items-center gap-3 w-full sm:w-auto">
@@ -119,9 +94,13 @@
                     <thead class="sticky top-0 bg-slate-50 dark:bg-slate-900 z-10">
                         <tr class="text-gray-400">
                             <th class="text-left font-bold px-5 py-4">#</th>
-                            <th class="text-left font-bold px-5 py-4">Nama</th>
-                            <th class="text-left font-bold px-5 py-4">Tipe</th>
+                            <th class="text-left font-bold px-5 py-4">Kode Transaksi</th>
+                            <th class="text-left font-bold px-5 py-4">Tanggal</th>
+                            <th class="text-left font-bold px-5 py-4">Pelanggan</th>
+                            <th class="text-left font-bold px-5 py-4">Total</th>
+                            <th class="text-left font-bold px-5 py-4">Sisa</th>
                             <th class="text-left font-bold px-5 py-4">Status</th>
+                            <th class="text-left font-bold px-5 py-4">Kasir</th>
                             <th class="text-center font-bold px-5 py-4">Aksi</th>
                         </tr>
                     </thead>
@@ -129,24 +108,37 @@
                         <tr>
                             <td class="px-5 py-4 font-bold text-gray-500 w-12">1</td>
                             <td class="px-5 py-4">
-                                <span class="font-bold text-slate-800">Bank Mandiri</span>
-                            </td>
-                            <td class="px-5 py-4">
-                                <span class="font-bold text-slate-800">Transfer</span>
-                            </td>
-                            <td class="px-5 py-4">
-                                <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary text-xs font-bold text-white">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
-                                    Aktif
+                                <span class="inline-flex items-center gap-2 px-6 py-2 rounded-lg bg-primary text-xs font-bold text-white">
+                                    TRX-0001
                                 </span>
+                            </td>
+                            <td class="px-5 py-4">
+                                <span class="font-bold text-slate-800">12/06/2026</span>
+                            </td>
+                            <td class="px-5 py-4">
+                                <span class="font-bold text-slate-800">Sule Prikitiw</span>
+                            </td>
+                            <td class="px-5 py-4">
+                                <span class="font-bold text-slate-800">Rp. 25.000</span>
+                            </td>
+                            <td class="px-5 py-4">
+                                <span class="font-bold text-red-600">0</span>
+                            </td>
+                            <td class="px-5 py-4">
+                                <span class="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-primary text-xs font-bold text-white">
+                                    Lunas
+                                </span>
+                            </td>
+                            <td class="px-5 py-4">
+                                <span class="font-bold text-slate-800">Elon Musk</span>
                             </td>
                             <td class="px-5 py-4 w-36 whitespace-nowrap">
                                 <div class="flex items-center justify-center gap-2">
-                                    <button type="button" onclick="editMenu(1)" class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Edit menu">
-                                        <i class="bx bxs-pencil"></i>
+                                    <button type="button" onclick="editMenu(1)" class="w-10 h-10 rounded-lg bg-gray-100 text-slate-500 flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Edit menu">
+                                        <i class="bx bxs-note"></i>
                                     </button>
-                                    <button type="button" onclick="hapusMenu(1)" class="w-10 h-10 rounded-lg bg-red-500 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Hapus menu">
-                                        <i class="bx bxs-trash"></i>
+                                    <button type="button" onclick="hapusMenu(1)" class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Hapus menu">
+                                        <i class="bx bxs-wallet-note"></i>
                                     </button>
                                 </div>
                             </td>

@@ -14,7 +14,7 @@ var welcomeChartOptions = {
                 enabled: true // Fitur sakti untuk menghilangkan semua axis, grid, dan padding
             }
         },
-        colors: ['#0a1612', '#2563eb'],
+        colors: ['#0a1612', '#3B82F6'],
         plotOptions: {
             bar: {
                 horizontal: false,
@@ -60,7 +60,7 @@ var welcomeChartOptions = {
             toolbar: { show: false }, // Sembunyikan menu bawaan
             fontFamily: 'inherit'
         },
-        colors: ['#2563eb', '#d9dee5', '#e8ecf1'],
+        colors: ['#3B82F6', '#d9dee5', '#e8ecf1'],
         plotOptions: {
             bar: {
                 horizontal: false,
@@ -127,4 +127,41 @@ var welcomeChartOptions = {
     habitChart.render();
 
 
-   
+        document.addEventListener("DOMContentLoaded", function () {
+
+    const table = document.getElementById("selection-table");
+
+    if (!table) return;
+
+    new DataTable(table, {
+
+        searchable: true,
+
+        sortable: true,
+
+        perPage: 10,
+
+        perPageSelect: [5, 10, 15, 20],
+
+        labels: {
+            placeholder: "Cari menu...",
+            perPage: "menu per halaman",
+            noRows: "Belum ada menu",
+            info: "Menampilkan {start} sampai {end} dari {rows} menu"
+        }
+
+    });
+
+});
+
+$(document).ready(function () {
+  $(".select2, .select2-multiple").select2({
+    // placeholder: "Cari guru...",
+    // allowClear: true
+    width: "100%",
+    language: {
+      noResults: function (){return "Data tidak ditemukan";}, 
+      searching: function (){return "Mencari...";}
+    }
+  });
+});

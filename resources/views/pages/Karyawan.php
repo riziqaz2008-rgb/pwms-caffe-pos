@@ -18,9 +18,9 @@
 
                 <div class="flex items-center gap-4 min-w-0">
 
-                    <div class="hidden sm:flex w-13 h-13 rounded-2xl bg-primary items-center justify-center shrink-0">
+                    <div class="hidden sm:flex w-13 h-13 rounded-lg bg-primary items-center justify-center shrink-0">
 
-                        <i class="bx bx-group text-2xl text-white"></i>
+                        <i class="bx bxs-user-id-card text-2xl text-white"></i>
 
                     </div>
 
@@ -50,7 +50,7 @@
                 <button
                     type="button"
                     @click="TambahKaryawan = true"
-                    class="w-full lg:w-auto flex items-center justify-center bg-primary text-white font-black px-5 py-3 gap-2 rounded-xl cursor-pointer hover:bg-blue-700 active:scale-95 transition-all duration-200"
+                    class="w-full lg:w-auto flex items-center justify-center bg-primary text-white font-bold px-5 py-3 gap-2 rounded-lg cursor-pointer hover:bg-blue-700 active:scale-95 transition-all duration-200"
                 >
 
                     <i class="bx bx-plus text-lg"></i>
@@ -66,13 +66,13 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-7">
 
-            <div class="bg-white dark:bg-slate-900 shadow-sm rounded-2xl p-5">
+            <div class="bg-white dark:bg-slate-900 border-e border-gray-200 p-5">
 
                 <div class="flex items-center gap-4">
 
-                    <div class="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center shrink-0">
+                    <div class="w-12 h-12 rounded-lg bg-primary flex items-center justify-center shrink-0">
 
-                        <i class="bx bx-group text-2xl text-white"></i>
+                        <i class="bx bxs-user-id-card text-2xl text-white"></i>
 
                     </div>
 
@@ -97,11 +97,11 @@
             </div>
 
 
-            <div class="bg-white dark:bg-slate-900 shadow-sm rounded-2xl p-5">
+            <div class="bg-white dark:bg-slate-900 p-5">
 
                 <div class="flex items-center gap-4">
 
-                    <div class="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center shrink-0">
+                    <div class="w-12 h-12 rounded-lg bg-primary flex items-center justify-center shrink-0">
 
                         <i class="bx bx-user-check text-2xl text-white"></i>
 
@@ -130,7 +130,7 @@
         </div>
 
 
-        <div class="sticky top-10 bg-white dark:bg-slate-900 shadow-sm rounded-2xl p-5 mb-6">
+        <div class="sticky top-10 bg-white dark:bg-slate-900 rounded-lg p-5 mb-6">
 
             <div class="flex flex-col lg:flex-row gap-3">
 
@@ -142,7 +142,7 @@
                         type="text"
                         x-model="search"
                         placeholder="Cari nama, username, atau nomor telepon..."
-                        class="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-xl border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                        class="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
                     >
 
                 </div>
@@ -150,7 +150,7 @@
 
                 <select
                     x-model="filterRole"
-                    class="w-full lg:w-48 px-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-bold rounded-xl border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary"
+                    class="w-full lg:w-48 px-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-bold rounded-lg border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary"
                 >
 
                     <option value="Semua">Semua Role</option>
@@ -166,7 +166,7 @@
 
                 <select
                     x-model="filterStatus"
-                    class="w-full lg:w-44 px-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-bold rounded-xl border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary"
+                    class="w-full lg:w-44 px-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-bold rounded-lg border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary"
                 >
 
                     <option value="Semua">Semua Status</option>
@@ -203,581 +203,231 @@
             </p>
 
         </div>
-<div class="overflow-x-auto overflow-y-auto p-1 max-h-[700px]">
-
-    <div class="w-full overflow-x-auto rounded-2xl shadow-sm">
-
-        <table
-            id="selection-table"
-            class="w-full min-w-[950px] text-sm mt-3 rounded-2xl overflow-hidden"
-        >
-
-            <!-- =========================
-                 TABLE HEADER
-            ========================== -->
-            <thead>
-
-                <tr class="bg-slate-50 dark:bg-slate-900 text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800">
-
-                    <th class="text-center font-semibold px-5 py-4 border-r border-slate-200 dark:border-slate-800">
-                        #
-                    </th>
-
-                    <th class="text-center font-semibold px-5 py-4 border-r border-slate-200 dark:border-slate-800">
-                        Nama
-                    </th>
-
-                    <th class="text-center font-semibold px-5 py-4 border-r border-slate-200 dark:border-slate-800">
-                        Username
-                    </th>
-
-                    <th class="text-center font-semibold px-5 py-4 border-r border-slate-200 dark:border-slate-800">
-                        No Telpon
-                    </th>
-
-                    <th class="text-center font-semibold px-5 py-4 border-r border-slate-200 dark:border-slate-800">
-                        Role
-                    </th>
-
-                    <th class="text-center font-semibold px-5 py-4 border-r border-slate-200 dark:border-slate-800">
-                        Status
-                    </th>
-
-                    <th class="text-center font-semibold px-5 py-4">
-                        Aksi
-                    </th>
-
-                </tr>
-
-            </thead>
-
-
-            <!-- =========================
-                 TABLE BODY
-            ========================== -->
-            <tbody id="body-tabel-karyawan">
-
-                <?php if (!empty($data_karyawan)): ?>
-
-                    <?php $no = 1; ?>
-
-                    <?php foreach ($data_karyawan as $karyawan): ?>
-
-                        <tr
-                            class="text-center bg-white dark:bg-slate-950
-                                   border-b border-slate-200 dark:border-slate-800
-                                   hover:bg-slate-50/70 dark:hover:bg-slate-900/60
-                                   transition-colors duration-200"
-                        >
-
-                            <!-- =========================
-                                 NOMOR
-                            ========================== -->
-                            <td class="px-5 py-4 border-r border-slate-200 dark:border-slate-800">
-
-                                <span class="font-semibold text-slate-700 dark:text-slate-300">
-                                    <?= $no++ ?>
-                                </span>
-
-                            </td>
-
-
-                            <!-- =========================
-                                 NAMA
-                            ========================== -->
-                            <td class="px-5 py-4 border-r border-slate-200 dark:border-slate-800">
-
-                                <div class="flex items-center justify-center gap-3 min-w-[180px]">
-
-                                    <!-- Foto -->
-                                    <div class="w-11 h-11 rounded-full overflow-hidden shrink-0">
-
-                                        <?php
-                                        $namaGambar = trim($karyawan['gambar_karyawan'] ?? '');
-                                        $imagePath = __DIR__ . '/../../../../assets/images/products/' . $namaGambar;
-                                        $imageUrl = '/assets/images/products/' . $namaGambar;
-                                        ?>
-
-                                        <?php if (!empty($namaGambar) && file_exists($imagePath)): ?>
-
-                                            <a
-                                                href="<?= htmlspecialchars($imageUrl) ?>"
-                                                target="_blank"
-                                                class="block w-full h-full"
-                                            >
-
-                                                <img
-                                                    src="<?= htmlspecialchars($imageUrl) ?>"
-                                                    loading="lazy"
-                                                    class="w-full h-full object-cover hover:scale-110 transition duration-300"
-                                                    alt="<?= htmlspecialchars($karyawan['nama_karyawan'] ?? '') ?>"
-                                                >
-
-                                            </a>
-
-                                        <?php else: ?>
-
-                                            <div class="w-full h-full flex items-center justify-center bg-slate-100 dark:bg-slate-800">
-
-                                                <i class="bx bx-user text-xl text-slate-400"></i>
-
-                                            </div>
-
-                                        <?php endif; ?>
-
-                                    </div>
-
-
-                                    <!-- Nama -->
-                                    <div class="text-left min-w-0">
-
-                                        <p class="text-sm font-bold text-slate-800 dark:text-slate-200 line-clamp-2 leading-snug">
-                                            <?= htmlspecialchars($karyawan['nama_karyawan'] ?? '-') ?>
-                                        </p>
-
-                                    </div>
-
-                                </div>
-
-                            </td>
-
-
-                            <!-- =========================
-                                 USERNAME
-                            ========================== -->
-                            <td class="px-5 py-4 border-r border-slate-200 dark:border-slate-800">
-
-                                <div class="flex justify-center">
-
-                                    <span class="inline-flex items-center gap-2
-                                                 px-4 py-2 rounded-lg
-                                                 bg-slate-50 dark:bg-slate-900
-                                                 text-slate-700 dark:text-slate-300
-                                                 font-semibold whitespace-nowrap">
-
-                                        <i class="bx bx-user text-primary"></i>
-
-                                        <?= htmlspecialchars($karyawan['username_karyawan'] ?? '-') ?>
-
-                                    </span>
-
-                                </div>
-
-                            </td>
-
-
-                            <!-- =========================
-                                 NO TELEPON
-                            ========================== -->
-                            <td class="px-5 py-4 border-r border-slate-200 dark:border-slate-800">
-
-                                <div class="flex justify-center">
-
-                                    <span class="inline-flex items-center gap-2
-                                                 text-slate-700 dark:text-slate-300
-                                                 font-medium whitespace-nowrap">
-
-                                        <i class="bx bx-phone text-primary"></i>
-
-                                        <?= htmlspecialchars($karyawan['no_telpon_karyawan'] ?? '-') ?>
-
-                                    </span>
-
-                                </div>
-
-                            </td>
-
-
-                            <!-- =========================
-                                 ROLE
-                            ========================== -->
-                            <td class="px-5 py-4 border-r border-slate-200 dark:border-slate-800">
-
-                                <div class="flex justify-center">
-
-                                    <div class="inline-flex items-center gap-2
-                                                px-4 py-2 rounded-lg
-                                                bg-primary text-white
-                                                font-semibold whitespace-nowrap">
-
-                                        <span class="w-2 h-2 rounded-full bg-white"></span>
-
-                                        <span>
-                                            <?= htmlspecialchars($karyawan['role_karyawan'] ?? '-') ?>
-                                        </span>
-
-                                    </div>
-
-                                </div>
-
-                            </td>
-
-
-                            <!-- =========================
-                                 STATUS
-                            ========================== -->
-                            <td class="px-5 py-4 border-r border-slate-200 dark:border-slate-800">
-
-                                <div class="flex justify-center">
-
-                                    <div class="inline-flex items-center gap-2
-                                                px-4 py-2 rounded-lg
-                                                bg-primary text-white
-                                                font-semibold whitespace-nowrap">
-
-                                        <span class="w-2 h-2 rounded-full bg-white"></span>
-
-                                        <span>
-                                            Aktif
-                                        </span>
-
-                                    </div>
-
-                                </div>
-
-                            </td>
-
-
-                            <!-- =========================
-                                 AKSI
-                            ========================== -->
-                            <td class="px-5 py-4">
-
-                                <div class="flex justify-center items-center gap-2 shrink-0">
-
-                                    <!-- Edit -->
-                                    <a
-                                        href="edit.php?id=<?= $karyawan['id'] ?? '' ?>"
-                                        class="flex items-center justify-center
-                                               w-11 h-11
-                                               bg-primary text-white
-                                               rounded-xl
-                                               shadow-sm
-                                               hover:bg-blue-700
-                                               active:scale-95
-                                               transition-all duration-200"
-                                        title="Edit Data"
-                                    >
-
-                                        <i class="bx bxs-pencil text-xl"></i>
-
-                                    </a>
-
-
-                                    <!-- Hapus -->
-                                    <button
-                                        type="button"
-                                        class="flex items-center justify-center
-                                               w-11 h-11
-                                               bg-red-500 text-white
-                                               rounded-xl
-                                               shadow-sm
-                                               hover:bg-red-600
-                                               active:scale-95
-                                               transition-all duration-200"
-                                        title="Hapus Data"
-                                    >
-
-                                        <i class="bx bxs-trash text-xl"></i>
-
-                                    </button>
-
-                                </div>
-
-                            </td>
-
+ <div class="overflow-hidden">
+                <table id="selection-table" class="w-full text-sm">
+                    <thead>
+                        <tr class="bg-slate-50 dark:bg-slate-900 text-gray-400">
+                            <th class="text-left font-bold px-5 py-4">#</th>
+                            <th class="text-left font-bold px-5 py-4">Nama</th>
+                            <th class="text-left font-bold px-5 py-4">No Telpon</th>
+                            <th class="text-left font-bold px-5 py-4">Role</th>
+                            <th class="text-left font-bold px-5 py-4">Status</th>
+                            <th class="text-center font-bold px-5 py-4">Aksi</th>
                         </tr>
+                    </thead>
 
-                    <?php endforeach; ?>
-
-
-                <?php else: ?>
-
-                    <!-- =========================
-                         EMPTY STATE
-                    ========================== -->
-                    <tr>
-
-                        <td colspan="7">
-
-                            <div class="min-h-[320px] w-full
-                                        flex flex-col justify-center items-center
-                                        gap-3
-                                        text-slate-400">
-
-                                <div class="w-16 h-16 rounded-2xl
-                                            bg-slate-100 dark:bg-slate-900
-                                            flex items-center justify-center">
-
-                                    <i class="bx bx-user text-4xl"></i>
-
-                                </div>
-
-                                <div class="text-center">
-
-                                    <h1 class="font-black text-slate-700 dark:text-slate-300">
-                                        Belum ada data karyawan
-                                    </h1>
-
-                                    <p class="text-xs text-slate-400 mt-1">
-                                        Data karyawan yang ditambahkan akan tampil di sini.
+                    <tbody id="body-tabel-kategori">
+                        <tr>
+                            <td colspan="6">
+                                <div class="flex flex-col items-center justify-center py-12 px-4 text-center bg-gray-50">
+                                    <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4 border border-gray-200/80">
+                                        <i class="bx bx-user-id-card text-4xl text-gray-300"></i>
+                                    </div>
+                                    <h3 class="text-base font-black text-slate-800 mb-1">Karyawan Belum Tersedia</h3>
+                                    <p class="text-xs text-gray-400 max-w-sm mb-5">
+                                        Belum ada karyawan pembayaran yang ditambahkan atau hasil pencarian tidak cocok.
                                     </p>
-
+                                    <button type="button"  @click="TambahKaryawan = true" class="px-4 py-3 bg-primary text-white text-sm font-bold rounded-lg hover:opacity-90 transition-all flex items-center gap-2">
+                                        <i class="bx bxs-plus text-base"></i>
+                                        <span>Tambah Karyawan</span>
+                                    </button>
                                 </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-                            </div>
 
-                        </td>
 
-                    </tr>
+ <div
+    x-show="TambahKaryawan"
+    x-cloak
+    @keydown.escape.window="TambahKaryawan = false"
+    class="fixed inset-0 z-[999] flex justify-center items-start sm:items-center w-full p-3 sm:p-4 overflow-y-auto"
+>
 
-                <?php endif; ?>
+    <!-- Backdrop dengan Transisi Halus -->
+    <div
+        x-show="TambahKaryawan"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        class="fixed inset-0 bg-slate-950/60 backdrop-blur-[2px]"
+        @click="TambahKaryawan = false"
+    ></div>
 
-            </tbody>
+    <!-- Modal Panel dengan Animasi Masuk/Keluar (Scale & Translate) -->
+    <div
+        x-show="TambahKaryawan"
+        x-transition:enter="transition ease-out duration-300 transform"
+        x-transition:enter-start="opacity-0 scale-95 translate-y-4 sm:translate-y-2"
+        x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+        x-transition:leave="transition ease-in duration-200 transform"
+        x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+        x-transition:leave-end="opacity-0 scale-95 translate-y-4 sm:translate-y-2"
+        class="relative w-full max-w-2xl z-10 my-auto"
+    >
 
-        </table>
+        <div class="relative bg-white dark:bg-slate-900 rounded-lg p-5 md:p-8 shadow-xl border border-gray-200 dark:border-slate-800">
+
+            <!-- Header Modal -->
+            <div class="flex items-center justify-between gap-4 pb-5 border-b border-gray-200 dark:border-slate-800">
+
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-lg bg-primary flex items-center justify-center shrink-0">
+                        <i class="bx bx-user-plus text-2xl text-white"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-black text-slate-900 dark:text-white">
+                            Tambah Karyawan
+                        </h2>
+                        <p class="text-sm text-gray-400 mt-1">
+                            Tambahkan data karyawan ke sistem.
+                        </p>
+                    </div>
+                </div>
+
+                <button
+                    type="button"
+                    @click="TambahKaryawan = false"
+                    class="w-11 h-11 rounded-full bg-gray-100 text-slate-700 flex items-center justify-center hover:text-white hover:bg-primary transition cursor-pointer shrink-0"
+                >
+                    <i class="bx bx-x text-xl"></i>
+                </button>
+
+            </div>
+
+            <!-- Form Content -->
+            <form class="mt-6">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                
+                    <!-- Section: Data Diri -->
+                    <div class="flex flex-col border-b border-gray-200 dark:border-slate-800 col-span-2 py-2">
+                        <label class="text-xs text-center font-black uppercase tracking-wide text-black dark:text-gray-400 ml-1">
+                            Data Diri
+                        </label>
+                    </div>
+
+                    <!-- Nama Lengkap -->
+                    <div>
+                        <label class="text-xs font-black uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
+                            Nama Lengkap <span class="text-red-600">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            placeholder="Masukkan nama lengkap"
+                            class="w-full mt-1.5 px-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                        >
+                    </div>
+                
+                    <!-- No. Telepon -->
+                    <div>
+                        <label class="text-xs font-black uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
+                            No. Telepon <span class="text-red-600">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            placeholder="08xxxxxxxxxx"
+                            class="w-full mt-1.5 px-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                        >
+                    </div>
+
+                    <!-- Role -->
+                    <div>
+                        <label class="text-xs font-black uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
+                            Role <span class="text-red-600">*</span>
+                        </label>
+                        <select
+                            class="w-full mt-1.5 px-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-bold rounded-lg border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary"
+                        >
+                            <option value="">Pilih role</option>
+                            <?php foreach($role as $d): ?>
+                                <option value="<?= $d['id_role'] ?>"><?= $d['nama_role'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <!-- Status -->
+                    <div>
+                        <label class="text-xs font-black uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
+                            Status <span class="text-red-600">*</span>
+                        </label>
+                        <div>
+                            <label class="text-xs flex justify-start items-center gap-2 rounded-lg p-2.5 mt-1.5 border border-gray-200 dark:border-slate-700 font-black uppercase tracking-wide text-gray-600 dark:text-gray-400" for="status">
+                                <label class="inline-flex justify-between items-center cursor-pointer">
+                                    <!-- Perbaikan typo pada atribut checked -->
+                                    <input type="checkbox" value="" class="sr-only peer" id="status" checked>
+                                    <div class="relative w-10.5 h-6 bg-gray-200 dark:bg-slate-700 dark:peer-focus:ring-primary rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[5px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+                                </label>
+                                Aktif 
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Section: Data Akun -->
+                    <div class="flex flex-col border-b border-gray-200 dark:border-slate-800 col-span-2 mt-4 py-2">
+                        <label class="text-xs text-center font-black uppercase tracking-wide text-black dark:text-gray-400 ml-1">
+                            Data Akun
+                        </label>
+                    </div>            
+
+                    <!-- Username -->
+                    <div>
+                        <label class="text-xs font-black uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
+                            Username <span class="text-red-600">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            placeholder="Contoh: budi.santoso"
+                            class="w-full mt-1.5 px-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                        >
+                    </div>
+
+                    <!-- Password -->
+                    <div>
+                        <label class="text-xs font-black uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
+                            Password <span class="text-red-600">*</span>
+                        </label>
+                        <input
+                            type="password"
+                            placeholder="Masukkan password"
+                            class="w-full mt-1.5 px-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                        >
+                    </div>
+
+                </div>
+
+                <!-- Footer Buttons -->
+                <div class="flex flex-col-reverse sm:flex-row justify-end gap-3 mt-6 pt-5 border-t border-gray-200 dark:border-slate-800">
+                    <button
+                        type="button"
+                        @click="TambahKaryawan = false"
+                        class="w-full sm:w-auto px-6 py-3 rounded-lg bg-gray-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold hover:bg-gray-200 transition cursor-pointer"
+                    >
+                        Batal
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="w-full sm:w-auto px-6 py-3 rounded-lg bg-primary text-white font-black hover:bg-blue-700 active:scale-95 transition cursor-pointer flex items-center justify-center gap-2"
+                    >
+                        <i class="bx bx-save text-lg"></i>
+                        <span>Simpan Karyawan</span>
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
 
     </div>
 
 </div>
-
-
-
-        <div
-            x-show="TambahKaryawan"
-            x-cloak
-            @keydown.escape.window="TambahKaryawan = false"
-            class="fixed inset-0 z-999 flex justify-center items-start sm:items-center w-full p-3 sm:p-4 overflow-y-auto"
-        >
-
-            <div
-                x-show="TambahKaryawan"
-                x-transition
-                class="fixed inset-0 bg-slate-950/60"
-                @click="TambahKaryawan = false"
-            ></div>
-
-
-            <div
-                x-show="TambahKaryawan"
-                x-transition
-                class="relative w-full max-w-2xl z-999 my-auto"
-            >
-
-                <div class="relative bg-white dark:bg-slate-900 shadow-sm rounded-2xl p-5 md:p-8">
-
-                    <div class="flex items-center justify-between gap-4 pb-5 border-b border-gray-200 dark:border-slate-800">
-
-                        <div class="flex items-center gap-4">
-
-                            <div class="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center">
-
-                                <i class="bx bx-user-plus text-2xl text-white"></i>
-
-                            </div>
-
-                            <div>
-
-                                <h2 class="text-xl font-black text-slate-900 dark:text-white">
-
-                                    Tambah Karyawan
-
-                                </h2>
-
-                                <p class="text-sm text-gray-400 mt-1">
-
-                                    Tambahkan data karyawan ke sistem.
-
-                                </p>
-
-                            </div>
-
-                        </div>
-
-
-                        <button
-                            type="button"
-                            @click="TambahKaryawan = false"
-                            class="w-10 h-10 rounded-xl bg-gray-100 text-slate-700 flex items-center justify-center hover:text-white hover:bg-blue-700 transition"
-                        >
-
-                            <i class="bx bx-x text-xl"></i>
-
-                        </button>
-
-                    </div>
-
-
-                    <form class="mt-6">
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-
-                        
-                            <div class="flex flex-col border-b border-gray-200 col-span-2 py-2">
-
-                                <label class="text-xs text-center font-black uppercase tracking-wide text-black dark:text-gray-400 ml-1">
-
-                                    Data Diri
-
-                                </label>
-    
-                            </div>
-
-                            
-
-                            <div>
-
-                                <label class="text-xs font-black uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
-
-                                    Nama Lengkap <span class="text-red-600">*</span>
-
-                                </label>
-
-                                <input
-                                    type="text"
-                                    placeholder="Masukkan nama lengkap"
-                                    class="w-full mt-1.5 px-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-xl border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-                                >
-
-                            </div>
-                        
-                            <div>
-
-                                <label class="text-xs font-black uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
-
-                                    No. Telepon <span class="text-red-600">*</span>
-
-                                </label>
-
-                                <input
-                                    type="text"
-                                    placeholder="08xxxxxxxxxx"
-                                    class="w-full mt-1.5 px-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-xl border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-                                >
-
-                            </div>
-
-                            <div>
-
-                                <label class="text-xs font-black uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
-
-                                    Role <span class="text-red-600">*</span>
-
-                                </label>
-
-                                <select
-                                    class="w-full mt-1.5 px-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-bold rounded-xl border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary"
-                                >
-
-                                    <option value="">Pilih role</option>
-                                    
-                                    <?php foreach($role as $d): ?>
-                                        <option value="<?= $d['id_role'] ?>"><?= $d['nama_role'] ?></option>
-                                    <?php endforeach; ?>
-
-                                </select>
-
-                            </div>
-
-                            <div>
-                                <label class="text-xs font-black uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
-
-                                    Status <span class="text-red-600">*</span>
-
-                                </label>
-
-                                <div>
-
-                                    <label class="text-xs flex justify-start items-center gap-2 rounded-xl p-2.5 mt-2 border border-gray-200 font-black uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1" for="status">
-                                        <label class="inline-flex justify-between items-center cursor-pointer">
-                                            <input type="checkbox" value="" class="sr-only peer" id="status" checkeed>
-                                            <div class="relative w-10.5 h-6 bg-gray-200 dark:peer-focus:ring-primary rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-buffer after:content-[''] after:absolute after:top-[4px] after:start-[5px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
-                                        </label>
-                                        Aktif 
-                                    </label>
-
-                                </div>
-                            </div>
-                            
-                            <div class="flex flex-col border-b border-gray-200 col-span-2 mt-4 py-2">
-
-                                <label class="text-xs text-center font-black uppercase tracking-wide text-black dark:text-gray-400 ml-1">
-
-                                    Data Akun
-
-                                </label>
-    
-                            </div>                        
-
-                            <div>
-
-                                <label class="text-xs font-black uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
-
-                                    Username <span class="text-red-600">*</span>
-
-                                </label>
-
-                                <input
-                                    type="text"
-                                    placeholder="Contoh: budi.santoso"
-                                    class="w-full mt-1.5 px-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-xl border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-                                >
-
-                            </div>
-
-                            <div>
-
-                                <label class="text-xs font-black uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1 col-span-2">
-
-                                    Password <span class="text-red-600">*</span>
-
-                                </label>
-
-                                <input
-                                    type="password"
-                                    placeholder="Masukkan password"
-                                    class="w-full mt-1.5 px-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-xl border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-                                >
-
-                            </div>
-
-
-                        </div>
-
-
-                        <div class="flex flex-col-reverse sm:flex-row justify-end gap-3 mt-6 pt-5 border-t border-gray-200 dark:border-slate-800">
-
-                            <button
-                                type="button"
-                                @click="TambahKaryawan = false"
-                                class="w-full sm:w-auto px-6 py-3 rounded-xl bg-gray-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold hover:bg-gray-200 transition"
-                            >
-
-                                Batal
-
-                            </button>
-
-
-                            <button
-                                type="submit"
-                                class="w-full sm:w-auto px-6 py-3 rounded-xl bg-primary text-white font-black hover:bg-blue-700 active:scale-95 transition"
-                            >
-
-                                <i class="bx bx-save mr-1"></i>
-
-                                Simpan Karyawan
-
-                            </button>
-
-                        </div>
-
-                    </form>
-
-                </div>
-
-            </div>
-
-        </div>
 
 
         <div
@@ -801,13 +451,13 @@
                 class="relative w-full max-w-xl z-999 my-auto"
             >
 
-                <div class="bg-white dark:bg-slate-900 shadow-sm rounded-2xl p-6 md:p-8">
+                <div class="bg-white dark:bg-slate-900 rounded-lg p-6 md:p-8">
 
                     <div class="flex items-center justify-between gap-4">
 
                         <div class="flex items-center gap-4">
 
-                            <div class="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center">
+                            <div class="w-12 h-12 rounded-lg bg-primary flex items-center justify-center">
 
                                 <i class="bx bx-user text-2xl text-white"></i>
 
@@ -834,7 +484,7 @@
                         <button
                             type="button"
                             @click="DetailKaryawan = false"
-                            class="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center hover:bg-blue-700 transition"
+                            class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:bg-blue-700 transition"
                         >
 
                             <i class="bx bx-x text-xl"></i>
@@ -846,7 +496,7 @@
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-7">
 
-                        <div class="p-4 rounded-xl shadow-sm">
+                        <div class="p-4 rounded-lg">
 
                             <p class="text-[10px] uppercase tracking-wider font-black text-gray-400">
 
@@ -863,7 +513,7 @@
                         </div>
 
 
-                        <div class="p-4 rounded-xl shadow-sm">
+                        <div class="p-4 rounded-lg">
 
                             <p class="text-[10px] uppercase tracking-wider font-black text-gray-400">
 
@@ -880,7 +530,7 @@
                         </div>
 
 
-                        <div class="p-4 rounded-xl shadow-sm">
+                        <div class="p-4 rounded-lg">
 
                             <p class="text-[10px] uppercase tracking-wider font-black text-gray-400">
 
@@ -897,7 +547,7 @@
                         </div>
 
 
-                        <div class="p-4 rounded-xl shadow-sm">
+                        <div class="p-4 rounded-lg">
 
                             <p class="text-[10px] uppercase tracking-wider font-black text-gray-400">
 
@@ -921,7 +571,7 @@
                         <button
                             type="button"
                             @click="DetailKaryawan = false"
-                            class="w-full flex items-center justify-center bg-primary text-white font-black px-5 py-3 rounded-xl hover:bg-blue-700 active:scale-95 transition"
+                            class="w-full flex items-center justify-center bg-primary text-white font-black px-5 py-3 rounded-lg hover:bg-blue-700 active:scale-95 transition"
                         >
 
                             Tutup

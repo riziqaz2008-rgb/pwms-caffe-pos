@@ -5,8 +5,6 @@ $route = $_GET['route'] ?? 'dashboard';
 switch ($route) {
 
     case 'dashboard':
-
-        // include __DIR__ . '/../app/controllers/dashboard_barang.controller.php';
         
         $page = __DIR__ . '/../resources/views/pages/Dashboard.php';
 
@@ -14,16 +12,12 @@ switch ($route) {
 
 
     case 'menu':
-
-        include __DIR__ . '/../app/controllers/DashboardMenu.Controller.php';
         
         $page = __DIR__ . '/../resources/views/pages/KelolaMenu.php';
 
         break;
 
     case 'menu/kategori':
-
-        include __DIR__ . '/../app/controllers/KategoriBarang.Controller.php';
         
         $page = __DIR__ . '/../resources/views/pages/KelolaKategori.php';
 
@@ -42,30 +36,30 @@ switch ($route) {
         break;
 
     case 'kasir':
-
-        include __DIR__ . '/../app/controllers/DashboardMenu.Controller.php';
         
         $page = __DIR__ . '/../resources/views/pages/Kasir.php';
 
         break;
 
     case 'transaksi':
-
-        include __DIR__ . '/../app/controllers/DashboardMenu.Controller.php';
         
         $page = __DIR__ . '/../resources/views/pages/KelolaMetode.php';
 
         break;
 
+    case 'hutang':
+        
+        $page = __DIR__ . '/../resources/views/pages/Hutang.php';
+
+        break;
+
     case 'pelanggan':
-         include __DIR__ . '/../app/controllers/KategoriBarang.Controller.php';
         
         $page = __DIR__ . '/../resources/views/pages/pelanggan.php';
 
         break;
 
     case 'karyawan':
-         include __DIR__ . '/../app/controllers/KategoriBarang.Controller.php';
         
         $page = __DIR__ . '/../resources/views/pages/karyawan.php';
 
@@ -78,15 +72,12 @@ switch ($route) {
         break;
 
     case 'laporan':
-
-        include __DIR__ . '/../app/controllers/DashboardMenu.Controller.php';
         
         $page = __DIR__ . '/../resources/views/pages/Laporan.php';
 
         break;
 
     case 'pengaturan':
-
         
         $page = __DIR__ . '/../resources/views/pages/Pengaturan.php';
 

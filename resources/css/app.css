@@ -1,14 +1,149 @@
 @import "tailwindcss";
 
 @theme {
-    --color-primary: #2563eb;
+    --color-primary: #3B82F6;
     --color-secondary: #334155;
     --color-danger: #ef4444;
 
-    --color-hover-primary: #E11D48;
+    --color-hover-primary: #155dfc;
     --color-primary-active: #2563eb;
 }
 
 [x-cloak] { 
         display: none !important; 
     }
+
+:root {
+  --primary-clr: #3B82F6;
+  --secondary-clr: #3B82F6;
+  --gray-clr: #939495;
+  --gray2-clr: #42434a;
+  --gray3-clr: #1e1f23;
+  --gray-bening-clr: #1e1f232b;
+  --gray-light-clr: #e9ecf1; /*#e9ecf1*/
+  --gray-light2-clr: #e9ecf136;
+  /* --accent-clr: #EBFFFB; */
+  --accent-clr: #3B82F6;
+  --danger-clr: #dc3545;
+  --danger-bening-clr: #fc9ca438;
+  --blue-clr: #2c4fff;
+  --blue-bening-clr: #a6b6fd6b;
+  --warning-clr: #ffc109;
+  --warning-bening-clr: #ffc1092e;
+  /* --warning-bening-clr: #fbe9b36c; */
+  --success-clr: #2ec953;
+  --success-bening-clr: #3B82F6;
+  /* --success-clr: #15803d;
+  --success-bening-clr: #dcfce7; */
+  --info-clr: #0dcaf0;
+  --info-bening-clr: #0dcaf028;
+  --bg-clr: #fff;
+  --text-clr: #000;
+  --light-clr: #fff;
+
+  --default-theme: #3B82F6;
+  --blue-theme: #2563eb;
+  --orange-theme: #f97316;
+
+  --bs-primary: var(--primary-clr);
+  --bs-secondary: var(--secondary-clr);
+  --bs-btn-close-focus-shadow: 0 0 0 0.25rem;
+  --bs-gray-400 : #ced4da;
+  --bs-gray-200 : #E5E7EB;
+
+  --poppins-regular: "poppins-regular";
+  --poppins-light: "poppins-light";
+  --gsans-regular: "gsans-regular";
+}
+
+.select2-container--default .select2-selection--multiple,
+.select2-container--default .select2-selection--single {
+  transition: .3s ease;
+  height: 100% !important;
+}
+.select2-container--default .select2-selection--single {
+  background-color: transparent;
+}
+/* .select2-container--default .select2-selection--single:focus {
+  box-shadow: 0 0 0 0.25rem var(--accent-clr);
+} */
+.select2-container--default .select2-selection--multiple {
+  /* height: calc(2.25rem + 2px); */
+  padding: 0.275rem 0.5rem .5rem;
+  background-color: transparent;
+  border: 1px solid var(--bs-gray-400);
+}
+[data-mode="dark"] .select2-container--default .select2-selection--single,
+[data-mode="dark"] .select2-container--default .select2-selection--multiple {
+  border: 1px solid var(--gray2-clr);
+}
+.select2-container--default .select2-selection--single:focus,
+.select2-container--default.select2-container--focus .select2-selection--multiple,
+.select2-container--default .select2-selection--multiple:focus {
+  border-color: var(--primary-clr) !important;
+  /* box-shadow: 0 0 0 0.25rem var(--accent-clr); */
+}
+.select2-container--default
+  .select2-selection--single
+  .select2-selection__rendered {
+  color: var(--text-clr);
+}
+.select2-dropdown {
+  background-color: var(--bg-clr);
+  color: var(--text-clr);
+}
+.select2-container .select2-selection--single {
+  height: calc(2.25rem + 2px);
+  padding: 0.375rem 0.5rem;
+  border: 1px solid var(--bs-gray-200) !important;
+  border-radius: 0.375rem;
+}
+.select2-container--default
+  .select2-selection--single
+  .select2-selection__rendered {
+  line-height: 1.5;
+}
+
+.select2-container--default
+  .select2-selection--single
+  .select2-selection__arrow {
+  height: 34px;
+  right: 10px !important;
+  top: 7px !important;
+}
+.select2-search--dropdown .select2-search__field:focus {
+  outline: none !important;
+}
+.select2-results__option--selected{
+  color: white;
+  background-color: var(--primary-clr) !important;
+}
+/* .select2-results__option .select2-results__option--selectable{} */
+.select2-results__option--highlighted {
+  background-color: var(--accent-clr) !important;
+  color: var(--light-clr) !important;
+}
+.select2-selection--multiple .select2-selection__choice {
+  background-color: var(--primary-clr) !important;
+  border: 1px solid var(--primary-clr) !important;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-top: 5px;
+}
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove,
+.select2-selection__choice__remove {
+  color: var(--danger-clr) !important;
+  background-color: var(--light-clr) !important;
+  margin-right: 6px;
+  font-weight: bold;
+  border-right: none;
+}
+/* .select2-selection__choice__remove:hover {
+  color: #ffdcdc !important;
+  background-color: var(--secondary-clr) !important;
+} */
+.select2-selection__choice:hover {
+  background-color: var(--secondary-clr) !important;
+}
