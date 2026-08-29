@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `pw-pos`
+-- Database: `pw_pos`
 --
 
 CREATE DATABASE IF NOT EXISTS pw_pos;
@@ -124,7 +124,6 @@ CREATE TABLE `roles` (
   `nama_role` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO `tipe` (`kode_role`, `nama_role`) VALUES ('super_admin', 'Super Admin'), ('admin', 'Admin'), ('kasir', 'Kasir');
 -- --------------------------------------------------------
 
 --
@@ -136,7 +135,6 @@ CREATE TABLE `tipe` (
   `nama_tipe` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO `tipe` (`nama_tipe`) VALUES ('cash'), ('bank'), ('ewallet'), ('card'), ('qris');
 -- --------------------------------------------------------
 
 --
@@ -356,6 +354,10 @@ ALTER TABLE `users`
   ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`id_role`) REFERENCES `roles` (`id_role`),
   ADD CONSTRAINT `users_ibfk_2` FOREIGN KEY (`id_anggota`) REFERENCES `anggota` (`id_anggota`);
 COMMIT;
+
+INSERT INTO `tipe` (`nama_tipe`) VALUES ('cash'), ('bank'), ('ewallet'), ('card'), ('qris');
+INSERT INTO `roles` (`kode_role`, `nama_role`) VALUES ('super_admin', 'Super Admin'), ('admin', 'Admin'), ('kasir', 'Kasir');
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
