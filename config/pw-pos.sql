@@ -126,6 +126,7 @@ CREATE TABLE `roles` (
   `nama_role` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+INSERT INTO `tipe` (`kode_role`, `nama_role`) VALUES ('super_admin', 'Super Admin'), ('admin', 'Admin'), ('kasir', 'Kasir');
 -- --------------------------------------------------------
 
 --
@@ -137,6 +138,7 @@ CREATE TABLE `tipe` (
   `nama_tipe` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+INSERT INTO `tipe` (`nama_tipe`) VALUES ('cash'), ('bank'), ('ewallet'), ('card'), ('qris');
 -- --------------------------------------------------------
 
 --
