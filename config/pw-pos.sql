@@ -21,9 +21,9 @@ SET time_zone = "+00:00";
 -- Database: `pw-pos`
 --
 
-CREATE DATABASE IF NOT EXISTS pw-pos;
+CREATE DATABASE IF NOT EXISTS pw_pos;
 
-USE pw-pos;
+USE pw_pos;
 
 -- --------------------------------------------------------
 
