@@ -3,7 +3,7 @@ $conn = mysqli_connect(
     "localhost", 
     "root",
     "",
-    "pw-pos"
+    "pw_pos"
 );
 
 if (!$conn) {
