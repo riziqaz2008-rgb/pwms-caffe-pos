@@ -44,7 +44,7 @@
         }"
         x-init="$watch('open', value => document.body.classList.toggle('overflow-hidden', value))">
         
-        
+        <?php $LayoutMode = $_GET['layoutMode'] ?? 'table' ?>
   
         <div class="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_400px] gap-6 items-start">
             <div class="min-w-0 order-2 xl:order-1">
@@ -126,14 +126,14 @@
 
                         <div class="flex items-center gap-1 p-1 rounded-lg">
                             <a
-                                href="?route=kasir&layoutMode=grid&category=<?= urlencode($currentCategory) ?>"
+                                href="?route=kasir&layoutMode=grid"
                                 class="w-9 h-9 flex items-center justify-center rounded-lg transition-all <?= ($_GET['layoutMode'] ?? 'grid') == 'grid' ? 'bg-primary text-white shadow-sm' : 'text-gray-400 hover:text-gray-700' ?>"
                             >
                                 <i class="bx bxs-grid text-lg"></i>
                             </a>
 
                             <a
-                                href="?route=kasir&layoutMode=table&category=<?= urlencode($currentCategory) ?>"
+                                href="?route=kasir&layoutMode=table"
                                 class="w-9 h-9 flex items-center justify-center rounded-lg transition-all <?= ($_GET['layoutMode'] ?? 'grid') == 'table' ? 'bg-primary text-white shadow-sm' : 'text-gray-400 hover:text-gray-700' ?>"
                             >
                                 <i class="bx bxs-rows text-lg"></i>
@@ -185,10 +185,26 @@
 
                                         <td class="px-5 py-4">
                                             <div class="flex items-center justify-center gap-2">
-                                                <button
+                                               <button
                                                     type="button"
-                                                    onclick="editMenu(1)"
-                                                    class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all"
+                                                    onclick="showGlobalForm({
+                                                        title: 'Edit Nama Barang',
+                                                        message: 'Silakan ubah data barang berikut:',
+                                                        actionUrl: '/barang/update',
+                                                        method: 'POST',
+                                                        type: 'info',
+                                                        icon: 'pencil',
+                                                        inputs: [
+                                                            { 
+                                                                label: 'Nama Barang', 
+                                                                type: 'text', 
+                                                                name: 'NamaBarang', 
+                                                                value: 'Udin', 
+                                                                placeholder: 'Contoh: Nasi Goreng' 
+                                                            }
+                                                        ]
+                                                    })"
+                                                    class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all cursor-pointer"
                                                     title="Edit menu"
                                                 >
                                                     <i class="bx bxs-pencil"></i>
@@ -242,13 +258,30 @@
                                         </div>
 
                                         <div class="flex gap-x-2.5">
-                                            <button
-                                                type="button"
-                                                class="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all shrink-0"
-                                                title="Edit menu"
-                                            >
-                                                <i class="bx bxs-pencil text-lg"></i>
-                                            </button>
+                                             <button
+                                                    type="button"
+                                                    onclick="showGlobalForm({
+                                                        title: 'Edit Nama Barang',
+                                                        message: 'Silakan ubah data barang berikut:',
+                                                        actionUrl: '/barang/update',
+                                                        method: 'POST',
+                                                        type: 'info',
+                                                        icon: 'pencil',
+                                                        inputs: [
+                                                            { 
+                                                                label: 'Nama Barang', 
+                                                                type: 'text', 
+                                                                name: 'NamaBarang', 
+                                                                value: 'Udin', 
+                                                                placeholder: 'Contoh: Nasi Goreng' 
+                                                            }
+                                                        ]
+                                                    })"
+                                                    class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all cursor-pointer"
+                                                    title="Edit menu"
+                                                >
+                                                    <i class="bx bxs-pencil"></i>
+                                                </button>
 
                                             <button
                                                 type="button"
@@ -354,23 +387,19 @@
                                 </div>
                             </div>
 
-                            <button
-                                type="button"
-                                @click="
-                                    modalKonfirmasi({
-                                        judul: 'Kosongkan Semua Pesanan?',
-                                        icon: 'alert-triangle',
-                                        pesan: 'Tindakan ini akan menghapus semua antrean pesanan.',
-                                        btn: 'Ya, Hapus Semua',
-                                        warnaBtn: 'danger',
-                                        callback: () => {
-                                            kosongkanPesanan();
-                                        }
-                                    })
-                                "                                    
-                                title="Kosongkan pesanan"
-                                class="w-9 h-9 rounded-lg flex items-center justify-center bg-red-600 hover:bg-red-500 transition-all"
-                            >
+                            <button 
+                            type="button"
+                            onclick="showGlobalForm({
+                                title: 'Hapus Barang',
+                                message: 'Silakan hapus barang berikut',
+                                actionUrl: '/barang/update',
+                                method: 'POST',
+                                type: 'danger',
+                                icon: 'trash',
+                            })"
+                            class="w-10 h-10 rounded-lg bg-rose-600 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all cursor-pointer"
+                            title="Edit menu"
+                                                >
                                 <i class="bx bxs-trash text-lg text-white"></i>
                             </button>
                         </div>
@@ -642,7 +671,7 @@
 
                             <button
                                 type="button"
-                                @click="showToast = true"
+                                onclick="showToast({ type: 'success', message: 'Pesanan Berhasil Disimpan!' })"
                                 class="w-full flex items-center justify-center bg-primary text-white font-black px-8 py-3.5 gap-2 rounded-lg cursor-pointer transition-all shadow-md mt-4"
                             >
                                 <i class="bx bxs-basket text-xl"></i>

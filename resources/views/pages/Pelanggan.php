@@ -1,6 +1,5 @@
 <section id="Pelanggan">
     <div>
-        <!-- Header & Tombol Aksi -->
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-5">
             <div class="flex items-center gap-x-5">
                 <div class="w-13 h-13 rounded-lg bg-primary flex items-center justify-center shrink-0 border-e border-gray-200">
@@ -27,48 +26,6 @@
             </div>
         </div>
 
-        <!-- Cards Ringkasan -->
-        <div class="grid sm:grid-cols-2 gap-5 mt-10 mb-8">
-            <div class="bg-white border-e border-gray-200 rounded-lg p-6">
-                <div class="flex items-center justify-between">
-                    <div class="w-12 h-12 rounded-lg bg-primary flex items-center justify-center">
-                        <i class="bx bx-group text-xl text-white"></i>
-                    </div>
-                </div>
-                <div class="mt-5">
-                    <p class="text-xs font-bold text-gray-400 uppercase tracking-wide">
-                        Total Pelanggan
-                    </p>
-                    <h3 class="text-2xl font-black text-gray-900 mt-1.5">
-                        24
-                    </h3>
-                    <p class="text-xs text-gray-400 mt-1.5">
-                        pelanggan terdaftar
-                    </p>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-lg p-6">
-                <div class="flex items-center justify-between">
-                    <div class="w-12 h-12 rounded-lg bg-primary flex items-center justify-center">
-                        <i class="bx bx-user-check text-xl text-white"></i>
-                    </div>
-                </div>
-                <div class="mt-5">
-                    <p class="text-xs font-bold text-gray-400 uppercase tracking-wide">
-                        Pelanggan Aktif
-                    </p>
-                    <h3 class="text-2xl font-black text-gray-900 mt-1.5">
-                        21
-                    </h3>
-                    <p class="text-xs text-gray-400 mt-1.5">
-                        pelanggan aktif
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Area Pencarian & Tabel -->
         <div class="mt-8">
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-5">
                 <div>
@@ -129,7 +86,6 @@
             </div>
         </div>
 
-        <!-- Pagination -->
         <div class="w-full flex justify-center mt-7">
             <nav aria-label="Pagination">
                 <ul class="flex items-center gap-1.5 bg-white border-e border-gray-200 rounded-full p-2">

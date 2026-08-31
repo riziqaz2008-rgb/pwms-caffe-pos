@@ -86,98 +86,111 @@
                     </div>
                 </div>
                    <div> 
-                    <!-- INI TOAST -->
-                        <div 
-                            x-show="showToast"
-                            x-transition
-                            id="toast-default" 
-                            class="fixed top-26 right-5 z-50te flex items-center w-full max-w-xs p-4 text-body bg-emerald-600 rounded-lg shadow-xs" 
-                            role="alert"
+                    <!-- INI TOAST JIR -->
+                     <div 
+                        id="liveToast" 
+                        class="fixed top-28 right-5 z-50 flex items-center w-full max-w-xs p-4 rounded-lg shadow-lg text-white hidden opacity-0 transition-all duration-300 transform translate-y-2 bg-emerald-600"
+                        role="alert"
                         >
-                            <i class="bx bxs-check-circle text-xl text-white"></i>
+                            <i id="toastIcon" class="bx bxs-check-circle text-xl text-white"></i>
 
-                            <div class="ms-2.5 text-white text-sm font-bold border-s border-default ps-3.5">
-                                Pesanan Berhasil Di Simpan.
-                            </div>
+                            <div id="pesanToast" class="ms-2.5 text-white text-sm font-bold border-s border-white/30 ps-3.5"></div>
 
                             <button 
                                 type="button"
-                                @click="showToast = false"
-                                class="ms-auto flex items-center justify-center text-white text-body hover:text-heading bg-transparent border border-transparent hover:bg-neutral-secondary-medium focus:ring-4 focus:ring-neutral-tertiary font-medium rounded text-sm h-8 w-8 focus:outline-none"
+                                id="toastCloseBtn"
+                                class="ms-auto flex items-center justify-center text-white hover:bg-white/20 font-medium rounded text-sm h-8 w-8 focus:outline-none transition"
                                 aria-label="Close"
                             >
                                 <span class="sr-only">Close</span>
-
-                                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
                                 </svg>
                             </button>
                         </div>
 
                     <div>
-                        <div
-                            x-show="showConfirm"
-                            x-cloak
-                            x-transition.opacity
-                            @keydown.escape.window="showConfirm = false"
-                            class="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm"
+
+                    <!-- INI MODAL TANPA FORM -->
+
+                    <div 
+                        id="confirmModal" 
+                        class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm opacity-0 transition-opacity duration-200"
+                    >
+                        <div id="confirmOverlay" class="fixed inset-0"></div>
+
+                        <div 
+                            id="confirmBox"
+                            class="relative w-full max-w-md p-6 sm:p-8 bg-white dark:bg-slate-900 rounded-3xl shadow-2xl text-center border border-slate-100 dark:border-slate-800 z-10 scale-95 translate-y-2 transition-all duration-200"
                         >
-
-                            <div
-                                @click="showConfirm = false"
-                                class="fixed inset-0"
-                            ></div>
-
-                            <div
-                                x-show="showConfirm"
-                                x-transition:enter="transition ease-out duration-200 transform"
-                                x-transition:enter-start="opacity-0 scale-95 translate-y-2"
-                                x-transition:enter-end="opacity-100 scale-100 translate-y-0"
-                                x-transition:leave="transition ease-in duration-150 transform"
-                                x-transition:leave-start="opacity-100 scale-100 translate-y-0"
-                                x-transition:leave-end="opacity-0 scale-95 translate-y-2"
-                                class="relative w-full max-w-md p-6 sm:p-8 bg-white dark:bg-slate-900 rounded-3xl shadow-2xl text-center border border-slate-100 dark:border-slate-800 z-10"
+                            <div 
+                                id="confirmIconContainer"
+                                class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-inner"
                             >
-
-                                <div class="w-16 h-16 rounded-2xl bg-rose-50 dark:bg-rose-950/50 text-rose-500 flex items-center justify-center mx-auto mb-5 shadow-inner">
-                                    <i
-                                        class="bx text-4xl"
-                                        :class="'bx-' + confirmIcon"
-                                    ></i>
-                                </div>
-
-                                <h3
-                                    x-text="confirmTitle"
-                                    class="text-xl font-bold text-slate-900 dark:text-white tracking-tight"
-                                ></h3>
-
-                                <p
-                                    x-html="confirmMessage"
-                                    class="text-sm text-slate-500 dark:text-slate-400 mt-2 mb-8 leading-relaxed"
-                                ></p>
-
-                                <div class="flex items-center gap-3">
-
-                                    <button
-                                        type="button"
-                                        @click="showConfirm = false"
-                                        class="flex-1 py-3 px-4 rounded-lg bg-gray-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer"
-                                    >
-                                        Batal
-                                    </button>
-
-                                    <button
-                                        type="button"
-                                        @click="jalankanKonfirmasi()"
-                                        x-text="confirmButton"
-                                        class="flex-1 py-3 px-4 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-sm font-semibold shadow-md shadow-rose-600/20 transition-colors cursor-pointer"
-                                    ></button>
-
-                                </div>
-
+                                <i id="confirmIcon" class="bx text-4xl"></i>
                             </div>
 
+                            <h3 id="confirmTitle" class="text-xl font-bold text-slate-900 dark:text-white tracking-tight"></h3>
+                            <p id="confirmMessage" class="text-sm text-slate-500 dark:text-slate-400 mt-2 mb-8 leading-relaxed"></p>
+
+                            <div class="flex items-center gap-3">
+                                <button 
+                                    type="button" 
+                                    id="confirmCancelBtn"
+                                    class="flex-1 py-3 px-4 rounded-lg bg-gray-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer"
+                                ></button>
+
+                                <button 
+                                    type="button" 
+                                    id="confirmActionBtn"
+                                    class="flex-1 py-3 px-4 rounded-lg text-white text-sm font-semibold shadow-md transition-colors cursor-pointer"
+                                ></button>
+                            </div>
                         </div>
+                    </div>
+
+                    <!-- INI MODAL DENGAN FORM -->
+
+                    <div 
+                        id="globalFormModal" 
+                        class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm opacity-0 transition-opacity duration-200"
+                    >
+                        <div id="globalFormOverlay" class="fixed inset-0"></div>
+
+                        <div 
+                            id="globalFormBox"
+                            class="relative w-full max-w-md p-6 sm:p-8 bg-white dark:bg-slate-900 rounded-3xl shadow-2xl text-center border border-slate-100 dark:border-slate-800 z-10 scale-95 translate-y-2 transition-all duration-200"
+                        >
+                            <div 
+                                id="globalFormIconContainer"
+                                class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-inner"
+                            >
+                                <i id="globalFormIcon" class="bx text-4xl"></i>
+                            </div>
+
+                            <h3 id="globalFormTitle" class="text-xl font-bold text-slate-900 dark:text-white tracking-tight"></h3>
+                            <p id="globalFormMessage" class="text-sm text-slate-500 dark:text-slate-400 mt-2 mb-6 leading-relaxed"></p>
+
+                            <form id="globalFormElement" action="#" method="POST" class="text-left space-y-4">
+                                <div id="globalFormInputsContainer" class="space-y-4"></div>
+
+                                <div class="flex items-center gap-3 pt-4 w-full">
+                                    <button 
+                                        type="button" 
+                                        id="globalFormCancelBtn"
+                                        class="flex-1 py-3 px-4 rounded-lg bg-gray-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer text-center"
+                                    ></button>
+
+                                    <button 
+                                        type="submit" 
+                                        id="globalFormSubmitBtn"
+                                        class="flex-1 py-3 px-4 rounded-lg text-white text-sm font-semibold shadow-md transition-colors cursor-pointer text-center"
+                                    ></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                  
             </section>
         </main>      
     </body>
