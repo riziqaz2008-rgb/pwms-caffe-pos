@@ -145,6 +145,7 @@ CREATE TABLE `transaksi` (
   `id_transaksi` int(11) NOT NULL,
   `kode_transaksi` varchar(100) DEFAULT NULL,
   `tanggal` datetime DEFAULT NULL,
+  `tipe_pesanan` tinyint NULL,
   `id_pelanggan` int(11) DEFAULT NULL,
   `nama_pelanggan` varchar(50) DEFAULT NULL,
   `subtotal` int(11) DEFAULT NULL,
