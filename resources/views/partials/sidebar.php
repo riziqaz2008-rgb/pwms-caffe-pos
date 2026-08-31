@@ -11,7 +11,7 @@
                 </div>    
                 <div x-show="sidebarOpen" class="font-black ms-3">Caffe<span class="text-primary">PW</span></div>
             </div>
-            <ul class="flex flex-col items-start h-screen my-5 px-5">
+            <ul class="flex flex-col items-start h-screen my-5 px-5 mb-4">
                 <div class="w-full">
                     <div x-show="sidebarOpen" x-transition class="px-2 mb-4 text-[11px] font-bold uppercase tracking-wider text-gray-400">
                         Menu Utama

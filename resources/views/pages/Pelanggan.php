@@ -34,9 +34,6 @@
                     <div class="w-12 h-12 rounded-lg bg-primary flex items-center justify-center">
                         <i class="bx bx-group text-xl text-white"></i>
                     </div>
-                    <span class="text-xs font-bold text-primary">
-                        Aktif
-                    </span>
                 </div>
                 <div class="mt-5">
                     <p class="text-xs font-bold text-gray-400 uppercase tracking-wide">
@@ -56,9 +53,6 @@
                     <div class="w-12 h-12 rounded-lg bg-primary flex items-center justify-center">
                         <i class="bx bx-user-check text-xl text-white"></i>
                     </div>
-                    <span class="text-xs font-bold text-primary">
-                        Aktif
-                    </span>
                 </div>
                 <div class="mt-5">
                     <p class="text-xs font-bold text-gray-400 uppercase tracking-wide">
