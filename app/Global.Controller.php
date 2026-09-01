@@ -1,5 +1,5 @@
 <?php
-   include __DIR__ . '../../config/database.php';
+include __DIR__ . '../../config/database.php';
 
 function query($q){
     global $conn;

@@ -1,6 +1,5 @@
-<?php
-$isEdit = isset($_GET['edit']) && !empty($_GET['edit']);
-?>
+
+<?php $isEdit = isset($_GET['edit']) && !empty($_GET['edit']); ?>
 <section id="Karyawan">
 
     <div
@@ -72,52 +71,53 @@ $isEdit = isset($_GET['edit']) && !empty($_GET['edit']);
 
         </div>
 
-        <div class="sticky top-10 bg-white dark:bg-slate-900 rounded-lg p-5 mb-6">
+        <div class="w-full sticky top-10 bg-white dark:bg-slate-900 rounded-lg p-5 mb-6">
 
-            <div class="flex flex-col lg:flex-row gap-3">
-
-                <div class="relative flex-1">
-
-                    <i class="bx bx-search absolute left-4 top-1/2 -translate-y-1/2 text-xl text-gray-400"></i>
-
-                    <input
-                        type="text"
-                        x-model="search"
-                        placeholder="Cari nama, username, atau nomor telepon..."
-                        class="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+            <div>
+                <form method="GET" class="flex flex-row gap-3" autocomplete="off">
+                    <input type="hidden" name="route" value="<?= htmlspecialchars($_GET['route'] ?? '')?>">
+                    <div class="relative flex-1">
+    
+                        <i class="bx bx-search absolute left-4 top-1/2 -translate-y-1/2 text-xl text-gray-400"></i>
+    
+                        <input
+                            type="text"
+                            placeholder="Cari nama, username, atau nomor telepon..."
+                            class="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                            name="cari"
+                            oninput="this.form.submit()"
+                            value="<?= htmlspecialchars($_GET['cari'] ?? '')?>"
+                        >
+    
+                    </div>
+    
+    
+                    <select
+                        class="w-full lg:w-48 px-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-bold rounded-lg border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary"
+                        name="rolef"
+                        onchange="this.form.submit()"
                     >
-
-                </div>
-
-
-                <select
-                    x-model="filterRole"
-                    class="w-full lg:w-48 px-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-bold rounded-lg border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary"
-                >
-
-                    <option value="Semua">Semua Role</option>
-
-                    <option value="Administrator">Administrator</option>
-
-                    <option value="Kasir">Kasir</option>
-
-                    <option value="Staff">Staff</option>
-
-                </select>
-
-
-                <select
-                    x-model="filterStatus"
-                    class="w-full lg:w-44 px-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-bold rounded-lg border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary"
-                >
-
-                    <option value="Semua">Semua Status</option>
-
-                    <option value="Aktif">Aktif</option>
-
-                    <option value="Nonaktif">Nonaktif</option>
-
-                </select>
+    
+                        <option value="" <?= $rolef == '' ? 'selected' :'' ?>>Semua Role</option>
+                        <?php foreach($role as $d): ?>
+                            <option value="<?= $d['id_role'] ?>" <?= $rolef == $d['id_role'] ? 'selected' :'' ?>><?= $d['nama_role'] ?></option>
+                        <?php endforeach; ?>
+    
+                    </select>
+    
+    
+                    <select
+                        class="w-full lg:w-44 px-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-bold rounded-lg border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary"
+                        name="statusf"
+                        onchange="this.form.submit()"
+                    >
+    
+                        <option value="">Semua Status</option>
+                        <option value="0" <?= $statusf == 0 ? 'selected' :'' ?>>Nonaktif</option>
+                        <option value="1" <?= $statusf == 1 ? 'selected' :'' ?>>Aktif</option>
+    
+                    </select>
+                </form>
 
             </div>
 
@@ -151,16 +151,30 @@ $isEdit = isset($_GET['edit']) && !empty($_GET['edit']);
                         <tr class="bg-slate-50 dark:bg-slate-900 text-gray-400">
                             <th class="text-left font-bold px-5 py-4">#</th>
                             <th class="text-left font-bold px-5 py-4">Nama</th>
-                            <th class="text-left font-bold px-5 py-4">No Telpon</th>
+                            <th class="text-left font-bold px-5 py-4">No. Telepon</th>
                             <th class="text-left font-bold px-5 py-4">Role</th>
-                            <th class="text-left font-bold px-5 py-4">Status</th>
+                            <th class="text-left font-bold px-5 py-4">Status Karyawan</th>
                             <th class="text-center font-bold px-5 py-4">Aksi</th>
                         </tr>
                     </thead>
 
                     <tbody id="body-tabel-kategori">
+                        <?php if(mysqli_num_rows($dkaryawan)): ?>
+                            <?php while($d = mysqli_fetch_assoc($dkaryawan)): ?>
+                            <tr>
+                                <td><?= $no++ ?></td>
+                                <td><?= $d['nama'] ?></td>
+                                <td><?= $d['telepon'] ?></td>
+                                <td><?= $d['nama_role'] ?></td>
+                                <td><?= $d['status'] ?></td>
+                                <td>
+                                    <button type="button">Halo</button>
+                                </td>
+                            </tr>
+                            <?php endwhile; ?>
+                        <?php else: ?>
                         <tr>
-                            <td colspan="6">
+                            <td colspan="7">
                                 <div class="flex flex-col items-center justify-center py-12 px-4 text-center bg-gray-50">
                                     <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4 border border-gray-200/80">
                                         <i class="bx bx-user-id-card text-4xl text-gray-300"></i>
@@ -189,6 +203,7 @@ $isEdit = isset($_GET['edit']) && !empty($_GET['edit']);
                                 </div>
                             </td>
                         </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -218,9 +233,8 @@ $isEdit = isset($_GET['edit']) && !empty($_GET['edit']);
                 </button>
             </div>
 
-            <!-- FORM -->
-            <form id="globalModalForm" action="" method="POST" class="p-5 sm:p-6">
-                
+            <!-- Form Content -->
+            <form method="POST" class="p-5 sm:p-6" autocomplete="off" id="globalModalForm">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 
                     <!-- Section 1: Data Diri -->
@@ -233,27 +247,27 @@ $isEdit = isset($_GET['edit']) && !empty($_GET['edit']);
 
                     <!-- Nama Lengkap (Diberikan ID globalModalInput agar JavaScript focus & input.value tidak error) -->
                     <div class="flex flex-col gap-1.5 w-full">
-                        <label for="globalModalInput" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
+                        <label for="nama" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
                             Nama Lengkap <span class="text-red-500" aria-hidden="true">*</span>
                         </label>
                         <div class="relative flex items-center w-full group">
                             <div class="absolute left-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors">
                                 <i class="bx bxs-user text-xl" aria-hidden="true"></i>
                             </div>
-                            <input type="text" name="namaLengkap" id="globalModalInput" placeholder="Masukkan nama lengkap" autocomplete="off" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all" required>
+                            <input type="text" name="nama" id="nama" placeholder="Masukkan nama" autocomplete="off" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all" required>
                         </div>
                     </div>
                 
                     <!-- No. Telepon -->
                     <div class="flex flex-col gap-1.5 w-full">
-                        <label for="noTelepon" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
+                        <label for="telepon" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
                             No. Telepon <span class="text-red-500" aria-hidden="true">*</span>
                         </label>
                         <div class="relative flex items-center w-full group">
                             <div class="absolute left-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors">
                                 <i class="bx bxs-phone text-xl" aria-hidden="true"></i>
                             </div>
-                            <input type="text" name="noTelepon" id="noTelepon" placeholder="Contoh: 081234567890" autocomplete="off" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all" required>
+                            <input type="text" name="telepon" id="telepon" placeholder="Contoh: 081234567890" autocomplete="off" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all" required>
                         </div>
                     </div>
 
@@ -288,6 +302,32 @@ $isEdit = isset($_GET['edit']) && !empty($_GET['edit']);
                                 <input type="checkbox" name="status" id="statusKaryawan" value="aktif" class="sr-only peer" checked>
                                 <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/50 dark:peer-focus:ring-primary/30 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
                                 <span class="ms-3 text-sm font-bold text-slate-700 dark:text-slate-300">Akun Aktif</span>
+                        <select
+                            class="w-full mt-1.5 px-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-bold rounded-lg border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary"
+                            name="role"
+                            id="role"
+                            required
+                        >
+                            <option value="">- Pilih role</option>
+                            <?php foreach($role as $d): ?>
+                                <option value="<?= $d['id_role'] ?>"><?= $d['nama_role'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <!-- Status -->
+                    <div>
+                        <label class="text-xs font-black uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
+                            Status
+                        </label>
+                        <div>
+                            <label class="text-xs flex justify-start items-center gap-2 rounded-lg p-2.5 mt-1.5 border border-gray-200 dark:border-slate-700 font-black uppercase tracking-wide text-gray-600 dark:text-gray-400" for="status">
+                                <label class="inline-flex justify-between items-center cursor-pointer">
+                                    <!-- Perbaikan typo pada atribut checked -->
+                                    <input type="checkbox" name="status" value="" class="sr-only peer" id="status">
+                                    <div class="relative w-10.5 h-6 bg-gray-200 dark:bg-slate-700 dark:peer-focus:ring-primary rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[5px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+                                </label>
+                                Aktif
                             </label>
                         </div>
                     </div>
@@ -302,27 +342,28 @@ $isEdit = isset($_GET['edit']) && !empty($_GET['edit']);
 
                     <!-- Username -->
                     <div class="flex flex-col gap-1.5 w-full">
-                        <label for="usernameKaryawan" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
+                        <label for="username" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
                             Username <span class="text-red-500" aria-hidden="true">*</span>
                         </label>
                         <div class="relative flex items-center w-full group">
                             <div class="absolute left-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors">
                                 <i class="bx bxs-user-circle text-xl" aria-hidden="true"></i>
                             </div>
-                            <input type="text" name="username" id="usernameKaryawan" placeholder="Contoh: budi.santoso" autocomplete="off" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all" required>
+                            <input type="text" name="username" id="username" placeholder="Contoh: budi.santoso" autocomplete="off" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all" required>
                         </div>
                     </div>
 
                     <!-- Password -->
                     <div class="flex flex-col gap-1.5 w-full">
-                        <label for="passwordKaryawan" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
+                        <label for="password" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
                             Password <span class="text-red-500" aria-hidden="true">*</span>
                         </label>
+
                         <div class="relative flex items-center w-full group">
                             <div class="absolute left-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors">
                                 <i class="bx bxs-lock-alt text-xl" aria-hidden="true"></i>
                             </div>
-                            <input type="password" name="password" id="passwordKaryawan" placeholder="Masukkan password" autocomplete="off" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all" required>
+                            <input type="password" name="password" id="password" placeholder="Masukkan password" autocomplete="off" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all" required>
                         </div>
                     </div>
 
@@ -343,163 +384,9 @@ $isEdit = isset($_GET['edit']) && !empty($_GET['edit']);
     </div>
 </div>
 
-
-        <div
-            x-show="DetailKaryawan"
-            x-cloak
-            @keydown.escape.window="DetailKaryawan = false"
-            class="fixed inset-0 z-999 flex justify-center items-start sm:items-center w-full p-3 sm:p-4 overflow-y-auto"
-        >
-
-            <div
-                x-show="DetailKaryawan"
-                x-transition
-                class="fixed inset-0 bg-slate-950/60"
-                @click="DetailKaryawan = false"
-            ></div>
-
-
-            <div
-                x-show="DetailKaryawan"
-                x-transition
-                class="relative w-full max-w-xl z-999 my-auto"
-            >
-
-                <div class="bg-white dark:bg-slate-900 rounded-lg p-6 md:p-8">
-
-                    <div class="flex items-center justify-between gap-4">
-
-                        <div class="flex items-center gap-4">
-
-                            <div class="w-12 h-12 rounded-lg bg-primary flex items-center justify-center">
-
-                                <i class="bx bx-user text-2xl text-white"></i>
-
-                            </div>
-
-                            <div>
-
-                                <p class="text-xs font-black uppercase tracking-wider text-blue-600">
-
-                                    Detail Karyawan
-
-                                </p>
-
-                                <h2
-                                    class="text-xl font-black text-slate-900 dark:text-white mt-1"
-                                    x-text="karyawanDetail"
-                                ></h2>
-
-                            </div>
-
-                        </div>
-
-
-                        <button
-                            type="button"
-                            @click="DetailKaryawan = false"
-                            class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:bg-blue-700 transition"
-                        >
-
-                            <i class="bx bx-x text-xl"></i>
-
-                        </button>
-
-                    </div>
-
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-7">
-
-                        <div class="p-4 rounded-lg">
-
-                            <p class="text-[10px] uppercase tracking-wider font-black text-gray-400">
-
-                                Role
-
-                            </p>
-
-                            <p class="text-sm font-black text-slate-900 dark:text-white mt-1">
-
-                                Kasir
-
-                            </p>
-
-                        </div>
-
-
-                        <div class="p-4 rounded-lg">
-
-                            <p class="text-[10px] uppercase tracking-wider font-black text-gray-400">
-
-                                Status
-
-                            </p>
-
-                            <p class="text-sm font-black text-blue-600 mt-1">
-
-                                Aktif
-
-                            </p>
-
-                        </div>
-
-
-                        <div class="p-4 rounded-lg">
-
-                            <p class="text-[10px] uppercase tracking-wider font-black text-gray-400">
-
-                                Email
-
-                            </p>
-
-                            <p class="text-sm font-bold text-slate-700 dark:text-slate-200 mt-1">
-
-                                karyawan@kedaiku.id
-
-                            </p>
-
-                        </div>
-
-
-                        <div class="p-4 rounded-lg">
-
-                            <p class="text-[10px] uppercase tracking-wider font-black text-gray-400">
-
-                                No. Telepon
-
-                            </p>
-
-                            <p class="text-sm font-bold text-slate-700 dark:text-slate-200 mt-1">
-
-                                0812-3456-7890
-
-                            </p>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="mt-6 pt-5 border-t border-gray-200 dark:border-slate-800">
-
-                        <button
-                            type="button"
-                            @click="DetailKaryawan = false"
-                            class="w-full flex items-center justify-center bg-primary text-white font-black px-5 py-3 rounded-lg hover:bg-blue-700 active:scale-95 transition"
-                        >
-
-                            Tutup
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
     </div>
 
 </section>
+<script>
+    
+</script>

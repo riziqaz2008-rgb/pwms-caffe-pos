@@ -60,7 +60,7 @@ switch ($route) {
         break;
 
     case 'karyawan':
-        
+        include  __DIR__ . '../../app/Karyawan.Controller.php';
         $page = __DIR__ . '/../resources/views/pages/karyawan.php';
 
         break;

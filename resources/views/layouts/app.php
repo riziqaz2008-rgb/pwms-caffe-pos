@@ -89,6 +89,9 @@
                 </div>
                    <div> 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> afd1f2a (pengguna - Sltn)
                     <!-- INI TOAST JIR -->
                      <div 
                         id="liveToast" 
@@ -114,65 +117,6 @@
 
                     <div>
 
-                    <!-- INI MODAL TANPA FORM -->
-
-                    <div 
-                        id="confirmModal" 
-                        class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm opacity-0 transition-opacity duration-200"
-                    >
-                        <div id="confirmOverlay" class="fixed inset-0"></div>
-
-                        <div 
-                            id="confirmBox"
-                            class="relative w-full max-w-md p-6 sm:p-8 bg-white dark:bg-slate-900 rounded-3xl shadow-2xl text-center border border-slate-100 dark:border-slate-800 z-10 scale-95 translate-y-2 transition-all duration-200"
-                        >
-                            <div 
-                                id="confirmIconContainer"
-                                class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-inner"
-=======
-
-                    <!-- INI TOAST JIR -->
-
-                <div
-                    id="liveToast"
-                    class="hidden fixed top-28 right-5 z-50 flex items-center w-full max-w-xs p-4 text-white rounded-lg shadow-lg"
-                    role="alert"
-                >
-                    <i id="toastIcon" class="bx text-xl text-white"></i>
-
-                    <div
-                        id="pesanToast"
-                        class="ms-2.5 text-sm font-bold border-s border-white/30 ps-3.5"
-                    ></div>
-
-                    <button
-                        type="button"
-                        onclick="document.getElementById('liveToast').classList.add('hidden')"
-                        class="ms-auto flex items-center justify-center text-white hover:bg-white/20 rounded-lg h-8 w-8 transition"
-                        aria-label="Close"
-                    >
-                        <span class="sr-only">Close</span>
-
-                        <svg
-                            class="w-5 h-5"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                stroke="currentColor"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M6 18 17.94 6M18 18 6.06 6"
-                            />
-                        </svg>
-                    </button>
-                </div>
-
-                <div>
-
                     <div
                         id="confirmModal"
                         tabindex="-1"
@@ -187,13 +131,10 @@
                         >
                             <div
                                 id="confirmIconContainer"
-                                class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5"
->>>>>>> 7e57b615230b0ad1a82366af887a8a867a742bf4
-                            >
+                                class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5">
                                 <i id="confirmIcon" class="bx text-4xl"></i>
                             </div>
 
-<<<<<<< HEAD
                             <h3 id="confirmTitle" class="text-xl font-bold text-slate-900 dark:text-white tracking-tight"></h3>
                             <p id="confirmMessage" class="text-sm text-slate-500 dark:text-slate-400 mt-2 mb-8 leading-relaxed"></p>
 
@@ -209,7 +150,7 @@
                                     id="confirmActionBtn"
                                     class="flex-1 py-3 px-4 rounded-lg text-white text-sm font-semibold shadow-md transition-colors cursor-pointer"
                                 ></button>
-=======
+
                             <h3
                                 id="confirmTitle"
                                 class="text-xl font-bold text-slate-900 dark:text-white tracking-tight"
@@ -237,59 +178,14 @@
                                 >
                                     Hapus
                                 </button>
->>>>>>> 7e57b615230b0ad1a82366af887a8a867a742bf4
+
                             </div>
                         </div>
                     </div>
-
-<<<<<<< HEAD
-                    <!-- INI MODAL DENGAN FORM -->
-
-                    <div 
-                        id="globalFormModal" 
-                        class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm opacity-0 transition-opacity duration-200"
-                    >
-                        <div id="globalFormOverlay" class="fixed inset-0"></div>
-
-                        <div 
-                            id="globalFormBox"
-                            class="relative w-full max-w-md p-6 sm:p-8 bg-white dark:bg-slate-900 rounded-3xl shadow-2xl text-center border border-slate-100 dark:border-slate-800 z-10 scale-95 translate-y-2 transition-all duration-200"
-                        >
-                            <div 
-                                id="globalFormIconContainer"
-                                class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-inner"
-                            >
-                                <i id="globalFormIcon" class="bx text-4xl"></i>
-                            </div>
-
-                            <h3 id="globalFormTitle" class="text-xl font-bold text-slate-900 dark:text-white tracking-tight"></h3>
-                            <p id="globalFormMessage" class="text-sm text-slate-500 dark:text-slate-400 mt-2 mb-6 leading-relaxed"></p>
-
-                            <form id="globalFormElement" action="#" method="POST" class="text-left space-y-4">
-                                <div id="globalFormInputsContainer" class="space-y-4"></div>
-
-                                <div class="flex items-center gap-3 pt-4 w-full">
-                                    <button 
-                                        type="button" 
-                                        id="globalFormCancelBtn"
-                                        class="flex-1 py-3 px-4 rounded-lg bg-gray-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer text-center"
-                                    ></button>
-
-                                    <button 
-                                        type="submit" 
-                                        id="globalFormSubmitBtn"
-                                        class="flex-1 py-3 px-4 rounded-lg text-white text-sm font-semibold shadow-md transition-colors cursor-pointer text-center"
-                                    ></button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                  
-=======
 
                     
                 </div>
->>>>>>> 7e57b615230b0ad1a82366af887a8a867a742bf4
+
             </section>
         </main> 
     
@@ -456,6 +352,272 @@
             document.addEventListener('keydown',function(event){
                 if(event.key==='Escape')closeGlobalModal();
             });
+=======
+            </section>
+        </main>      
+
+        <script>
+            let toastTimeout;
+
+            window.showToast = function(d) {
+              if (!d) return;
+
+              const $toast = $('#liveToast');
+              const $pesan = $('#pesanToast');
+              const $icon = $('#toastIcon');
+
+              if (!$toast.length) return;
+
+              const message = d.pesan || d.message || '';
+              let type = d.bg || d.type || 'success';
+              if (type === 'danger') type = 'error';
+
+              $pesan.text(message);
+
+              // Reset class warna & ikon
+              $toast.removeClass('bg-emerald-600 bg-rose-600 bg-amber-500 bg-sky-600');
+              $icon.removeClass('bxs-check-circle bxs-x-circle bxs-error bxs-info-circle');
+
+              // Mapping class sesuai Alpine.js sebelumnya
+              const config = {
+                success: { bg: 'bg-emerald-600', icon: 'bxs-check-circle' },
+                error: { bg: 'bg-rose-600', icon: 'bxs-x-circle' },
+                warning: { bg: 'bg-amber-500', icon: 'bxs-error' },
+                info: { bg: 'bg-sky-600', icon: 'bxs-info-circle' }
+              };
+
+              const currentConfig = config[type] || config.success;
+              $toast.addClass(currentConfig.bg);
+              $icon.addClass(currentConfig.icon);
+
+              // Animasi muncul
+              $toast.removeClass('hidden');
+              setTimeout(() => {
+                $toast.removeClass('opacity-0 translate-y-2').addClass('opacity-100 translate-y-0');
+              }, 10);
+
+              // Auto-hide
+              clearTimeout(toastTimeout);
+              toastTimeout = setTimeout(() => {
+                hideToast();
+              }, 4000);
+            };
+
+            window.hideToast = function() {
+              const $toast = $('#liveToast');
+              if (!$toast.length) return;
+
+              $toast.removeClass('opacity-100 translate-y-0').addClass('opacity-0 translate-y-2');
+
+              setTimeout(() => {
+                $toast.addClass('hidden');
+              }, 300);
+            };
+
+            $(document).on('click', '#toastCloseBtn', function() {
+              hideToast();
+            });
+
+            let confirmCallback = null;
+
+            window.showConfirm = function(options) {
+              const config = {
+                title: options.title || 'Konfirmasi',
+                message: options.message || 'Apakah Anda yakin?',
+                icon: options.icon || 'help-circle',
+                type: options.type || 'info',
+                buttonText: options.buttonText || 'Ya, Lanjutkan',
+                cancelText: options.cancelText || 'Batal',
+                onConfirm: options.onConfirm || null
+              };
+
+              confirmCallback = config.onConfirm;
+
+              $('#confirmTitle').text(config.title);
+              $('#confirmMessage').html(config.message);
+              $('#confirmCancelBtn').text(config.cancelText);
+              $('#confirmActionBtn').text(config.buttonText);
+
+              $('#confirmIcon').attr('class', `bx bx-${config.icon} text-4xl`);
+
+              const styles = {
+                danger: {
+                  iconBg: 'bg-rose-50 dark:bg-rose-950/50 text-rose-500',
+                  btnBg: 'bg-rose-600 hover:bg-rose-700 shadow-rose-600/20'
+                },
+                warning: {
+                  iconBg: 'bg-amber-50 dark:bg-amber-950/50 text-amber-500',
+                  btnBg: 'bg-amber-600 hover:bg-amber-700 shadow-amber-600/20'
+                },
+                success: {
+                  iconBg: 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-500',
+                  btnBg: 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/20'
+                },
+                info: {
+                  iconBg: 'bg-sky-50 dark:bg-sky-950/50 text-sky-500',
+                  btnBg: 'bg-sky-600 hover:bg-sky-700 shadow-sky-600/20'
+                }
+              };
+
+              const selectedStyle = styles[config.type] || styles.info;
+
+              $('#confirmIconContainer')
+                .removeClass('bg-rose-50 dark:bg-rose-950/50 text-rose-500 bg-amber-50 dark:bg-amber-950/50 text-amber-500 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-500 bg-sky-50 dark:bg-sky-950/50 text-sky-500')
+                .addClass(selectedStyle.iconBg);
+
+              $('#confirmActionBtn')
+                .removeClass('bg-rose-600 hover:bg-rose-700 shadow-rose-600/20 bg-amber-600 hover:bg-amber-700 shadow-amber-600/20 bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/20 bg-sky-600 hover:bg-sky-700 shadow-sky-600/20')
+                .addClass(selectedStyle.btnBg);
+
+              const $modal = $('#confirmModal');
+              const $box = $('#confirmBox');
+
+              $modal.removeClass('hidden').addClass('flex');
+
+              setTimeout(() => {
+                $modal.removeClass('opacity-0').addClass('opacity-100');
+                $box.removeClass('scale-95 translate-y-2').addClass('scale-100 translate-y-0');
+              }, 10);
+            };
+
+            window.hideConfirm = function() {
+              const $modal = $('#confirmModal');
+              const $box = $('#confirmBox');
+
+              $modal.removeClass('opacity-100').addClass('opacity-0');
+              $box.removeClass('scale-100 translate-y-0').addClass('scale-95 translate-y-2');
+
+              setTimeout(() => {
+                $modal.removeClass('flex').addClass('hidden');
+                confirmCallback = null;
+              }, 200);
+            };
+
+            $(document).ready(function() {
+              $('#confirmCancelBtn, #confirmOverlay').on('click', function() {
+                hideConfirm();
+              });
+
+              $('#confirmActionBtn').on('click', function() {
+                if (typeof confirmCallback === 'function') {
+                  confirmCallback();
+                }
+                hideConfirm();
+              });
+
+              $(document).on('keydown', function(e) {
+                if (e.key === 'Escape' && !$('#confirmModal').hasClass('hidden')) {
+                  hideConfirm();
+                }
+              });
+            });
+
+
+            // INI MODAK TANPA FORM
+
+            window.showGlobalForm = function(options) {
+              const config = {
+                title: options.title || 'Konfirmasi',
+                message: options.message || '',
+                type: options.type || 'danger',
+                icon: options.icon || 'error-circle',
+                buttonText: options.buttonText || 'Lanjutkan',
+                cancelText: options.cancelText || 'Batal',
+                actionUrl: options.actionUrl || '#',
+                method: options.method || 'POST',
+                inputs: options.inputs || []
+              };
+
+              $('#globalFormTitle').text(config.title);
+              $('#globalFormMessage').html(config.message);
+              $('#globalFormCancelBtn').text(config.cancelText);
+              $('#globalFormSubmitBtn').text(config.buttonText);
+              $('#globalFormElement').attr('action', config.actionUrl).attr('method', config.method);
+
+              $('#globalFormIcon').attr('class', `bx bx-${config.icon} text-4xl`);
+
+              const styles = {
+                danger: {
+                  iconBg: 'bg-rose-600 dark:bg-rose-950/50 text-white',
+                  btnBg: 'bg-rose-600 hover:bg-rose-700 shadow-rose-600/20'
+                },
+                warning: {
+                  iconBg: 'bg-amber-50 dark:bg-amber-950/50 text-amber-500',
+                  btnBg: 'bg-amber-600 hover:bg-amber-700 shadow-amber-600/20'
+                },
+                success: {
+                  iconBg: 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-500',
+                  btnBg: 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/20'
+                },
+                info: {
+                  iconBg: 'bg-primary dark:bg-sky-950/50 text-white',
+                  btnBg: 'bg-primary hover:bg-sky-700 shadow-primary/20'
+                }
+              };
+
+              const selectedStyle = styles[config.type] || styles.info;
+
+              $('#globalFormIconContainer')
+                .removeClass('bg-rose-50 dark:bg-rose-950/50 text-rose-500 bg-amber-50 dark:bg-amber-950/50 text-amber-500 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-500 bg-sky-50 dark:bg-sky-950/50 text-sky-500')
+                .addClass(selectedStyle.iconBg);
+
+              $('#globalFormSubmitBtn')
+                .removeClass('bg-rose-600 hover:bg-rose-700 shadow-rose-600/20 bg-amber-600 hover:bg-amber-700 shadow-amber-600/20 bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/20 bg-sky-600 hover:bg-sky-700 shadow-sky-600/20')
+                .addClass(selectedStyle.btnBg);
+
+              const $inputsContainer = $('#globalFormInputsContainer');
+              $inputsContainer.empty();
+
+              config.inputs.forEach(item => {
+                let inputHtml = '<div>';
+                if (item.label) {
+                  inputHtml += `<label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">${item.label}</label>`;
+                }
+                inputHtml += `<input 
+                  type="${item.type || 'text'}" 
+                  name="${item.name || ''}" 
+                  value="${item.value || ''}" 
+                  placeholder="${item.placeholder || ''}"
+                  class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 transition"
+                /></div>`;
+                $inputsContainer.append(inputHtml);
+              });
+
+              const $modal = $('#globalFormModal');
+              const $box = $('#globalFormBox');
+
+              $modal.removeClass('hidden').addClass('flex');
+
+              setTimeout(() => {
+                $modal.removeClass('opacity-0').addClass('opacity-100');
+                $box.removeClass('scale-95 translate-y-2').addClass('scale-100 translate-y-0');
+              }, 10);
+            };
+
+        window.hideGlobalForm = function() {
+          const $modal = $('#globalFormModal');
+          const $box = $('#globalFormBox');
+
+          $modal.removeClass('opacity-100').addClass('opacity-0');
+          $box.removeClass('scale-100 translate-y-0').addClass('scale-95 translate-y-2');
+
+          setTimeout(() => {
+            $modal.removeClass('flex').addClass('hidden');
+          }, 200);
+        };
+
+        $(document).ready(function() {
+          $('#globalFormCancelBtn, #globalFormOverlay').on('click', function() {
+            hideGlobalForm();
+          });
+        
+          $(document).on('keydown', function(e) {
+            if (e.key === 'Escape' && !$('#globalFormModal').hasClass('hidden')) {
+              hideGlobalForm();
+            }
+          });
+        });
+>>>>>>> afd1f2a (pengguna - Sltn)
         </script>
     </body>
 </html>
