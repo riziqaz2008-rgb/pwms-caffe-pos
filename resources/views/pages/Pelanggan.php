@@ -18,6 +18,18 @@
             <div class="flex flex-row gap-x-3 my-1 shrink-0">
                 <button
                     type="button"
+                     onclick='showGlobalModal(<?= json_encode([
+                        "title" => "Tambah Pelanggan",
+                        "subtitle" => "Tambahkan data pelanggan baru ke dalam sistem.",
+                        "icon" => "bxs-user-plus",
+                        "iconBg" => "bg-primary",
+                        "action" => "/pelanggan/store",
+                        "method" => "POST",
+                        "buttonText" => "Simpan pelanggan",
+                        "buttonIcon" => "bxs-save",
+                        "buttonColor" => "bg-primary hover:bg-blue-700",
+                        "value" => ""
+                    ]) ?>)'
                     class="w-full h-12 md:w-auto flex items-center justify-center bg-primary text-white font-bold px-6 gap-2 rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
                 >
                     <i class="bx bx-plus text-lg"></i>
@@ -78,7 +90,18 @@
                                     </p>
                                     <button 
                                         type="button" 
-                                        @click="Pelanggan = true" 
+                                        onclick='showGlobalModal(<?= json_encode([
+                                            "title" => "Tambah Pelanggan",
+                                            "subtitle" => "Tambahkan data pelanggan baru ke dalam sistem.",
+                                            "icon" => "bxs-user-plus",
+                                            "iconBg" => "bg-primary",
+                                            "action" => "/pelanggan/store",
+                                            "method" => "POST",
+                                            "buttonText" => "Simpan pelanggan",
+                                            "buttonIcon" => "bxs-save",
+                                            "buttonColor" => "bg-primary hover:bg-blue-700",
+                                            "value" => ""
+                                        ]) ?>)'
                                         class="px-4 py-3 bg-primary text-white text-sm font-bold rounded-lg hover:opacity-90 transition-all flex items-center gap-2"
                                     >
                                         <i class="bx bx-plus text-base"></i>
@@ -89,6 +112,73 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+        <div id="global-modal" role="dialog" aria-modal="true" aria-labelledby="globalModalTitle" class="hidden fixed inset-0 z-[9999] items-center justify-center p-4 bg-slate-950/60 backdrop-blur-[2px]">
+            <div class="relative p-4 w-full max-w-xl">
+                <div class="relative bg-white dark:bg-slate-900 rounded-lg shadow-xl border border-gray-200 dark:border-slate-800">
+                    
+                    <!-- HEADER MODAL -->
+                    <div class="flex items-start justify-between p-5 sm:p-6 border-b border-gray-100 dark:border-slate-800">
+                        <div class="flex items-center gap-3 sm:gap-4">
+                            <div id="globalModalIconContainer" class="flex w-12 h-12 rounded-lg bg-primary items-center justify-center shrink-0">
+                                <i id="globalModalIcon" class="bx bxs-user-plus text-2xl text-white" aria-hidden="true"></i>
+                            </div>
+                            <div>
+                                <h3 id="globalModalTitle" class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white leading-tight"></h3>
+                                <p id="globalModalSubtitle" class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 font-medium mt-1"></p>
+                            </div>
+                        </div>
+                        
+                        <!-- TOMBOL CLOSE -->
+                        <button type="button" onclick="closeGlobalModal()" class="text-slate-500 bg-slate-100 dark:bg-slate-800 dark:text-slate-400 hover:bg-primary hover:text-white rounded-full w-10 h-10 inline-flex justify-center items-center transition-colors cursor-pointer shrink-0" aria-label="Tutup modal">
+                            <i class="bx bx-x text-2xl" aria-hidden="true"></i>
+                        </button>
+                    </div>
+
+                    <form id="globalModalForm" action="" method="POST" class="p-5 sm:p-6">
+                        
+                        <div class="grid grid-cols-1 gap-5">                    
+
+                            <div class="flex flex-col gap-1.5 w-full">
+                                <label for="globalModalInput" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
+                                    Nama Lengkap <span class="text-red-500" aria-hidden="true">*</span>
+                                </label>
+                                <div class="relative flex items-center w-full group">
+                                    <div class="absolute left-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors">
+                                        <i class="bx bxs-user text-xl" aria-hidden="true"></i>
+                                    </div>
+                                    <input type="text" name="namaLengkap" id="globalModalInput" placeholder="Masukkan nama lengkap" autocomplete="off" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all" required>
+                                </div>
+                            </div>
+                        
+                            <div class="flex flex-col gap-1.5 w-full">
+                                <label for="noTelepon" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
+                                    No. Telepon <span class="text-red-500" aria-hidden="true">*</span>
+                                </label>
+                                <div class="relative flex items-center w-full group">
+                                    <div class="absolute left-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors">
+                                        <i class="bx bxs-phone text-xl" aria-hidden="true"></i>
+                                    </div>
+                                    <input type="text" name="noTelepon" id="noTelepon" placeholder="Contoh: 081234567890" autocomplete="off" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all" required>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- FOOTER / BUTTONS -->
+                        <div class="flex flex-col-reverse sm:flex-row items-center justify-end pt-5 mt-6 border-t border-gray-100 dark:border-slate-800 gap-3">
+                            <button type="button" onclick="closeGlobalModal()" class="w-full sm:w-auto bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold px-6 py-3 rounded-lg text-sm transition-all">
+                                Batal
+                            </button>
+                            <button id="globalModalSubmit" type="submit" class="w-full sm:w-auto flex items-center justify-center bg-primary hover:bg-blue-700 text-white font-black px-6 py-3 gap-2 rounded-lg text-sm transition-all">
+                                <i id="globalModalSubmitIcon" class="bx bxs-save text-lg" aria-hidden="true"></i>
+                                <span id="globalModalSubmitText">Simpan Karyawan</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
 
