@@ -38,7 +38,6 @@ CREATE TABLE `anggota` (
   `nama_panggilan` varchar(50) DEFAULT NULL,
   `telepon` varchar(15) DEFAULT NULL,
   `status` tinyint(4) DEFAULT NULL,
-  `deleted` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -81,6 +80,7 @@ CREATE TABLE `menu` (
   `nama` varchar(100) DEFAULT NULL,
   `id_kategori` int(11) DEFAULT NULL,
   `deskripsi` text DEFAULT NULL,
+  `harga` int(11) DEFAULT NULL,
   `menu_tersedia` tinyint,
   `status_menu` tinyint,
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -97,7 +97,6 @@ CREATE TABLE `metode` (
   `id_tipe` int(11) DEFAULT NULL,
   `deskripsi` text DEFAULT NULL,
   `status` tinyint(4) DEFAULT NULL,
-  `deleted` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -110,8 +109,6 @@ CREATE TABLE `pelanggan` (
   `id_pelanggan` int(11) NOT NULL,
   `nama_pelanggan` varchar(100) DEFAULT NULL,
   `telepon` varchar(15) DEFAULT NULL,
-  `status` tinyint(4) DEFAULT NULL,
-  `deleted` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -161,7 +158,6 @@ CREATE TABLE `transaksi` (
   `id_user` int(11) DEFAULT NULL,
   `diubah_oleh` int(11) DEFAULT NULL,
   `diubah_pada` datetime DEFAULT NULL,
-  `deleted` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -177,7 +173,6 @@ CREATE TABLE `users` (
   `id_role` int(11) DEFAULT NULL,
   `id_anggota` int(11) DEFAULT NULL,
   `status` tinyint(4) DEFAULT NULL,
-  `deleted` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
