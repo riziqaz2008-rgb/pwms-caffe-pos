@@ -37,7 +37,7 @@ CREATE TABLE `anggota` (
   `nama_lengkap` varchar(100) DEFAULT NULL,
   `nama_panggilan` varchar(50) DEFAULT NULL,
   `telepon` varchar(15) DEFAULT NULL,
-  `status` tinyint(4) DEFAULT NULL,
+  `status` tinyint(4) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -82,7 +82,7 @@ CREATE TABLE `menu` (
   `deskripsi` text DEFAULT NULL,
   `harga` int(11) DEFAULT NULL,
   `menu_tersedia` tinyint,
-  `status_menu` tinyint,
+  `status_menu` tinyint
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -96,7 +96,7 @@ CREATE TABLE `metode` (
   `nama_metode` varchar(50) DEFAULT NULL,
   `id_tipe` int(11) DEFAULT NULL,
   `deskripsi` text DEFAULT NULL,
-  `status` tinyint(4) DEFAULT NULL,
+  `status` tinyint(4) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -108,7 +108,7 @@ CREATE TABLE `metode` (
 CREATE TABLE `pelanggan` (
   `id_pelanggan` int(11) NOT NULL,
   `nama_pelanggan` varchar(100) DEFAULT NULL,
-  `telepon` varchar(15) DEFAULT NULL,
+  `telepon` varchar(15) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -157,7 +157,7 @@ CREATE TABLE `transaksi` (
   `kembalian` int(11) DEFAULT NULL,
   `id_user` int(11) DEFAULT NULL,
   `diubah_oleh` int(11) DEFAULT NULL,
-  `diubah_pada` datetime DEFAULT NULL,
+  `diubah_pada` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -172,7 +172,7 @@ CREATE TABLE `users` (
   `password` varchar(50) DEFAULT NULL,
   `id_role` int(11) DEFAULT NULL,
   `id_anggota` int(11) DEFAULT NULL,
-  `status` tinyint(4) DEFAULT NULL,
+  `status` tinyint(4) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
