@@ -185,6 +185,14 @@
             </section>
         </main> 
     
+        <?php if(isset($hasil)): ?>
+          <script>
+            document.addEventListener('DOMContentLoaded', function (){
+              showToast(<?= json_encode($hasil) ?>);
+            });
+          </script>
+        <?php endif; ?>
+
         <script>
 
             // INI GLOBAL TOAST JS YE..
@@ -327,7 +335,7 @@
                 // form.action=data.action??'#';
                 form.method=data.method??'POST';
 
-                input.value=data.value??'';
+                submit.value=data.value??'';
                 submit.className=`w-full sm:w-auto flex items-center justify-center text-white font-black px-6 py-3 gap-2 rounded-lg text-sm transition-all ${data.buttonColor??'bg-primary hover:bg-blue-700'}`;
                 submitIcon.className=`bx ${data.buttonIcon??'bxs-save'} text-lg`;
                 
