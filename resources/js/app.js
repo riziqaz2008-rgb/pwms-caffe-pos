@@ -166,6 +166,7 @@ $(document).ready(function () {
   });
 });
 
+<<<<<<< HEAD
 let toastTimeout;
 
 window.showToast = function(d) {
@@ -426,3 +427,6 @@ $(document).ready(function() {
     }
   });
 });
+=======
+
+>>>>>>> 7e57b615230b0ad1a82366af887a8a867a742bf4

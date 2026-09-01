@@ -80,7 +80,9 @@ CREATE TABLE `menu` (
   `foto` varchar(200) DEFAULT NULL,
   `nama` varchar(100) DEFAULT NULL,
   `id_kategori` int(11) DEFAULT NULL,
-  `deskripsi` text DEFAULT NULL
+  `deskripsi` text DEFAULT NULL,
+  `menu_tersedia` tinyint,
+  `status_menu` tinyint,
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------

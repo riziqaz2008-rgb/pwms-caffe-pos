@@ -31,7 +31,19 @@ $kategori = getKategori();
                             <i class="bx bxs-book-bookmark text-md"></i>
                         <span>Kategori</span>
                     </a>
-                    <button type="button" @click="TambahMenu = true"
+                    <button type="button" 
+                        onclick='showGlobalModal(<?= json_encode([
+                            "title" => "Tambah Menu",
+                            "subtitle" => "Kelola daftar menu, harga, kategori, dan informasi menu cafe.",
+                            "icon" => "bx-bowl-hot",
+                            "iconBg" => "bg-primary",
+                            "action" => "/menu/store",
+                            "method" => "POST",
+                            "buttonText" => "Simpan Menu",
+                            "buttonIcon" => "bxs-save",
+                            "buttonColor" => "bg-primary hover:bg-blue-700",
+                            "value" => ""
+                        ]) ?>)'
                         class="w-full sm:w-auto flex items-center justify-center gap-2 bg-primary text-white font-bold px-6 py-3 rounded-lg hover:bg-blue-700 active:scale-95 transition-all duration-200">
                             <i class="bx bxs-plus text-xl"></i>
                         <span>Tambah Menu</span>
@@ -194,10 +206,30 @@ $kategori = getKategori();
                                         </td>
                                         <td class="px-5 py-4">
                                             <div class="flex items-center justify-center gap-2">
-                                                <button type="button" onclick="editMenu(1)" class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Edit menu">
+                                                <button type="button" 
+                                                onclick='showGlobalModal(<?= json_encode([
+                                                    "title" => "Edit Menu",
+                                                    "subtitle" => "Perbarui informasi menu cafe.",
+                                                    "icon" => "bxs-edit",
+                                                    "iconBg" => "bg-amber-500",
+                                                    "action" => "/menu/update/1",
+                                                    "method" => "POST",
+                                                    "buttonText" => "Simpan Perubahan",
+                                                    "buttonIcon" => "bxs-save",
+                                                    "buttonColor" => "bg-amber-500 hover:bg-amber-600",
+                                                    "value" => "Nasi Goreng Special"
+                                                ]) ?>)'
+                                                class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Edit menu">
                                                     <i class="bx bxs-pencil"></i>
                                                 </button>
-                                                <button type="button" onclick="hapusMenu(1)" class="w-10 h-10 rounded-lg bg-red-500 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Hapus menu">
+                                                <button type="button" 
+                                                 onclick="showConfirm(
+                                                    'Hapus Data?',
+                                                    'Yakin ingin menghapus data ini?',
+                                                    'Ya, Hapus',
+                                                    'danger'
+                                                )"    
+                                                class="w-10 h-10 rounded-lg bg-red-500 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Hapus menu">
                                                     <i class="bx bxs-trash"></i>
                                                 </button>
                                             </div>
@@ -230,7 +262,56 @@ $kategori = getKategori();
                         <!-- YANG DI KOMENT INI CONTOH JIKA ADA VALUE NYA.
                                         SILAHKAN DI SESUAIKAN ISI DATABASE. -->
                          
-                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                            <div class="flex flex-row sm:flex-col group bg-white border border-gray-200 rounded-lg overflow-hidden transition-all duration-200">
+                                <div class="relative w-36 h-36 shrink-0 sm:w-full sm:h-48 overflow-hidden bg-gray-100">
+                                    <img
+                                        src="https://images.unsplash.com/photo-1603133872878-684f208fb84b?q=80&w=800&auto=format&fit=crop"
+                                        loading="lazy"
+                                        class="w-full h-full object-cover object-center group-hover:scale-105 transition duration-300"
+                                        alt="Nasi Goreng Spesial"
+                                    >
+                                    <div class="absolute top-2.5 left-2.5 sm:top-3 sm:left-3">
+                                        <span class="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg bg-primary text-[10px] sm:text-xs font-black text-white">
+                                            Makanan
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="p-4 sm:p-5 flex-1 min-w-0 flex flex-col justify-between">
+                                    <h3 class="font-black text-gray-900 text-base sm:text-lg line-clamp-2 leading-snug">
+                                        Nasi Goreng Spesial
+                                    </h3>
+
+                                    <div class="flex items-end justify-between gap-3 mt-4 sm:mt-6 pt-2">
+                                        <div class="min-w-0">
+                                            <span class="text-[10px] uppercase tracking-wider font-bold text-gray-400 block mb-0.5">
+                                                Harga
+                                            </span>
+                                            <span class="text-base sm:text-lg font-black text-gray-900 whitespace-nowrap">
+                                                Rp 25.000
+                                            </span>
+                                        </div>
+
+                                        <div class="flex gap-x-2.5">
+                                            <button
+                                                type="button"
+                                                class="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all shrink-0"
+                                                title="Edit menu"
+                                            >
+                                                <i class="bx bxs-pencil text-lg"></i>
+                                            </button>
+                                            <button
+                                                type="button"
+                                                class="w-10 h-10 rounded-xl bg-red-600 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all shrink-0"
+                                                title="Hapus menu"
+                                            >
+                                                <i class="bx bxs-trash text-lg"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                        
                         
                         <!-- YANG DI BAWAH INI CONTOH JIKA VALUE NYA KOSONG. -->
@@ -296,71 +377,77 @@ $kategori = getKategori();
                 </nav>
             </div>
         </div>
-        
-        <div 
-            x-show="TambahMenu" 
-            x-cloak
-            @keydown.escape.window="TambahMenu = false"
-            class="fixed inset-0 z-[999] flex justify-center items-center w-full p-4 sm:p-6 overflow-y-auto">
-    
-        <div 
-            x-show="TambahMenu"
-            x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0"
-            x-transition:enter-end="opacity-100"
-            x-transition:leave="transition ease-in duration-200"
-            x-transition:leave-start="opacity-100"
-            x-transition:leave-end="opacity-0"
-            class="fixed inset-0 bg-slate-950/60 backdrop-blur-[2px]"
-            @click="TambahMenu = false">
-        </div>
+            
+        <div
+            id="global-modal"
+            class="hidden fixed inset-0 z-[9999] items-center justify-center w-full p-4 sm:p-6 overflow-y-auto bg-slate-950/60 backdrop-blur-[2px]"
+        >
+            <div class="relative w-full max-w-5xl my-auto">
+                <div class="relative bg-white border border-gray-200 rounded-l shadow-xl p-5 sm:p-8 max-h-[calc(100vh-2rem)] overflow-y-auto">
 
-        <div 
-            x-show="TambahMenu"
-            x-transition:enter="transition ease-out duration-300 transform"
-            x-transition:enter-start="opacity-0 scale-95 translate-y-4 sm:translate-y-2"
-            x-transition:enter-end="opacity-100 scale-100 translate-y-0"
-            x-transition:leave="transition ease-in duration-200 transform"
-            x-transition:leave-start="opacity-100 scale-100 translate-y-0"
-            x-transition:leave-end="opacity-0 scale-95 translate-y-4 sm:translate-y-2"
-            class="relative w-full max-w-5xl z-10 my-auto">
-    
-            <div class="relative bg-white border border-gray-200 rounded-l shadow-xl p-5 sm:p-8 max-h-[calc(100vh-2rem)] overflow-y-auto">>
+                <!-- HEADER -->
                 <div class="mb-6 sm:mb-8 flex justify-between items-start sm:items-center gap-4">
                     <div class="flex items-center gap-3 sm:gap-4 min-w-0">
-                        <div class="flex w-12 h-12 rounded-l bg-primary items-center justify-center shrink-0 shadow-sm">
-                            <i class="bx bx-bowl-hot text-2xl text-white"></i>
+                        <div
+                            id="globalModalIconContainer"
+                            class="flex w-12 h-12 rounded-l bg-primary items-center justify-center shrink-0 shadow-sm"
+                        >
+                            <i
+                                id="globalModalIcon"
+                                class="bx bx-bowl-hot text-2xl text-white"
+                            ></i>
                         </div>
-                        <div class="min-w-0">    
-                            <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
-                                <h1 class="text-slate-900 font-black text-xl sm:text-2xl leading-tight">
-                                    Tambah Menu
-                                </h1>
-                            </div>    
-                            <p class="text-xs sm:text-sm text-gray-500 font-medium mt-1">
+                        <div class="min-w-0">
+                            <h1
+                                id="globalModalTitle"
+                                class="text-slate-900 font-black text-xl sm:text-2xl leading-tight"
+                            >
+                                Tambah Menu
+                            </h1>
+                            <p
+                                id="globalModalSubtitle"
+                                class="text-xs sm:text-sm text-gray-500 font-medium mt-1"
+                            >
                                 Kelola daftar menu, harga, kategori, dan informasi menu cafe.
-                            </p>    
-                        </div>    
-                    </div>    
-                    <button type="button" @click="TambahMenu = false" title="Tutup"
-                        class="flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-100 text-slate-500 hover:text-white hover:bg-primary font-black cursor-pointer transition-colors shrink-0"                    >
+                            </p>
+                        </div>
+                    </div>
+
+                    <button
+                        type="button"
+                        onclick="closeGlobalModal()"
+                        title="Tutup"
+                        class="flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-100 text-slate-500 hover:text-white hover:bg-primary font-black cursor-pointer transition-colors shrink-0"
+                    >
                         <i class="bx bx-x text-2xl"></i>
                     </button>
                 </div>
-                <form action="" method="POST" enctype="multipart/form-data" class="w-full">
+
+                <!-- FORM -->
+                <form
+                    id="globalModalForm"
+                    action=""
+                    method="POST"
+                    enctype="multipart/form-data"
+                    class="w-full"
+                >
                     <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-5">
+
                         <div class="flex flex-col gap-1.5 w-full min-w-0">
-                            <label for="namaBarang" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 ml-1">
+                            <label
+                                for="globalModalInput"
+                                class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 ml-1"
+                            >
                                 Nama Menu <span class="text-red-500">*</span>
                             </label>
                             <div class="relative flex items-center w-full group">
                                 <div class="absolute left-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors duration-200">
                                     <i class="bx bx-price-tag-alt text-xl sm:text-lg"></i>
                                 </div>
-                                <input 
+                                <input
                                     type="text"
                                     name="namaBarang"
-                                    id="namaBarang"
+                                    id="globalModalInput"
                                     placeholder="Contoh: Nasi Goreng Special"
                                     autocomplete="off"
                                     class="w-full pl-10 sm:pl-11 pr-4 py-3 bg-white text-slate-900 text-sm font-medium rounded-lg sm:rounded-l border-2 border-gray-200/80 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all"
@@ -370,14 +457,17 @@ $kategori = getKategori();
                         </div>
 
                         <div class="flex flex-col gap-1.5 w-full min-w-0">
-                            <label for="hargaJual"class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 ml-1">
+                            <label
+                                for="hargaJual"
+                                class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 ml-1"
+                            >
                                 Harga Jual (Rp) <span class="text-red-500">*</span>
                             </label>
                             <div class="relative flex items-center w-full group">
                                 <div class="absolute left-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors duration-200">
                                     <i class="bx bx-coin text-xl sm:text-lg"></i>
                                 </div>
-                                <input 
+                                <input
                                     type="text"
                                     inputmode="numeric"
                                     name="hargaBarang"
@@ -392,21 +482,22 @@ $kategori = getKategori();
                         </div>
 
                         <div class="flex flex-col gap-1.5 w-full min-w-0">
-                            <label 
+                            <label
                                 for="kategoriTambah"
-                                class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 ml-1">
+                                class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 ml-1"
+                            >
                                 Kategori <span class="text-red-500">*</span>
                             </label>
                             <div class="relative flex items-center w-full group">
                                 <div class="absolute left-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors duration-200 z-10">
                                     <i class="bx bx-filter text-xl sm:text-lg"></i>
                                 </div>
-                                <select 
+                                <select
                                     name="kategoriBarang"
                                     id="kategoriTambah"
                                     required
-                                    class="w-full pl-10 sm:pl-11 pr-10 py-3 bg-white text-slate-900 text-sm font-medium rounded-lg sm:rounded-l border-2 border-gray-200/80 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary appearance-none cursor-pointer transition-all">
-
+                                    class="w-full pl-10 sm:pl-11 pr-10 py-3 bg-white text-slate-900 text-sm font-medium rounded-lg sm:rounded-l border-2 border-gray-200/80 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary appearance-none cursor-pointer transition-all"
+                                >
                                     <option value="" disabled selected>Pilih Kategori Menu</option>
                                     <option value="makanan">Makanan</option>
                                     <option value="minuman">Minuman</option>
@@ -416,16 +507,19 @@ $kategori = getKategori();
                                 </div>
                             </div>
                         </div>
-    
+
                         <div class="flex flex-col gap-1.5 w-full group col-span-1 lg:col-span-2 xl:col-span-3 min-w-0">
-                            <label for="deskripsi" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 ml-1">
+                            <label
+                                for="deskripsi"
+                                class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 ml-1"
+                            >
                                 Deskripsi & Catatan
                             </label>
                             <div class="relative flex w-full h-full">
                                 <div class="absolute left-3.5 top-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors duration-200">
                                     <i class="bx bx-info-octagon text-xl sm:text-lg"></i>
                                 </div>
-                                <textarea 
+                                <textarea
                                     name="deskripsiBarang"
                                     id="deskripsi"
                                     rows="3"
@@ -435,13 +529,22 @@ $kategori = getKategori();
                             </div>
                         </div>
 
-                        <div x-data="{ imageUrl: null }" class="flex flex-col gap-1.5 w-full col-span-1 lg:col-span-2 xl:col-span-3 min-w-0">
+                        <div
+                            x-data="{ imageUrl: null }"
+                            class="flex flex-col gap-1.5 w-full col-span-1 lg:col-span-2 xl:col-span-3 min-w-0"
+                        >
                             <label class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 ml-1">
                                 Foto Menu
                             </label>
-                            <label for="gambarBarang" class="relative border-2 border-dashed border-gray-200/90 hover:border-primary group transition-all duration-200 rounded-lg sm:rounded-l p-6 sm:p-8 flex flex-col items-center justify-center cursor-pointer text-center bg-slate-50/40 hover:bg-slate-50 overflow-hidden min-h-[160px]">
 
-                                <div x-show="!imageUrl" class="flex flex-col items-center justify-center gap-3">
+                            <label
+                                for="gambarBarang"
+                                class="relative border-2 border-dashed border-gray-200/90 hover:border-primary group transition-all duration-200 rounded-lg sm:rounded-l p-6 sm:p-8 flex flex-col items-center justify-center cursor-pointer text-center bg-slate-50/40 hover:bg-slate-50 overflow-hidden min-h-[160px]"
+                            >
+                                <div
+                                    x-show="!imageUrl"
+                                    class="flex flex-col items-center justify-center gap-3"
+                                >
                                     <div class="w-12 h-12 text-white bg-primary rounded-lg flex items-center justify-center shadow-sm">
                                         <i class="bx bx-images text-2xl"></i>
                                     </div>
@@ -454,21 +557,25 @@ $kategori = getKategori();
                                         </p>
                                     </div>
                                 </div>
-                        
+
                                 <template x-if="imageUrl">
                                     <div class="relative flex flex-col items-center justify-center w-full h-full">
-                                        <img :src="imageUrl" class="max-h-40 w-auto object-cover rounded-lg shadow-md border border-gray-100" />
-                                        <button 
-                                            type="button" 
+                                        <img
+                                            :src="imageUrl"
+                                            class="max-h-40 w-auto object-cover rounded-lg shadow-md border border-gray-100"
+                                        />
+                                        <button
+                                            type="button"
                                             @click.stop.prevent="imageUrl = null; $refs.fileInput.value = ''"
                                             class="mt-3 px-3 py-1 text-sm font-semibold bg-red-600 text-white hover:bg-red-700 rounded-lg transition-colors flex items-center gap-1"
                                         >
-                                            <i class="bx bx-trash"></i> Hapus Foto
+                                            <i class="bx bx-trash"></i>
+                                            Hapus Foto
                                         </button>
                                     </div>
                                 </template>
-                        
-                                <input 
+
+                                <input
                                     x-ref="fileInput"
                                     type="file"
                                     id="gambarBarang"
@@ -486,7 +593,7 @@ $kategori = getKategori();
                                 >
                             </label>
                         </div>
-    
+
                         <div class="flex flex-col gap-1.5 w-full col-span-1 lg:col-span-2 xl:col-span-2 min-w-0">
                             <div class="flex items-center justify-between p-4 sm:p-5 bg-gray-50 rounded-lg sm:rounded-l border border-gray-200/80">
                                 <div>
@@ -497,14 +604,19 @@ $kategori = getKategori();
                                         Aktifkan jika menu ini siap untuk dipesan oleh pelanggan.
                                     </p>
                                 </div>
-                                
                                 <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                                    <input type="checkbox" name="status_aktif" value="1" class="sr-only peer" checked>
+                                    <input
+                                        type="checkbox"
+                                        name="status_tersedia"
+                                        value="1"
+                                        class="sr-only peer"
+                                        checked
+                                    >
                                     <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
                                 </label>
                             </div>
                         </div>
-    
+
                         <div class="flex flex-col gap-1.5 w-full col-span-1 lg:col-span-2 xl:col-span-1 min-w-0">
                             <div class="flex items-center justify-between p-4 sm:p-5 bg-gray-50 rounded-lg sm:rounded-l border border-gray-200/80">
                                 <div>
@@ -512,28 +624,54 @@ $kategori = getKategori();
                                         Status Menu
                                     </label>
                                     <p class="text-xs text-gray-500 font-medium mt-0.5">
-                                        Aktifkan Jika Menu Tersedia.
+                                        Aktifkan jika menu tersedia.
                                     </p>
-                                </div>                                
+                                </div>
                                 <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                                    <input type="checkbox" name="status_aktif" value="1" class="sr-only peer" checked>
+                                    <input
+                                        type="checkbox"
+                                        name="status_aktif"
+                                        value="1"
+                                        class="sr-only peer"
+                                        checked
+                                    >
                                     <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
                                 </label>
                             </div>
                         </div>
+
                     </div>
-                    
+
+                    <!-- FOOTER -->
                     <div class="w-full flex flex-col-reverse sm:flex-row justify-end mt-6 sm:mt-8 pt-5 border-t border-gray-100 gap-3">
-                        <button type="button" @click="TambahMenu = false" class="w-full sm:w-auto flex items-center justify-center bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-6 py-3 gap-2 rounded-lg sm:rounded-l cursor-pointer transition-all active:scale-95">
+                        <button
+                            type="button"
+                            onclick="closeGlobalModal()"
+                            class="w-full sm:w-auto flex items-center justify-center bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-6 py-3 gap-2 rounded-lg sm:rounded-l cursor-pointer transition-all active:scale-95"
+                        >
                             <span>Batal</span>
                         </button>
-                        <button type="submit" class="w-full sm:w-auto flex items-center justify-center bg-primary hover:bg-primary/90 text-white font-black px-6 py-3 gap-2 rounded-lg sm:rounded-l cursor-pointer transition-all active:scale-95">
-                            <i class="bx bxs-save text-lg"></i>
-                            <span>Simpan Menu</span>
-                        </button>        
-                    </div>    
-                </form>    
-            </div>    
-        </div>    
+
+                        <button
+                            id="globalModalSubmit"
+                            type="submit"
+                            class="w-full sm:w-auto flex items-center justify-center bg-primary hover:bg-primary/90 text-white font-black px-6 py-3 gap-2 rounded-lg sm:rounded-l cursor-pointer transition-all active:scale-95"
+                        >
+                            <i
+                                id="globalModalSubmitIcon"
+                                class="bx bxs-save text-lg"
+                            ></i>
+                            <span id="globalModalSubmitText">
+                                Simpan Menu
+                            </span>
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
     </div>
+
+
 </section>
