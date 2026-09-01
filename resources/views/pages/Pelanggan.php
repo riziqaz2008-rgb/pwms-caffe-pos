@@ -27,24 +27,30 @@
         </div>
 
         <div class="mt-8">
-            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-5">
-                <div>
-                    <h2 class="text-lg font-black text-slate-900">
-                        Daftar Pelanggan
-                    </h2>
-                    <p class="text-xs text-slate-400 mt-1">
-                        Data pelanggan yang terdaftar di sistem
-                    </p>
-                </div>
-
-                <div class="relative w-full lg:w-96">
-                    <i class="bx bx-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl"></i>
-                    <input
-                        type="search"
-                        placeholder="Cari nama, ID, atau nomor HP..."
-                        class="w-full h-12 pl-11 pr-11 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-                    >
-                </div>
+            <form method="GET" autocomplete="off">
+                <input type="hidden" name="route" value="<?= htmlspecialchars($_GET['route'] ?? '')?>">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-5">
+                    <div>
+                        <h2 class="text-lg font-black text-slate-900">
+                            Daftar Pelanggan
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-1">
+                            Data pelanggan yang terdaftar di sistem
+                        </p>
+                    </div>
+    
+                    <div class="relative w-full lg:w-96">
+                        <i class="bx bx-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl"></i>
+                        <input
+                            type="search"
+                            placeholder="Cari nama, atau nomor Telepon..."
+                            class="w-full h-12 pl-11 pr-11 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                            name="cari"
+                            oninput="this.form.submit()"
+                            value="<?= htmlspecialchars($_GET['cari'] ?? '')?>"
+                        >
+                    </div>
+            </form>
             </div>
 
             <div class="overflow-hidden">
@@ -53,7 +59,7 @@
                         <tr class="bg-slate-50 dark:bg-slate-900 text-gray-400">
                             <th class="text-left font-bold px-5 py-4">#</th>
                             <th class="text-left font-bold px-5 py-4">Nama</th>
-                            <th class="text-left font-bold px-5 py-4">No HP</th>
+                            <th class="text-left font-bold px-5 py-4">No Telepon</th>
                             <th class="text-center font-bold px-5 py-4">Aksi</th>
                         </tr>
                     </thead>
