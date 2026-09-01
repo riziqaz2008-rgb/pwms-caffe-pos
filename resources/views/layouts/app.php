@@ -87,11 +87,7 @@
                         </main>
                     </div>
                 </div>
-                   <div> 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> afd1f2a (pengguna - Sltn)
+                   <div>
                     <!-- INI TOAST JIR -->
                      <div 
                         id="liveToast" 
@@ -352,7 +348,6 @@
             document.addEventListener('keydown',function(event){
                 if(event.key==='Escape')closeGlobalModal();
             });
-=======
             </section>
         </main>      
 
@@ -617,7 +612,6 @@
             }
           });
         });
->>>>>>> afd1f2a (pengguna - Sltn)
         </script>
     </body>
 </html>
