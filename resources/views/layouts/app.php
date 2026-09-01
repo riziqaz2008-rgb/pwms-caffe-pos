@@ -336,6 +336,7 @@
                 form.method=data.method??'POST';
 
                 submit.value=data.value??'';
+                submit.name=data.nameBtn??'';
                 submit.className=`w-full sm:w-auto flex items-center justify-center text-white font-black px-6 py-3 gap-2 rounded-lg text-sm transition-all ${data.buttonColor??'bg-primary hover:bg-blue-700'}`;
                 submitIcon.className=`bx ${data.buttonIcon??'bxs-save'} text-lg`;
                 
