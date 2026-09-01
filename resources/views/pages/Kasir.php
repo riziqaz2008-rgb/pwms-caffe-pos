@@ -187,23 +187,12 @@
                                             <div class="flex items-center justify-center gap-2">
                                                <button
                                                     type="button"
-                                                    onclick="showGlobalForm({
-                                                        title: 'Edit Nama Barang',
-                                                        message: 'Silakan ubah data barang berikut:',
-                                                        actionUrl: '/barang/update',
-                                                        method: 'POST',
-                                                        type: 'info',
-                                                        icon: 'pencil',
-                                                        inputs: [
-                                                            { 
-                                                                label: 'Nama Barang', 
-                                                                type: 'text', 
-                                                                name: 'NamaBarang', 
-                                                                value: 'Udin', 
-                                                                placeholder: 'Contoh: Nasi Goreng' 
-                                                            }
-                                                        ]
-                                                    })"
+                                                    onclick="showConfirm(
+                                                        'Edit Data?',
+                                                        'Yakin ingin menghapus data ini?',
+                                                        'Ya, Hapus',
+                                                        'info'
+                                                    )"
                                                     class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all cursor-pointer"
                                                     title="Edit menu"
                                                 >
@@ -212,7 +201,12 @@
 
                                                 <button
                                                     type="button"
-                                                    onclick="hapusMenu(1)"                                                   
+                                                    onclick="showConfirm(
+                                                        'Hapus Data?',
+                                                        'Yakin ingin menghapus data ini?',
+                                                        'Ya, Hapus',
+                                                        'danger'
+                                                    )"                                                  
                                                     class="w-10 h-10 rounded-lg bg-red-500 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all"
                                                     title="Hapus menu"
                                                 >
@@ -285,6 +279,12 @@
 
                                             <button
                                                 type="button"
+                                                onclick="showConfirm(
+                                                    'Hapus Data?',
+                                                    'Yakin ingin menghapus data ini?',
+                                                    'Ya, Hapus',
+                                                    'danger'
+                                                )"
                                                 class="w-10 h-10 rounded-xl bg-red-600 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all shrink-0"
                                                 title="Hapus menu"
                                             >
@@ -389,14 +389,12 @@
 
                             <button 
                             type="button"
-                            onclick="showGlobalForm({
-                                title: 'Hapus Barang',
-                                message: 'Silakan hapus barang berikut',
-                                actionUrl: '/barang/update',
-                                method: 'POST',
-                                type: 'danger',
-                                icon: 'trash',
-                            })"
+                            onclick="showConfirm(
+                                'Hapus Data?',
+                                'Yakin ingin menghapus data ini?',
+                                'Ya, Hapus',
+                                'danger'
+                            )"
                             class="w-10 h-10 rounded-lg bg-rose-600 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all cursor-pointer"
                             title="Edit menu"
                                                 >
@@ -671,7 +669,7 @@
 
                             <button
                                 type="button"
-                                onclick="showToast({ type: 'success', message: 'Pesanan Berhasil Disimpan!' })"
+                                onclick="showToast('Data berhasil disimpan!', 'success')"     
                                 class="w-full flex items-center justify-center bg-primary text-white font-black px-8 py-3.5 gap-2 rounded-lg cursor-pointer transition-all shadow-md mt-4"
                             >
                                 <i class="bx bxs-basket text-xl"></i>

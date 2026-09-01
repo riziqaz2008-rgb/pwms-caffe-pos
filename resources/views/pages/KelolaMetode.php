@@ -29,7 +29,19 @@
                             <i class="bx bxs-filter text-md"></i>
                         <span>Filter</span>
                     </button>
-                    <button type="button" @click="TambahMetode = true"
+                    <button type="button" 
+                    onclick='showGlobalModal(<?= json_encode([
+                        "title" => "Tambah Metode Pembayaran",
+                        "subtitle" => "Tambahkan metode pembayaran baru untuk pembayaran cafe.",
+                        "icon" => "bxs-credit-card",
+                        "iconBg" => "bg-primary",
+                        "action" => "/metode-pembayaran/store",
+                        "method" => "POST",
+                        "buttonText" => "Simpan Metode",
+                        "buttonIcon" => "bxs-save",
+                        "buttonColor" => "bg-primary hover:bg-blue-700",
+                        "value" => ""
+                    ]) ?>)'
                         class="w-full sm:w-auto flex items-center justify-center gap-2 bg-primary text-white font-bold px-6 py-3 rounded-lg hover:bg-blue-700 active:scale-95 transition-all duration-200">
                             <i class="bx bxs-plus text-xl"></i>
                         <span>Tambah Metode</span>
@@ -142,10 +154,30 @@
                             </td>
                             <td class="px-5 py-4 w-36 whitespace-nowrap">
                                 <div class="flex items-center justify-center gap-2">
-                                    <button type="button" onclick="editMenu(1)" class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Edit menu">
+                                    <button type="button" 
+                                    onclick='showGlobalModal(<?= json_encode([
+                                        "title" => "Edit Metode Pembayaran",
+                                        "subtitle" => "Perbarui informasi metode pembayaran cafe.",
+                                        "icon" => "bxs-edit",
+                                        "iconBg" => "bg-amber-500",
+                                        "action" => "/metode-pembayaran/update/1",
+                                        "method" => "POST",
+                                        "buttonText" => "Simpan Perubahan",
+                                        "buttonIcon" => "bxs-save",
+                                        "buttonColor" => "bg-amber-500 hover:bg-amber-600",
+                                        "value" => "Cash / Tunai"
+                                    ]) ?>)'
+                                    class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Edit menu">
                                         <i class="bx bxs-pencil"></i>
                                     </button>
-                                    <button type="button" onclick="hapusMenu(1)" class="w-10 h-10 rounded-lg bg-red-500 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Hapus menu">
+                                    <button type="button" 
+                                    onclick="showConfirm(
+                                        'Hapus Data?',
+                                        'Yakin ingin menghapus data ini?',
+                                        'Ya, Hapus',
+                                        'danger'
+                                    )"    
+                                    class="w-10 h-10 rounded-lg bg-red-500 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Hapus menu">
                                         <i class="bx bxs-trash"></i>
                                     </button>
                                 </div>
@@ -209,159 +241,184 @@
             </div>
         </div>
 
-        <div x-init="$watch('TambahMetode', value => document.body.classList.toggle('overflow-hidden', value))">
+        <div
+            id="global-modal"
+            class="hidden fixed inset-0 z-[9999] items-center justify-center w-full p-4 sm:p-6 overflow-y-auto bg-slate-950/60 backdrop-blur-[2px]"
+        >
+            <div class="relative w-full max-w-xl z-10 my-auto">
+                <div class="relative bg-white border border-gray-200 rounded-lg shadow-xl p-5 sm:p-8 max-h-[calc(100vh-2rem)] overflow-y-auto">
 
-            <div
-                x-show="TambahMetode"
-                x-cloak
-                @keydown.escape.window="TambahMetode = false"
-                class="fixed inset-0 z-[999] flex justify-center items-center w-full p-4 sm:p-6 overflow-y-auto">
-
-            <div
-                x-show="TambahMetode"
-                x-transition:enter="transition ease-out duration-300"
-                x-transition:enter-start="opacity-0"
-                x-transition:enter-end="opacity-100"
-                x-transition:leave="transition ease-in duration-200"
-                x-transition:leave-start="opacity-100"
-                x-transition:leave-end="opacity-0"
-                class="fixed inset-0 bg-slate-950/60 backdrop-blur-[2px]"
-                @click="TambahMetode = false">
-            </div>
-
-            <div
-                x-show="TambahMetode"
-                x-transition:enter="transition ease-out duration-300 transform"
-                x-transition:enter-start="opacity-0 scale-95 translate-y-4 sm:translate-y-2"
-                x-transition:enter-end="opacity-100 scale-100 translate-y-0"
-                x-transition:leave="transition ease-in duration-200 transform"
-                x-transition:leave-start="opacity-100 scale-100 translate-y-0"
-                x-transition:leave-end="opacity-0 scale-95 translate-y-4 sm:translate-y-2"
-                class="relative w-full max-w-xl z-10 my-auto">
-
-                    <div class="relative bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-lg p-5 sm:p-8 shadow-xl max-h-[calc(100vh-2rem)] overflow-y-auto">
-                        <div class="mb-6 sm:mb-8 flex justify-between items-start sm:items-center gap-4">
-                            <div class="flex items-center gap-3 sm:gap-4">
-                                <div class="flex w-12 h-12 rounded-lg bg-primary items-center justify-center shrink-0">
-                                    <i class="bx bxs-credit-card text-2xl text-white"></i>
-                                </div>
-                                <div>
-                                    <h1 class="text-slate-900 dark:text-white font-black text-xl sm:text-2xl leading-tight">
-                                        Tambah Metode Pembayaran
-                                    </h1>
-                                    <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 font-medium mt-1">
-                                        Tambahkan metode pembayaran baru untuk pembayaran cafe.
-                                    </p>
-                                </div>
-                            </div>
-                            <button 
-                                type="button"
-                                @click="TambahMetode = false"
-                                class="flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-white dark:hover:text-white hover:bg-primary dark:hover:bg-primary font-black cursor-pointer transition-colors shrink-0"
-                                title="Tutup"
-                            >
-                                <i class="bx bxs-x text-2xl"></i>
-                            </button>
+                <div class="mb-6 sm:mb-8 flex justify-between items-start sm:items-center gap-4">
+                    <div class="flex items-center gap-3 sm:gap-4 min-w-0">
+                        <div
+                            id="globalModalIconContainer"
+                            class="flex w-12 h-12 rounded-lg bg-primary items-center justify-center shrink-0"
+                        >
+                            <i
+                                id="globalModalIcon"
+                                class="bx bxs-credit-card text-2xl text-white"
+                            ></i>
                         </div>
 
-                        <form action="" method="POST" class="w-full">
-                            <div class="grid grid-cols-1 gap-5">
+                        <div class="min-w-0">
+                            <h1
+                                id="globalModalTitle"
+                                class="text-slate-900 font-black text-xl sm:text-2xl leading-tight"
+                            >
+                                Tambah Metode Pembayaran
+                            </h1>
 
-                                <div class="flex flex-col gap-1.5 w-full">
-                                    <label for="namaMetode" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
-                                        Nama Metode <span class="text-red-500">*</span>
-                                    </label>
-                                    <div class="relative flex items-center w-full group">
-                                        <div class="absolute left-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors duration-200">
-                                            <i class="bx bxs-wallet-alt text-xl sm:text-lg"></i>
-                                        </div>
-                                        <input
-                                            type="text"
-                                            name="namaMetode"
-                                            id="namaMetode"
-                                            placeholder="Contoh: Bank Mandiri"
-                                            autocomplete="off"
-                                            class="w-full pl-10 sm:pl-11 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg sm:rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring focus:ring-primary focus:border-primary transition-all"
-                                            required
-                                        >
-                                    </div>
-                                </div>
-
-                                <div class="flex flex-col gap-1.5 w-full">
-                                    <label for="namaMetode" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
-                                        Tipe Pembayaran <span class="text-red-500">*</span>
-                                    </label>
-                                    <div class="relative flex items-center w-full group">
-                                        <div class="absolute left-3.5 top-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors duration-200">
-                                            <i class="bx bxs-credit-card text-xl sm:text-lg"></i>
-                                        </div>
-                                    <div class="relative w-full">
-                                        <div class="relative w-full">
-                                            <select
-                                                name="namaMetode"
-                                                id="namaMetode"
-                                                class="w-full pl-10 sm:pl-11 pr-10 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg sm:rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring focus:ring-primary focus:border-primary transition-all appearance-none cursor-pointer"
-                                                required
-                                            >
-                                                <option value="" disabled selected hidden>Pilih Metode Pembayaran</option>
-                                                <option value="Cash">Cash / Tunai</option>
-                                                <option value="QRIS">QRIS</option>
-                                                <option value="Transfer Bank">Transfer Bank</option>
-                                                <option value="Debit Card">Kartu Debit</option>
-                                                <option value="Credit Card">Kartu Kredit</option>
-                                            </select>                                
-                                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
-                                                <i class="bx bxs-credit-card text-xl"></i>
-                                            </div>
-
-                                            <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-gray-400">
-                                                <i class="bx bx-chevron-down text-xl"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="flex flex-col gap-1.5 w-full mt-4">
-                                    <label for="deskripsiMetode" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
-                                        Deskripsi <span class="text-red-500">*</span>
-                                    </label>
-                                    <div class="relative flex w-full group">
-                                        <div class="absolute left-3.5 top-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors duration-200">
-                                            <i class="bx bxs-info-octagon text-xl sm:text-lg"></i>
-                                        </div>
-                                        <textarea
-                                            name="deskripsiMetode"
-                                            id="deskripsiMetode"
-                                            rows="3"
-                                            placeholder="Jelaskan penggunaan metode pembayaran ini..."
-                                            class="w-full pl-10 sm:pl-11 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg sm:rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring focus:ring-primary focus:border-primary resize-y transition-all"
-                                        >
-                                        </textarea>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="w-full flex flex-col-reverse sm:flex-row justify-end mt-6 sm:mt-8 pt-5 border-t border-gray-100 dark:border-slate-800 gap-3 sm:gap-3">
-                                <button
-                                    type="button"
-                                    @click="TambahMetode = false"
-                                    class="w-full sm:w-auto flex items-center justify-center bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold px-6 py-3 gap-2 rounded-lg sm:rounded-lg cursor-pointer transition-all active:scale-95"
-                                >
-                                    <span>Batal</span>
-                                </button>
-                                <button
-                                    type="submit"
-                                    class="w-full sm:w-auto flex items-center justify-center bg-primary hover:bg-primary/90 text-white font-black px-6 py-3 gap-2 rounded-lg sm:rounded-lg cursor-pointer transition-all active:scale-95"
-                                >
-                                    <i class="bx bxs-save text-lg"></i>
-                                    <span>Simpan Metode</span>
-                                </button>
-                            </div>
-                        </form>
+                            <p
+                                id="globalModalSubtitle"
+                                class="text-xs sm:text-sm text-gray-500 font-medium mt-1"
+                            >
+                                Tambahkan metode pembayaran baru untuk pembayaran cafe.
+                            </p>
+                        </div>
                     </div>
+
+                    <button
+                        type="button"
+                        onclick="closeGlobalModal()"
+                        title="Tutup"
+                        class="flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-100 text-slate-500 hover:text-white hover:bg-primary font-black cursor-pointer transition-colors shrink-0"
+                    >
+                        <i class="bx bx-x text-2xl"></i>
+                    </button>
                 </div>
+
+                <form
+                    id="globalModalForm"
+                    action=""
+                    method="POST"
+                    class="w-full"
+                >
+
+                    <div class="grid grid-cols-1 gap-5">
+
+
+                        <div class="flex flex-col gap-1.5 w-full">
+                            <label
+                                for="globalModalInput"
+                                class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 ml-1"
+                            >
+                                Nama Metode <span class="text-red-500">*</span>
+                            </label>
+
+                            <div class="relative flex items-center w-full group">
+                                <div class="absolute left-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors duration-200">
+                                    <i class="bx bxs-wallet-alt text-xl sm:text-lg"></i>
+                                </div>
+
+                                <input
+                                    type="text"
+                                    name="namaMetode"
+                                    id="globalModalInput"
+                                    placeholder="Contoh: Bank Mandiri"
+                                    autocomplete="off"
+                                    class="w-full pl-10 sm:pl-11 pr-4 py-3 bg-white text-slate-900 text-sm font-medium rounded-lg border-2 border-gray-200/80 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <!-- TIPE PEMBAYARAN -->
+                        <div class="flex flex-col gap-1.5 w-full">
+                            <label
+                                for="tipePembayaran"
+                                class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 ml-1"
+                            >
+                                Tipe Pembayaran <span class="text-red-500">*</span>
+                            </label>
+
+                            <div class="relative flex items-center w-full group">
+                                <div class="absolute left-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors duration-200 z-10">
+                                    <i class="bx bxs-credit-card text-xl sm:text-lg"></i>
+                                </div>
+
+                                <select
+                                    name="tipePembayaran"
+                                    id="tipePembayaran"
+                                    class="w-full pl-10 sm:pl-11 pr-10 py-3 bg-white text-slate-900 text-sm font-medium rounded-lg border-2 border-gray-200/80 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all appearance-none cursor-pointer"
+                                    required
+                                >
+                                    <option value="" disabled selected hidden>
+                                        Pilih Tipe Pembayaran
+                                    </option>
+                                    <option value="Cash">Cash / Tunai</option>
+                                    <option value="QRIS">QRIS</option>
+                                    <option value="Transfer Bank">Transfer Bank</option>
+                                    <option value="Debit Card">Kartu Debit</option>
+                                    <option value="Credit Card">Kartu Kredit</option>
+                                </select>
+
+                                <div class="absolute right-3.5 flex items-center pointer-events-none text-gray-400">
+                                    <i class="bx bx-chevron-down text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- DESKRIPSI -->
+                        <div class="flex flex-col gap-1.5 w-full mt-2">
+                            <label
+                                for="deskripsiMetode"
+                                class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 ml-1"
+                            >
+                                Deskripsi
+                            </label>
+
+                            <div class="relative flex w-full group">
+                                <div class="absolute left-3.5 top-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors duration-200">
+                                    <i class="bx bxs-info-octagon text-xl sm:text-lg"></i>
+                                </div>
+
+                                <textarea
+                                    name="deskripsiMetode"
+                                    id="deskripsiMetode"
+                                    rows="3"
+                                    placeholder="Jelaskan penggunaan metode pembayaran ini..."
+                                    class="w-full pl-10 sm:pl-11 pr-4 py-3 bg-white text-slate-900 text-sm font-medium rounded-lg border-2 border-gray-200/80 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary resize-y transition-all"
+                                ></textarea>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- FOOTER -->
+                    <div class="w-full flex flex-col-reverse sm:flex-row justify-end mt-6 sm:mt-8 pt-5 border-t border-gray-100 gap-3">
+
+                        <button
+                            type="button"
+                            onclick="closeGlobalModal()"
+                            class="w-full sm:w-auto flex items-center justify-center bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-6 py-3 gap-2 rounded-lg cursor-pointer transition-all active:scale-95"
+                        >
+                            <span>Batal</span>
+                        </button>
+
+                        <button
+                            id="globalModalSubmit"
+                            type="submit"
+                            class="w-full sm:w-auto flex items-center justify-center bg-primary hover:bg-primary/90 text-white font-black px-6 py-3 gap-2 rounded-lg cursor-pointer transition-all active:scale-95"
+                        >
+                            <i
+                                id="globalModalSubmitIcon"
+                                class="bx bxs-save text-lg"
+                            ></i>
+
+                            <span id="globalModalSubmitText">
+                                Simpan Metode
+                            </span>
+                        </button>
+
+                    </div>
+
+                </form>
             </div>
         </div>
+
+    </div>
+
+
 
         <div x-init="$watch('FilterMetode', value => document.body.classList.toggle('overflow-hidden', value))">
             <div

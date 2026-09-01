@@ -18,7 +18,9 @@
         <link href="https://cdn.boxicons.com/3.0.7/fonts/basic/boxicons.min.css"rel="stylesheet"/>
         
         <!-- STYLE -->
+        <acriptk src="http://localhost:5174/resources/css/app.js">
         <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"></script>
         
         <!-- JQUERY -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -86,112 +88,268 @@
                     </div>
                 </div>
                    <div> 
+
                     <!-- INI TOAST JIR -->
-                     <div 
-                        id="liveToast" 
-                        class="fixed top-28 right-5 z-50 flex items-center w-full max-w-xs p-4 rounded-lg shadow-lg text-white hidden opacity-0 transition-all duration-300 transform translate-y-2 bg-emerald-600"
-                        role="alert"
-                        >
-                            <i id="toastIcon" class="bx bxs-check-circle text-xl text-white"></i>
 
-                            <div id="pesanToast" class="ms-2.5 text-white text-sm font-bold border-s border-white/30 ps-3.5"></div>
+                <div
+                    id="liveToast"
+                    class="hidden fixed top-28 right-5 z-50 flex items-center w-full max-w-xs p-4 text-white rounded-lg shadow-lg"
+                    role="alert"
+                >
+                    <i id="toastIcon" class="bx text-xl text-white"></i>
 
-                            <button 
-                                type="button"
-                                id="toastCloseBtn"
-                                class="ms-auto flex items-center justify-center text-white hover:bg-white/20 font-medium rounded text-sm h-8 w-8 focus:outline-none transition"
-                                aria-label="Close"
-                            >
-                                <span class="sr-only">Close</span>
-                                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
-                                </svg>
-                            </button>
-                        </div>
+                    <div
+                        id="pesanToast"
+                        class="ms-2.5 text-sm font-bold border-s border-white/30 ps-3.5"
+                    ></div>
 
-                    <div>
-
-                    <!-- INI MODAL TANPA FORM -->
-
-                    <div 
-                        id="confirmModal" 
-                        class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm opacity-0 transition-opacity duration-200"
+                    <button
+                        type="button"
+                        onclick="document.getElementById('liveToast').classList.add('hidden')"
+                        class="ms-auto flex items-center justify-center text-white hover:bg-white/20 rounded-lg h-8 w-8 transition"
+                        aria-label="Close"
                     >
-                        <div id="confirmOverlay" class="fixed inset-0"></div>
+                        <span class="sr-only">Close</span>
 
-                        <div 
-                            id="confirmBox"
-                            class="relative w-full max-w-md p-6 sm:p-8 bg-white dark:bg-slate-900 rounded-3xl shadow-2xl text-center border border-slate-100 dark:border-slate-800 z-10 scale-95 translate-y-2 transition-all duration-200"
+                        <svg
+                            class="w-5 h-5"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
                         >
-                            <div 
+                            <path
+                                stroke="currentColor"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M6 18 17.94 6M18 18 6.06 6"
+                            />
+                        </svg>
+                    </button>
+                </div>
+
+                <div>
+
+                    <div
+                        id="confirmModal"
+                        tabindex="-1"
+                        aria-hidden="true"
+                        class="hidden fixed inset-0 z-[9999] items-center justify-center p-4 overflow-y-auto"
+                    >
+                        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
+
+                        <div
+                            id="confirmBox"
+                            class="relative w-full max-w-md p-6 sm:p-8 bg-white dark:bg-slate-900 rounded-3xl shadow-2xl text-center z-10"
+                        >
+                            <div
                                 id="confirmIconContainer"
-                                class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-inner"
+                                class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5"
                             >
                                 <i id="confirmIcon" class="bx text-4xl"></i>
                             </div>
 
-                            <h3 id="confirmTitle" class="text-xl font-bold text-slate-900 dark:text-white tracking-tight"></h3>
-                            <p id="confirmMessage" class="text-sm text-slate-500 dark:text-slate-400 mt-2 mb-8 leading-relaxed"></p>
+                            <h3
+                                id="confirmTitle"
+                                class="text-xl font-bold text-slate-900 dark:text-white tracking-tight"
+                            ></h3>
+
+                            <p
+                                id="confirmMessage"
+                                class="text-sm text-slate-500 dark:text-slate-400 mt-2 mb-8 leading-relaxed"
+                            ></p>
 
                             <div class="flex items-center gap-3">
-                                <button 
-                                    type="button" 
+                                <button
+                                    type="button"
                                     id="confirmCancelBtn"
-                                    class="flex-1 py-3 px-4 rounded-lg bg-gray-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer"
-                                ></button>
+                                    data-modal-hide="confirmModal"
+                                    class="flex-1 py-3 px-4 rounded-lg bg-gray-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                                >
+                                    Batal
+                                </button>
 
-                                <button 
-                                    type="button" 
+                                <button
+                                    type="button"
                                     id="confirmActionBtn"
-                                    class="flex-1 py-3 px-4 rounded-lg text-white text-sm font-semibold shadow-md transition-colors cursor-pointer"
-                                ></button>
+                                    class="flex-1 py-3 px-4 rounded-lg text-white text-sm font-semibold shadow-md transition-colors"
+                                >
+                                    Hapus
+                                </button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- INI MODAL DENGAN FORM -->
 
-                    <div 
-                        id="globalFormModal" 
-                        class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm opacity-0 transition-opacity duration-200"
-                    >
-                        <div id="globalFormOverlay" class="fixed inset-0"></div>
-
-                        <div 
-                            id="globalFormBox"
-                            class="relative w-full max-w-md p-6 sm:p-8 bg-white dark:bg-slate-900 rounded-3xl shadow-2xl text-center border border-slate-100 dark:border-slate-800 z-10 scale-95 translate-y-2 transition-all duration-200"
-                        >
-                            <div 
-                                id="globalFormIconContainer"
-                                class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-inner"
-                            >
-                                <i id="globalFormIcon" class="bx text-4xl"></i>
-                            </div>
-
-                            <h3 id="globalFormTitle" class="text-xl font-bold text-slate-900 dark:text-white tracking-tight"></h3>
-                            <p id="globalFormMessage" class="text-sm text-slate-500 dark:text-slate-400 mt-2 mb-6 leading-relaxed"></p>
-
-                            <form id="globalFormElement" action="#" method="POST" class="text-left space-y-4">
-                                <div id="globalFormInputsContainer" class="space-y-4"></div>
-
-                                <div class="flex items-center gap-3 pt-4 w-full">
-                                    <button 
-                                        type="button" 
-                                        id="globalFormCancelBtn"
-                                        class="flex-1 py-3 px-4 rounded-lg bg-gray-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer text-center"
-                                    ></button>
-
-                                    <button 
-                                        type="submit" 
-                                        id="globalFormSubmitBtn"
-                                        class="flex-1 py-3 px-4 rounded-lg text-white text-sm font-semibold shadow-md transition-colors cursor-pointer text-center"
-                                    ></button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                  
+                    
+                </div>
             </section>
-        </main>      
+        </main> 
+    
+        <script>
+
+            // INI GLOBAL TOAST JS YE..
+
+            function showToast(message, type = 'success') {
+            const toast = document.getElementById('liveToast');
+            const pesan = document.getElementById('pesanToast');
+            const icon = document.getElementById('toastIcon');
+
+            pesan.textContent = message;
+
+            toast.classList.remove(
+                'bg-emerald-600',
+                'bg-red-600',
+                'bg-amber-500',
+                'bg-blue-600'
+            );
+
+            if (type === 'success') {
+                toast.classList.add('bg-emerald-600');
+                icon.className = 'bx bxs-check-circle text-xl text-white';
+            } else if (type === 'error') {
+                toast.classList.add('bg-red-600');
+                icon.className = 'bx bxs-x-circle text-xl text-white';
+            } else if (type === 'warning') {
+                toast.classList.add('bg-amber-500');
+                icon.className = 'bx bxs-error text-xl text-white';
+            } else if (type === 'info') {
+                toast.classList.add('bg-blue-600');
+                icon.className = 'bx bxs-info-circle text-xl text-white';
+            }
+
+            toast.classList.remove('hidden');
+
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        // INI ANU ADALAH POKOKNYA INI MODAL GLOBAL
+
+            const confirmModal = document.getElementById('confirmModal');
+
+            function showConfirm(
+                title = 'Hapus Data?',
+                message = 'Data yang dihapus tidak dapat dikembalikan.',
+                actionText = 'Hapus',
+                type = 'danger'
+            ) {
+                const titleElement = document.getElementById('confirmTitle');
+                const messageElement = document.getElementById('confirmMessage');
+                const actionButton = document.getElementById('confirmActionBtn');
+                const iconContainer = document.getElementById('confirmIconContainer');
+                const icon = document.getElementById('confirmIcon');
+
+                titleElement.textContent = title;
+                messageElement.textContent = message;
+                actionButton.textContent = actionText;
+
+                actionButton.classList.remove(
+                    'bg-red-600',
+                    'hover:bg-red-700',
+                    'bg-emerald-600',
+                    'hover:bg-emerald-700',
+                    'bg-amber-500',
+                    'hover:bg-amber-600',
+                    'bg-blue-600',
+                    'hover:bg-blue-700'
+                );
+
+                iconContainer.classList.remove(
+                    'bg-red-100',
+                    'text-red-600',
+                    'bg-emerald-100',
+                    'text-emerald-600',
+                    'bg-amber-100',
+                    'text-amber-600',
+                    'bg-blue-100',
+                    'text-blue-600'
+                );
+
+                if (type === 'danger') {
+                    actionButton.classList.add('bg-red-600', 'hover:bg-red-700');
+                    iconContainer.classList.add('bg-red-100', 'text-red-600');
+                    icon.className = 'bx bx-trash text-4xl';
+                }
+
+                if (type === 'success') {
+                    actionButton.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
+                    iconContainer.classList.add('bg-emerald-100', 'text-emerald-600');
+                    icon.className = 'bx bx-check-circle text-4xl';
+                }
+
+                if (type === 'warning') {
+                    actionButton.classList.add('bg-amber-500', 'hover:bg-amber-600');
+                    iconContainer.classList.add('bg-amber-100', 'text-amber-600');
+                    icon.className = 'bx bx-error text-4xl';
+                }
+
+                if (type === 'info') {
+                    actionButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                    iconContainer.classList.add('bg-blue-100', 'text-blue-600');
+                    icon.className = 'bx bx-info-circle text-4xl';
+                }
+
+                confirmModal.classList.remove('hidden');
+                confirmModal.classList.add('flex');
+            }
+
+            document.getElementById('confirmCancelBtn').addEventListener('click', function () {
+                confirmModal.classList.add('hidden');
+                confirmModal.classList.remove('flex');
+            });
+
+            confirmModal.querySelector('.fixed.inset-0').addEventListener('click', function () {
+                confirmModal.classList.add('hidden');
+                confirmModal.classList.remove('flex');
+            });
+
+
+
+            function showGlobalModal(data){
+                const modal=document.getElementById('global-modal');
+                const title=document.getElementById('globalModalTitle');
+                const subtitle=document.getElementById('globalModalSubtitle');
+                const iconContainer=document.getElementById('globalModalIconContainer');
+                const icon=document.getElementById('globalModalIcon');
+                const form=document.getElementById('globalModalForm');
+                const input=document.getElementById('globalModalInput');
+                const submit=document.getElementById('globalModalSubmit');
+                const submitIcon=document.getElementById('globalModalSubmitIcon');
+                const submitText=document.getElementById('globalModalSubmitText');
+
+                title.textContent=data.title??'';
+                subtitle.textContent=data.subtitle??'';
+                
+                iconContainer.className=`flex w-12 h-12 rounded-lg items-center justify-center shrink-0 ${data.iconBg??'bg-primary'}`;
+                icon.className=`bx ${data.icon??'bx-plus'} text-2xl text-white`;
+
+                form.action=data.action??'#';
+                form.method=data.method??'POST';
+
+                input.value=data.value??'';
+                submit.className=`w-full sm:w-auto flex items-center justify-center text-white font-black px-6 py-3 gap-2 rounded-lg text-sm transition-all ${data.buttonColor??'bg-primary hover:bg-blue-700'}`;
+                submitIcon.className=`bx ${data.buttonIcon??'bxs-save'} text-lg`;
+                
+                submitText.textContent=data.buttonText??'Simpan';
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                input.focus();
+            }
+
+            function closeGlobalModal(){
+                const modal=document.getElementById('global-modal');
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+            document.getElementById('global-modal').addEventListener('click',function(event){
+                if(event.target===this)closeGlobalModal();
+            });
+            document.addEventListener('keydown',function(event){
+                if(event.key==='Escape')closeGlobalModal();
+            });
+        </script>
     </body>
 </html>

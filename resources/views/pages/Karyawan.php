@@ -1,9 +1,12 @@
-
+<?php
+$isEdit = isset($_GET['edit']) && !empty($_GET['edit']);
+?>
 <section id="Karyawan">
 
     <div
         x-data="{
             TambahKaryawan: false,
+            isEdit: <?= $isEdit ? 'true' : 'false' ?>,
             DetailKaryawan: false,
             karyawanDetail: null,
             search: '',
@@ -47,17 +50,23 @@
                 </div>
 
 
-                <button
-                    type="button"
-                    @click="TambahKaryawan = true"
-                    class="w-full lg:w-auto flex items-center justify-center bg-primary text-white font-bold px-5 py-3 gap-2 rounded-lg cursor-pointer hover:bg-blue-700 active:scale-95 transition-all duration-200"
-                >
-
-                    <i class="bx bx-plus text-lg"></i>
-
-                    <span>Tambah Karyawan</span>
-
-                </button>
+                <button type="button" 
+                    onclick='showGlobalModal(<?= json_encode([
+                        "title" => "Tambah Karyawan",
+                        "subtitle" => "Tambahkan data karyawan baru ke dalam sistem.",
+                        "icon" => "bxs-user-plus",
+                        "iconBg" => "bg-primary",
+                        "action" => "/karyawan/store",
+                        "method" => "POST",
+                        "buttonText" => "Simpan Karyawan",
+                        "buttonIcon" => "bxs-save",
+                        "buttonColor" => "bg-primary hover:bg-blue-700",
+                        "value" => ""
+                    ]) ?>)'
+                    class="w-full sm:w-auto flex items-center justify-center gap-2 bg-primary text-white font-bold px-6 py-3 rounded-lg hover:bg-blue-700 active:scale-95 transition-all duration-200">
+                <i class="bx bxs-user-plus text-xl"></i>
+                <span>Tambah Karyawan</span>
+            </button>
 
             </div>
 
@@ -160,10 +169,23 @@
                                     <p class="text-xs text-gray-400 max-w-sm mb-5">
                                         Belum ada karyawan pembayaran yang ditambahkan atau hasil pencarian tidak cocok.
                                     </p>
-                                    <button type="button"  @click="TambahKaryawan = true" class="px-4 py-3 bg-primary text-white text-sm font-bold rounded-lg hover:opacity-90 transition-all flex items-center gap-2">
-                                        <i class="bx bxs-plus text-base"></i>
-                                        <span>Tambah Karyawan</span>
-                                    </button>
+                                    <button type="button" 
+                                        onclick='showGlobalModal(<?= json_encode([
+                                            "title" => "Tambah Karyawan",
+                                            "subtitle" => "Tambahkan data karyawan baru ke dalam sistem.",
+                                            "icon" => "bxs-user-plus",
+                                            "iconBg" => "bg-primary",
+                                            "action" => "/karyawan/store",
+                                            "method" => "POST",
+                                            "buttonText" => "Simpan Karyawan",
+                                            "buttonIcon" => "bxs-save",
+                                            "buttonColor" => "bg-primary hover:bg-blue-700",
+                                            "value" => ""
+                                        ]) ?>)'
+                                        class="w-full sm:w-auto flex items-center justify-center gap-2 bg-primary text-white font-bold px-6 py-3 rounded-lg hover:bg-blue-700 active:scale-95 transition-all duration-200">
+                                    <i class="bx bxs-user-plus text-xl"></i>
+                                    <span>Tambah Karyawan</span>
+                                </button>
                                 </div>
                             </td>
                         </tr>
@@ -173,193 +195,152 @@
 
 
 
- <div
-    x-show="TambahKaryawan"
-    x-cloak
-    @keydown.escape.window="TambahKaryawan = false"
-    class="fixed inset-0 z-[999] flex justify-center items-start sm:items-center w-full p-3 sm:p-4 overflow-y-auto"
->
-
-    <!-- Backdrop dengan Transisi Halus -->
-    <div
-        x-show="TambahKaryawan"
-        x-transition:enter="transition ease-out duration-300"
-        x-transition:enter-start="opacity-0"
-        x-transition:enter-end="opacity-100"
-        x-transition:leave="transition ease-in duration-200"
-        x-transition:leave-start="opacity-100"
-        x-transition:leave-end="opacity-0"
-        class="fixed inset-0 bg-slate-950/60 backdrop-blur-[2px]"
-        @click="TambahKaryawan = false"
-    ></div>
-
-    <!-- Modal Panel dengan Animasi Masuk/Keluar (Scale & Translate) -->
-    <div
-        x-show="TambahKaryawan"
-        x-transition:enter="transition ease-out duration-300 transform"
-        x-transition:enter-start="opacity-0 scale-95 translate-y-4 sm:translate-y-2"
-        x-transition:enter-end="opacity-100 scale-100 translate-y-0"
-        x-transition:leave="transition ease-in duration-200 transform"
-        x-transition:leave-start="opacity-100 scale-100 translate-y-0"
-        x-transition:leave-end="opacity-0 scale-95 translate-y-4 sm:translate-y-2"
-        class="relative w-full max-w-2xl z-10 my-auto"
-    >
-
-        <div class="relative bg-white dark:bg-slate-900 rounded-lg p-5 md:p-8 shadow-xl border border-gray-200 dark:border-slate-800">
-
-            <!-- Header Modal -->
-            <div class="flex items-center justify-between gap-4 pb-5 border-b border-gray-200 dark:border-slate-800">
-
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-lg bg-primary flex items-center justify-center shrink-0">
-                        <i class="bx bx-user-plus text-2xl text-white"></i>
+<!-- GLOBAL MODAL (Diubah ID & Event handler-nya agar sesuai JS) -->
+<div id="global-modal" role="dialog" aria-modal="true" aria-labelledby="globalModalTitle" class="hidden fixed inset-0 z-[9999] items-center justify-center p-4 bg-slate-950/60 backdrop-blur-[2px]">
+    <div class="relative p-4 w-full max-w-2xl">
+        <div class="relative bg-white dark:bg-slate-900 rounded-lg shadow-xl border border-gray-200 dark:border-slate-800">
+            
+            <!-- HEADER MODAL -->
+            <div class="flex items-start justify-between p-5 sm:p-6 border-b border-gray-100 dark:border-slate-800">
+                <div class="flex items-center gap-3 sm:gap-4">
+                    <div id="globalModalIconContainer" class="flex w-12 h-12 rounded-lg bg-primary items-center justify-center shrink-0">
+                        <i id="globalModalIcon" class="bx bxs-user-plus text-2xl text-white" aria-hidden="true"></i>
                     </div>
                     <div>
-                        <h2 class="text-xl font-black text-slate-900 dark:text-white">
-                            Tambah Karyawan
-                        </h2>
-                        <p class="text-sm text-gray-400 mt-1">
-                            Tambahkan data karyawan ke sistem.
-                        </p>
+                        <h3 id="globalModalTitle" class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white leading-tight"></h3>
+                        <p id="globalModalSubtitle" class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 font-medium mt-1"></p>
                     </div>
                 </div>
-
-                <button
-                    type="button"
-                    @click="TambahKaryawan = false"
-                    class="w-11 h-11 rounded-full bg-gray-100 text-slate-700 flex items-center justify-center hover:text-white hover:bg-primary transition cursor-pointer shrink-0"
-                >
-                    <i class="bx bx-x text-xl"></i>
+                
+                <!-- TOMBOL CLOSE -->
+                <button type="button" onclick="closeGlobalModal()" class="text-slate-500 bg-slate-100 dark:bg-slate-800 dark:text-slate-400 hover:bg-primary hover:text-white rounded-full w-10 h-10 inline-flex justify-center items-center transition-colors cursor-pointer shrink-0" aria-label="Tutup modal">
+                    <i class="bx bx-x text-2xl" aria-hidden="true"></i>
                 </button>
-
             </div>
 
-            <!-- Form Content -->
-            <form class="mt-6">
-
+            <!-- FORM -->
+            <form id="globalModalForm" action="" method="POST" class="p-5 sm:p-6">
+                
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 
-                    <!-- Section: Data Diri -->
-                    <div class="flex flex-col border-b border-gray-200 dark:border-slate-800 col-span-2 py-2">
-                        <label class="text-xs text-center font-black uppercase tracking-wide text-black dark:text-gray-400 ml-1">
+                    <!-- Section 1: Data Diri -->
+                    <div class="col-span-1 md:col-span-2 flex items-center gap-3 pb-2 border-b border-gray-100 dark:border-slate-800">
+                        <i class="bx bxs-id-card text-primary text-xl" aria-hidden="true"></i>
+                        <h4 class="text-sm font-bold uppercase tracking-wider text-slate-800 dark:text-gray-300">
                             Data Diri
-                        </label>
+                        </h4>
                     </div>
 
-                    <!-- Nama Lengkap -->
-                    <div>
-                        <label class="text-xs font-black uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
-                            Nama Lengkap <span class="text-red-600">*</span>
+                    <!-- Nama Lengkap (Diberikan ID globalModalInput agar JavaScript focus & input.value tidak error) -->
+                    <div class="flex flex-col gap-1.5 w-full">
+                        <label for="globalModalInput" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
+                            Nama Lengkap <span class="text-red-500" aria-hidden="true">*</span>
                         </label>
-                        <input
-                            type="text"
-                            placeholder="Masukkan nama lengkap"
-                            class="w-full mt-1.5 px-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-                        >
+                        <div class="relative flex items-center w-full group">
+                            <div class="absolute left-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors">
+                                <i class="bx bxs-user text-xl" aria-hidden="true"></i>
+                            </div>
+                            <input type="text" name="namaLengkap" id="globalModalInput" placeholder="Masukkan nama lengkap" autocomplete="off" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all" required>
+                        </div>
                     </div>
                 
                     <!-- No. Telepon -->
-                    <div>
-                        <label class="text-xs font-black uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
-                            No. Telepon <span class="text-red-600">*</span>
+                    <div class="flex flex-col gap-1.5 w-full">
+                        <label for="noTelepon" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
+                            No. Telepon <span class="text-red-500" aria-hidden="true">*</span>
                         </label>
-                        <input
-                            type="text"
-                            placeholder="08xxxxxxxxxx"
-                            class="w-full mt-1.5 px-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-                        >
+                        <div class="relative flex items-center w-full group">
+                            <div class="absolute left-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors">
+                                <i class="bx bxs-phone text-xl" aria-hidden="true"></i>
+                            </div>
+                            <input type="text" name="noTelepon" id="noTelepon" placeholder="Contoh: 081234567890" autocomplete="off" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all" required>
+                        </div>
                     </div>
 
                     <!-- Role -->
-                    <div>
-                        <label class="text-xs font-black uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
-                            Role <span class="text-red-600">*</span>
+                    <div class="flex flex-col gap-1.5 w-full">
+                        <label for="roleKaryawan" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
+                            Role <span class="text-red-500" aria-hidden="true">*</span>
                         </label>
-                        <select
-                            class="w-full mt-1.5 px-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-bold rounded-lg border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary"
-                        >
-                            <option value="">Pilih role</option>
-                            <?php foreach($role as $d): ?>
-                                <option value="<?= $d['id_role'] ?>"><?= $d['nama_role'] ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                        <div class="relative flex items-center w-full group">
+                            <div class="absolute left-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors">
+                                <i class="bx bxs-briefcase-alt-2 text-xl" aria-hidden="true"></i>
+                            </div>
+                            <select name="role" id="roleKaryawan" class="w-full pl-11 pr-10 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-bold rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all appearance-none cursor-pointer" required>
+                                <option value="">Pilih role...</option>
+                                <?php foreach($role as $d): ?>
+                                    <option value="<?= $d['id_role'] ?>"><?= $d['nama_role'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <div class="absolute right-3.5 pointer-events-none text-gray-400">
+                                <i class="bx bx-chevron-down text-xl"></i>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Status -->
-                    <div>
-                        <label class="text-xs font-black uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
-                            Status <span class="text-red-600">*</span>
+                    <!-- Status Toggle -->
+                    <div class="flex flex-col gap-1.5 w-full">
+                        <label class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
+                            Status <span class="text-red-500" aria-hidden="true">*</span>
                         </label>
-                        <div>
-                            <label class="text-xs flex justify-start items-center gap-2 rounded-lg p-2.5 mt-1.5 border border-gray-200 dark:border-slate-700 font-black uppercase tracking-wide text-gray-600 dark:text-gray-400" for="status">
-                                <label class="inline-flex justify-between items-center cursor-pointer">
-                                    <!-- Perbaikan typo pada atribut checked -->
-                                    <input type="checkbox" value="" class="sr-only peer" id="status" checked>
-                                    <div class="relative w-10.5 h-6 bg-gray-200 dark:bg-slate-700 dark:peer-focus:ring-primary rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[5px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
-                                </label>
-                                Aktif 
+                        <div class="w-full px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border-2 border-gray-200/80 dark:border-slate-700 flex items-center">
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="checkbox" name="status" id="statusKaryawan" value="aktif" class="sr-only peer" checked>
+                                <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/50 dark:peer-focus:ring-primary/30 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                                <span class="ms-3 text-sm font-bold text-slate-700 dark:text-slate-300">Akun Aktif</span>
                             </label>
                         </div>
                     </div>
                     
-                    <!-- Section: Data Akun -->
-                    <div class="flex flex-col border-b border-gray-200 dark:border-slate-800 col-span-2 mt-4 py-2">
-                        <label class="text-xs text-center font-black uppercase tracking-wide text-black dark:text-gray-400 ml-1">
+                    <!-- Section 2: Data Akun -->
+                    <div class="col-span-1 md:col-span-2 flex items-center gap-3 pt-4 pb-2 border-b border-gray-100 dark:border-slate-800">
+                        <i class="bx bxs-user-account text-primary text-xl" aria-hidden="true"></i>
+                        <h4 class="text-sm font-bold uppercase tracking-wider text-slate-800 dark:text-gray-300">
                             Data Akun
-                        </label>
+                        </h4>
                     </div>            
 
                     <!-- Username -->
-                    <div>
-                        <label class="text-xs font-black uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
-                            Username <span class="text-red-600">*</span>
+                    <div class="flex flex-col gap-1.5 w-full">
+                        <label for="usernameKaryawan" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
+                            Username <span class="text-red-500" aria-hidden="true">*</span>
                         </label>
-                        <input
-                            type="text"
-                            placeholder="Contoh: budi.santoso"
-                            class="w-full mt-1.5 px-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-                        >
+                        <div class="relative flex items-center w-full group">
+                            <div class="absolute left-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors">
+                                <i class="bx bxs-user-circle text-xl" aria-hidden="true"></i>
+                            </div>
+                            <input type="text" name="username" id="usernameKaryawan" placeholder="Contoh: budi.santoso" autocomplete="off" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all" required>
+                        </div>
                     </div>
 
                     <!-- Password -->
-                    <div>
-                        <label class="text-xs font-black uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
-                            Password <span class="text-red-600">*</span>
+                    <div class="flex flex-col gap-1.5 w-full">
+                        <label for="passwordKaryawan" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
+                            Password <span class="text-red-500" aria-hidden="true">*</span>
                         </label>
-                        <input
-                            type="password"
-                            placeholder="Masukkan password"
-                            class="w-full mt-1.5 px-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-                        >
+                        <div class="relative flex items-center w-full group">
+                            <div class="absolute left-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors">
+                                <i class="bx bxs-lock-alt text-xl" aria-hidden="true"></i>
+                            </div>
+                            <input type="password" name="password" id="passwordKaryawan" placeholder="Masukkan password" autocomplete="off" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all" required>
+                        </div>
                     </div>
 
                 </div>
 
-                <!-- Footer Buttons -->
-                <div class="flex flex-col-reverse sm:flex-row justify-end gap-3 mt-6 pt-5 border-t border-gray-200 dark:border-slate-800">
-                    <button
-                        type="button"
-                        @click="TambahKaryawan = false"
-                        class="w-full sm:w-auto px-6 py-3 rounded-lg bg-gray-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold hover:bg-gray-200 transition cursor-pointer"
-                    >
+                <!-- FOOTER / BUTTONS -->
+                <div class="flex flex-col-reverse sm:flex-row items-center justify-end pt-5 mt-6 border-t border-gray-100 dark:border-slate-800 gap-3">
+                    <button type="button" onclick="closeGlobalModal()" class="w-full sm:w-auto bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold px-6 py-3 rounded-lg text-sm transition-all">
                         Batal
                     </button>
-
-                    <button
-                        type="submit"
-                        class="w-full sm:w-auto px-6 py-3 rounded-lg bg-primary text-white font-black hover:bg-blue-700 active:scale-95 transition cursor-pointer flex items-center justify-center gap-2"
-                    >
-                        <i class="bx bx-save text-lg"></i>
-                        <span>Simpan Karyawan</span>
+                    <button id="globalModalSubmit" type="submit" class="w-full sm:w-auto flex items-center justify-center bg-primary hover:bg-blue-700 text-white font-black px-6 py-3 gap-2 rounded-lg text-sm transition-all">
+                        <i id="globalModalSubmitIcon" class="bx bxs-save text-lg" aria-hidden="true"></i>
+                        <span id="globalModalSubmitText">Simpan Karyawan</span>
                     </button>
                 </div>
-
             </form>
-
         </div>
-
     </div>
-
 </div>
 
 
