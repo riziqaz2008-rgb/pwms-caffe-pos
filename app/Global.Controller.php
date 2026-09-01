@@ -1,4 +1,6 @@
 <?php
+   include __DIR__ . '../../config/database.php';
+
 function query($q){
     global $conn;
     return mysqli_query($conn, $q);

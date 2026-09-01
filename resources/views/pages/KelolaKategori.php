@@ -1,3 +1,16 @@
+<?php
+
+if (isset($_POST['btnSimpanKategori'])) {
+    $hasil = tambahKategori($_POST);
+    $_SESSION['toast'] = $hasil;
+    header("Location: ?route=menu/kategori");
+    exit;
+}
+
+$keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
+$kategori = cariKategori();
+
+?>
 <section id="Kategorikategori">
     <div x-data="{
         layoutModeToggle: $persist(true),
@@ -45,20 +58,26 @@
                     </p>
                 </div>
                 <div class="flex items-center gap-3 w-full sm:w-auto">
-                    <form action="" method="GET" class="flex-1 sm:w-[280px]">
+                    <form action="" method="GET" class="flex-1 sm:w-[280px]"id="formCariKategori">
+                        <input 
+                            type="hidden" 
+                            name="route" 
+                            value="menu/kategori"
+    >
                         <div class="relative flex items-center gap-2 p-1.5 rounded-lg border-2 border-gray-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 focus-within:ring-2 focus-within:ring-primary transition-all min-h-[48px]">
                             <div class="flex items-center text-gray-400 pl-2 shrink-0">
                                 <i class="bx bx-search text-lg"></i>
                             </div>
         
                             <input
-                                name="search"
-                                type="search"
-                                id="search-dropdown"
-                                oninput="doLiveSearch(this.value)"
+                                name="keyword"
+                                type="text"
+                                id="searchKategori"
                                 class="flex-1 px-1 py-1 bg-transparent text-slate-900 dark:text-slate-100 text-sm placeholder:text-gray-400 focus:outline-none font-medium min-w-0"
-                                placeholder="Cari kategori..."
-                            >
+                                placeholder="Cari nama kategori..."
+                                value="<?= htmlspecialchars($keyword ?? '') ?>"
+                                >
+                            
                         </div>
                     </form>
                 </div>
@@ -74,19 +93,20 @@
                             </tr>
                         </thead>
                         <tbody id="body-tabel-kategori">
+                            <?php $no = 1; ?>
+                            <?php foreach ($kategori as $k): ?>
                             <tr>
 
-                            <!-- YANG DI KOMENT INI CONTOH JIKA ADA VALUE NYA.
-                                            SILAHKAN DI SESUAIKAN ISI DATABASE. -->
 
                                 <td class="px-5 py-4">
-                                    <span class="font-bold text-slate-800">1</span>
+                                    <span class="font-bold text-slate-800"><?= $no++ ?></span>
                                 </td>
                                 <td class="px-5 py-4">
                                     <span class="inline-flex items-center gap-2 px-6 py-2 rounded-lg bg-primary text-white text-sm font-bold">
-                                        Makanan
+                                        <?= $k['nama_kategori']; ?>
                                     </span>
                                 </td>
+
                                 <td class="px-5 py-4">
                                     <div class="flex items-center justify-center gap-2">
                                         <button type="button" onclick="editMenu(1)" class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Edit menu">
@@ -97,7 +117,7 @@
                                         </button>
                                     </div>
                                 </td> 
-
+<?php endforeach; ?>
                                 <!-- YANG DI BAWAH INI CONTOH JIKA VALUE NYA KOSONG. -->
 
                                 <!-- <td colspan="3">
@@ -226,12 +246,13 @@
                                     </div>
                                 </div>    
                             </div>
+                         
                             <div class="w-full flex flex-col-reverse sm:flex-row justify-end mt-6 sm:mt-8 pt-5 border-t border-gray-100 gap-3 sm:gap-3">    
                                 <button type="button" @click="kategori = false"
                                     class="w-full sm:w-auto flex items-center justify-center bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-6 py-3 gap-2 rounded-lg sm:rounded-lg cursor-pointer transition-all active:scale-95">
                                     <span>Batal</span>
                                 </button>
-                                <button type="submit"
+                                <button type="submit" name="btnSimpanKategori"
                                     class="w-full sm:w-auto flex items-center justify-center bg-primary hover:bg-primary/90 text-white font-black px-6 py-3 gap-2 rounded-lg sm:rounded-lg cursor-pointer transition-all active:scale-95">
                                         <i class="bx bxs-save text-lg"></i>
                                         <span>Simpan Kategori</span>
@@ -244,6 +265,21 @@
         </div>
     </div>
 </section>
+<script>
+const searchKategori = document.getElementById('searchKategori');
+const formCariKategori = document.getElementById('formCariKategori');
 
+let typingTimer;
+
+searchKategori.addEventListener('input', function () {
+
+    clearTimeout(typingTimer);
+
+    typingTimer = setTimeout(function () {
+        formCariKategori.submit();
+    }, 500);
+
+});
+</script>
 
 

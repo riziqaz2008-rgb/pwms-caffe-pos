@@ -1,3 +1,6 @@
+<?php
+$kategori = getKategori();
+?>
 <section id="Menu" x-data="{ 
             layoutModeToggle: $persist(true), 
             filterToggle: $persist(true), 
@@ -87,10 +90,12 @@
                     <form class="flex flex-col md:flex-row rounded-lg bg-white overflow-hidden">
                         <div class="relative w-full md:w-52 shrink-0">
                             <select name="category" class="w-full h-12 pl-4 pr-10 bg-slate-50 text-sm font-bold text-gray-700 border border-gray-200 rounded-t-xl md:rounded-t-none md:rounded-l-xl md:border-r-0 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary focus:z-10 cursor-pointer appearance-none">
-                                <option value="Semua Kategori" selected>Semua Kategori</option>
-                                <option value="Makanan">Makanan</option>
-                                <option value="Minuman">Minuman</option>
-                                <option value="Camilan">Camilan</option>
+                                <option value="">Semua Kategori</option>
+                                    <?php foreach ($kategori as $k): ?>
+                                <option value="<?= $k['id_kategori']; ?>">
+                                    <?= htmlspecialchars($k['nama_kategori']); ?>
+                                </option>
+                                    <?php endforeach; ?>
                             </select>
                             <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-gray-400">
                                 <i class="bx bx-chevron-down text-lg"></i>
@@ -147,12 +152,14 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <?php $no = 1; ?>
+                            <?php foreach ($menu as $m): ?>
                                     <tr class="group hover:bg-slate-50 transition-colors">
 
                                     <!-- YANG DI KOMENT INI CONTOH JIKA ADA VALUE NYA.
                                         SILAHKAN DI SESUAIKAN ISI DATABASE. -->
 
-                                        <td class="px-5 py-4 font-bold text-gray-500">1</td>
+                                        <td class="px-5 py-4 font-bold text-gray-500"><?= $no++ ?></td>
                                         <td class="px-5 py-4">
 
                                             <!-- JIKA GAMBAR KOSONG -->
@@ -169,14 +176,14 @@
                                             </div>
                                         </td>
                                         <td class="px-5 py-4">
-                                            <span class="font-bold text-slate-800">Nasi Goreng Spesial</span>
+                                            <span class="font-bold text-slate-800"><?= $m['nama'] ?></span>
                                         </td>
                                         <td class="px-5 py-4">
-                                            <span class="font-bold text-slate-800">Rp 25.000</span>
+                                            <span class="font-bold text-slate-800">Rp <?= number_format($m['harga'], 0, ',', '.') ?></span>
                                         </td>
                                         <td class="px-5 py-4">
                                             <span class="inline-flex items-center px-6 py-2 rounded-lg bg-primary text-white text-sm font-bold">
-                                                Makanan
+                                               <?= $m['nama_kategori']; ?>
                                             </span>
                                         </td>
                                         <td class="px-5 py-4">
@@ -195,7 +202,7 @@
                                                 </button>
                                             </div>
                                         </td>
-
+                                        <?php endforeach; ?>
                                         <!-- YANG DI BAWAH INI CONTOH JIKA VALUE NYA KOSONG. -->
 
                                         <!-- <td colspan="7">
@@ -223,56 +230,7 @@
                         <!-- YANG DI KOMENT INI CONTOH JIKA ADA VALUE NYA.
                                         SILAHKAN DI SESUAIKAN ISI DATABASE. -->
                          
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                            <div class="flex flex-row sm:flex-col group bg-white border border-gray-200 rounded-lg overflow-hidden transition-all duration-200">
-                                <div class="relative w-36 h-36 shrink-0 sm:w-full sm:h-48 overflow-hidden bg-gray-100">
-                                    <img
-                                        src="https://images.unsplash.com/photo-1603133872878-684f208fb84b?q=80&w=800&auto=format&fit=crop"
-                                        loading="lazy"
-                                        class="w-full h-full object-cover object-center group-hover:scale-105 transition duration-300"
-                                        alt="Nasi Goreng Spesial"
-                                    >
-                                    <div class="absolute top-2.5 left-2.5 sm:top-3 sm:left-3">
-                                        <span class="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg bg-primary text-[10px] sm:text-xs font-black text-white">
-                                            Makanan
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="p-4 sm:p-5 flex-1 min-w-0 flex flex-col justify-between">
-                                    <h3 class="font-black text-gray-900 text-base sm:text-lg line-clamp-2 leading-snug">
-                                        Nasi Goreng Spesial
-                                    </h3>
-
-                                    <div class="flex items-end justify-between gap-3 mt-4 sm:mt-6 pt-2">
-                                        <div class="min-w-0">
-                                            <span class="text-[10px] uppercase tracking-wider font-bold text-gray-400 block mb-0.5">
-                                                Harga
-                                            </span>
-                                            <span class="text-base sm:text-lg font-black text-gray-900 whitespace-nowrap">
-                                                Rp 25.000
-                                            </span>
-                                        </div>
-
-                                        <div class="flex gap-x-2.5">
-                                            <button
-                                                type="button"
-                                                class="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all shrink-0"
-                                                title="Edit menu"
-                                            >
-                                                <i class="bx bxs-pencil text-lg"></i>
-                                            </button>
-                                            <button
-                                                type="button"
-                                                class="w-10 h-10 rounded-xl bg-red-600 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all shrink-0"
-                                                title="Hapus menu"
-                                            >
-                                                <i class="bx bxs-trash text-lg"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        
                        
                         
                         <!-- YANG DI BAWAH INI CONTOH JIKA VALUE NYA KOSONG. -->

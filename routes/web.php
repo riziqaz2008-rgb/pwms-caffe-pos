@@ -12,13 +12,13 @@ switch ($route) {
 
 
     case 'menu':
-        
+        include __DIR__ . '/../app/Menu.Controller.php';
         $page = __DIR__ . '/../resources/views/pages/KelolaMenu.php';
 
         break;
 
     case 'menu/kategori':
-        
+        include __DIR__ . '/../app/Kategori.Controller.php';
         $page = __DIR__ . '/../resources/views/pages/KelolaKategori.php';
 
         break;
