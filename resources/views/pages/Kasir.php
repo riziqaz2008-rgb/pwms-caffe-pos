@@ -288,13 +288,11 @@
                                             inputs: [
                                                 {
                                                     name: 'alasan_penolakan',
-                                                    type: 'hidden',
-                                                    placeholder: 'Masukkan alasan...'
+                                                    type: 'hidden'
                                                 },
                                                 {
                                                     name: 'catatan',
-                                                    type: 'hidden',
-                                                    placeholder: 'Masukkan catatan tambahan...'
+                                                    type: 'hidden'
                                                 }
                                             ]
                                         });"

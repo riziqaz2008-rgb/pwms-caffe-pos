@@ -105,11 +105,11 @@ unset($_SESSION['toast']);
         <div class="flex items-center gap-2">
             <div class="w-1.5 h-5 rounded-full bg-primary"></div>
             <h2 class="text-sm font-black text-slate-800 dark:text-white">
-                Daftar Karyawan
+                Daftar Anggota
             </h2>
         </div>
         <p class="text-xs text-gray-400 dark:text-gray-500 font-medium mt-1 ml-3.5">
-            Data karyawan yang terdaftar pada sistem.
+            Data anggota yang terdaftar pada sistem.
         </p>
     </div>
     <div class="overflow-hidden">
@@ -126,35 +126,59 @@ unset($_SESSION['toast']);
             </thead>
 
             <tbody id="body-tabel-kategori">
-                <?php if(mysqli_num_rows($dkaryawan)): ?>
-                    <?php while($d = mysqli_fetch_assoc($dkaryawan)): ?>
+                <?php if(mysqli_num_rows($danggota)): ?>
+                    <?php while($d = mysqli_fetch_assoc($danggota)): ?>
                     <tr>
-                        <td><?= $no++ ?></td>
-                        <td><?= $d['nama'] ?></td>
-                        <td><?= $d['telepon'] ?></td>
-                        <td><?= $d['nama_role'] ?></td>
-                        <td><?= $d['status'] ?></td>
-                        <td>
-                            <button 
-                                type="button" 
+                        <td class="px-5 py-4"><?= $no++ ?></td>
+                        <td class="px-5 py-4"><?= $d['nama'] ?></td>
+                        <td class="px-5 py-4"><?= $d['telepon'] ?></td>
+                        <td class="px-5 py-4"><?= $d['nama_role'] ?></td>
+                        <td class="px-5 py-4"><?= $d['status'] ?></td>
+                        <td class="px-5 py-4">
+                            <div class="flex items-center justify-center gap-2">
+                                <button type="button" 
                                 onclick='showGlobalModal(<?= json_encode([
                                     "title" => "Edit Anggota",
-                                    "subtitle" => "Perbarui data anggota baru ke dalam sistem.",
-                                    "icon" => "bxs-user-plus",
-                                    "iconBg" => "bg-primary",
-                                    "action" => "/pelanggan/store",
+                                    "subtitle" => "Perbarui data anggota.",
+                                    "icon" => "bxs-edit",
+                                    "iconBg" => "bg-amber-500",
                                     "method" => "POST",
-                                    "buttonText" => "Simpan pelanggan",
+                                    "buttonText" => "Simpan Perubahan",
                                     "buttonIcon" => "bxs-save",
-                                    "buttonColor" => "bg-primary hover:bg-blue-700",
+                                    "buttonColor" => "bg-amber-500 hover:bg-amber-600",
                                     "nameBtn" => "aksi",
-                                    "value" => "tambah"
-                                ]) ?>)'
-                                class="px-4 py-3 bg-primary text-white text-sm font-bold rounded-lg hover:opacity-90 transition-all flex items-center gap-2"
-                            >
-                                <i class="bx bx-plus text-base"></i>
-                                <span>Tambah Pelanggan</span>
-                            </button>
+                                    "value" => "edit"
+                                ]) ?>)
+                                 modalEdit(this)
+                                 '
+                                class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Edit menu"
+                                data-id="<?= htmlspecialchars($d['id_anggota']) ?>" data-nama="<?= htmlspecialchars($d['nama']) ?>" data-telp="<?= htmlspecialchars($d['telepon']) ?>">
+                                    <i class="bx bxs-pencil"></i>
+                                </button>
+                                <button type="button" 
+                                onclick="showConfirmForm({
+                                    title: 'Hapus Pelanggan',
+                                    message: 'Apakah Anda yakin ingin hapus pelanggan <?= htmlspecialchars($d['nama']) ?>?.',
+                                    actionText: 'Ya, hapus',
+                                    type: 'danger',
+                                    nameAksi: 'hapus',
+                                    inputs: [
+                                        {
+                                            name: 'aksi',
+                                            type: 'hidden',
+                                            value: 'hapus'
+                                        },
+                                        {
+                                            name: 'id',
+                                            type: 'hidden',
+                                            value: <?= htmlspecialchars($d['id_anggota']) ?>
+                                        }
+                                    ]
+                                });"    
+                                class="w-10 h-10 rounded-lg bg-red-500 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Hapus menu">
+                                    <i class="bx bxs-trash"></i>
+                                </button>
+                            </div>
                         </td>
                     </tr>
                     <?php endwhile; ?>
@@ -165,9 +189,9 @@ unset($_SESSION['toast']);
                             <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4 border border-gray-200/80">
                                 <i class="bx bxs-user-id-card text-4xl text-gray-300"></i>
                             </div>
-                            <h3 class="text-base font-black text-slate-800 mb-1">Karyawan Belum Tersedia</h3>
+                            <h3 class="text-base font-black text-slate-800 mb-1">Anggota Belum Tersedia</h3>
                             <p class="text-xs text-gray-400 max-w-sm mb-5">
-                                Belum ada karyawan pembayaran yang ditambahkan atau hasil pencarian tidak cocok.
+                                Belum ada anggota yang ditambahkan atau hasil pencarian tidak cocok.
                             </p>
                             <button type="button" 
                                 onclick='showGlobalModal(<?= json_encode([
@@ -179,7 +203,6 @@ unset($_SESSION['toast']);
                                     "buttonText" => "Simpan Anggota",
                                     "buttonIcon" => "bxs-save",
                                     "buttonColor" => "bg-primary hover:bg-blue-700",
-                                    
                                     "nameBtn" => "aksi",
                                     "value" => "tambah"
                                 ]) ?>)'
@@ -213,6 +236,7 @@ unset($_SESSION['toast']);
                     </button>
                 </div>
                 <form id="globalModalForm" action="" method="POST" class="p-5 sm:p-6" autocomplete="off">
+                    <input type="hidden" name="id" id="id">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div class="col-span-1 md:col-span-2 flex items-center gap-3 pb-2 border-b border-gray-100 dark:border-slate-800">
                             <i class="bx bxs-id-card text-primary text-xl" aria-hidden="true"></i>
@@ -276,18 +300,18 @@ unset($_SESSION['toast']);
                             <h4 class="text-sm font-bold uppercase tracking-wider text-slate-800 dark:text-gray-300">Data Akun</h4>
                         </div>
                         <div class="flex flex-col gap-1.5 w-full">
-                            <label for="usernameKaryawan" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
+                            <label for="username" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
                                 Username <span class="text-red-500" aria-hidden="true">*</span>
                             </label>
                             <div class="relative flex items-center w-full group">
                                 <div class="absolute left-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors">
                                     <i class="bx bxs-user-circle text-xl" aria-hidden="true"></i>
                                 </div>
-                                <input type="text" name="username" maxlength="25" id="usernameKaryawan" placeholder="Contoh: budi.santoso" autocomplete="off" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring focus:ring-primary focus:border-primary transition-all" required>
+                                <input type="text" name="username" maxlength="25" id="username" placeholder="Contoh: budi.santoso" autocomplete="off" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring focus:ring-primary focus:border-primary transition-all" required>
                             </div>
                         </div>
                         <div class="flex flex-col gap-1.5 w-full">
-                            <label for="passwordKaryawan" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
+                            <label for="password" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
                                 Password <span class="text-red-500" aria-hidden="true">*</span>
                             </label>
                             <div class="relative flex items-center w-full group">

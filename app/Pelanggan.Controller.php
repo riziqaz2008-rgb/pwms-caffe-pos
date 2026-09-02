@@ -23,85 +23,103 @@ function tambah($d){
 
     if(empty($nama) || $nama == ''){
         return [
-            'status' => false,
             'bg' => 'warning',
-            'icon' => 'info-circle',
             'pesan' => 'Nama kosong, harap diisi.'
         ];
     }
 
     if($telp === ''){
         return [
-            'status' => false,
             'bg' => 'warning',
-            'icon' => 'info-circle',
             'pesan' => 'Nomor telepon kosong, harap diisi.'
         ];
     } elseif(!preg_match('/^08[0-9]{9,14}$/', $telp)){
         return [
-            'status' => false,
             'bg' => 'warning',
-            'icon' => 'info-circle',
             'pesan' => 'Nomor telepon harus diawali 08 dan terdiri dari 10 sampai 15 digit angka.'
+        ];
+    }
+
+    $qcn = query("SELECT * FROM pelanggan WHERE nama_pelanggan='$nama'");
+    $cn = mysqli_fetch_assoc($qcn);
+    if(mysqli_num_rows($cn) > 0){
+        return [
+            'bg' => 'info',
+            'pesan' => 'Nama pelanggan '.$cn['nama_pelanggan'].' sudah ada. Harap ganti nama yang lain'
+        ];
+    }
+
+    $qct = query("SELECT * FROM pelanggan WHERE telepon='$telp'");
+    $ct = mysqli_fetch_assoc($qct);
+    if(mysqli_num_rows($ct) > 0){
+        return [
+            'bg' => 'info',
+            'pesan' => 'Nomor telepon '.$ct['telepon'].' sudah ada. Harap ganti telepon yang lain'
         ];
     }
 
     $q = query("INSERT INTO pelanggan (nama_pelanggan, telepon) VALUES ('$nama', '$telp')");
     if($q){
         return [
-            'status' => true,
             'bg' => 'success',
-            'icon' => 'check-circle',
-            'pesan' => 'Pelanggan berhasil ditambahkan.'        
+            'pesan' => 'Pelanggan berhasil ditambahkan.'
         ];
     }
 
     return [
-        'status' => false,
         'bg' => 'danger',
-        'icon' => 'alert-triangle',
         'pesan' => 'Pelanggan gagal ditambahkan. Harap coba lagi.'
     ];
 }
 
 function edit($d){
-    $id = $d['id'];
+    $id = (int)$d['id'];
     $nama = $d['nama'];
     $telp = $d['telepon'];
+
+    $cn = query("SELECT * FROM pelanggan WHERE nama='$nama' AND id_pelanggan != '$id'");
+    if($cn){
+        return [
+            'bg' => 'info',
+            'pesan' => 'Nama pelanggan tersebut sudah digunakan. Harap ganti nama yang lain.'
+        ];
+    }
 
     $q = query("UPDATE pelanggan SET nama_pelanggan='$nama', telepon='$telp' WHERE id_pelanggan='$id'");
     if($q){
         return [
-            // 'status' => true,
             'bg' => 'success',
             'pesan' => 'Pelanggan berhasil diperbarui.'
         ];
     }
 
     return [
-        // 'status' => false,
         'bg' => 'danger',
         'pesan' => 'Pelanggan gagal diperbarui. Harap coba lagi.'
     ];
 }
 
 function hapus($d){
-    $id = $d['id'];
+    $id = (int)$d['id'];
+
+    $c = query("SELECT * FROM pelanggan WHERE id_pelanggan='$id'");
+    if(mysqli_num_rows($c) == 0){
+        return [
+            'bg' => 'info',
+            'pesan' => 'ID pelanggan tidak ditemukan.',
+        ];
+    }
 
     $q = query("DELETE FROM pelanggan WHERE id_pelanggan='$id'");
     if($q){
         return [
-            'status' => true,
             'bg' => 'success',
-            'icon' => 'check-circle',
             'pesan' => 'Pelanggan berhasil dihapus.',
         ];
     }
 
     return [
-        'status' => false,
         'bg' => 'danger',
-        'icon' => 'alert-triangle',
         'pesan' => 'Pelanggan gagal dihapus. Harap coba lagi',
     ];
 }

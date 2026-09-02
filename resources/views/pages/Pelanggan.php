@@ -106,12 +106,25 @@
                                     <i class="bx bxs-pencil"></i>
                                 </button>
                                 <button type="button" 
-                                onclick="showConfirm(
-                                    'Hapus Pelanggan',
-                                    'Yakin ingin menghapus pelanggan ini?',
-                                    'Ya, Hapus',
-                                    'danger'
-                                )"    
+                                onclick="showConfirmForm({
+                                    title: 'Hapus Pelanggan',
+                                    message: 'Apakah Anda yakin ingin hapus pelanggan <?= htmlspecialchars($d['nama_pelanggan']) ?>?.',
+                                    actionText: 'Ya, hapus',
+                                    type: 'danger',
+                                    nameAksi: 'hapus',
+                                    inputs: [
+                                        {
+                                            name: 'aksi',
+                                            type: 'hidden',
+                                            value: 'hapus'
+                                        },
+                                        {
+                                            name: 'id',
+                                            type: 'hidden',
+                                            value: <?= htmlspecialchars($d['id_pelanggan']) ?>
+                                        }
+                                    ]
+                                });"    
                                 class="w-10 h-10 rounded-lg bg-red-500 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Hapus menu">
                                     <i class="bx bxs-trash"></i>
                                 </button>

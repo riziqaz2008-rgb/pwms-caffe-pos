@@ -314,6 +314,27 @@
 
             // INI MODAL ID LOGIKA JS MODAL YG ADA FORM NYA
 
+            // Contoh
+            // showConfirmForm({
+            //     title: 'Hapus Pelanggan',
+            //     message: 'Apakah Anda yakin ingin hapus pelanggan tersebut?.',
+            //     actionText: 'Ya, hapus',
+            //     type: 'danger',
+            //     nameAksi: 'hapus',
+            //     inputs: [
+            //         {
+            //             name: 'aksi',
+            //             type: 'hidden',
+            //             value: 'hapus'
+            //         },
+            //         {
+            //             name: 'id',
+            //             type: 'hidden',
+            //             type: id data
+            //         }
+            //     ]
+            // });
+
     const confirmModalId = document.getElementById('confirmModalId');
 
         function showConfirmForm({
@@ -321,6 +342,7 @@
             message = 'Apakah kamu yakin?',
             actionText = 'Ya',
             type = 'danger',
+            nameAksi = '',
             inputs = [],
             action = '',
             method = 'POST',
@@ -337,6 +359,7 @@
             titleElement.textContent = title;
             messageElement.textContent = message;
             actionButton.textContent = actionText;
+            actionButton.value = nameAksi;
 
             form.action = action;
             form.method = method;
