@@ -1,43 +1,45 @@
 <section id="Pelanggan">
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-5">
-        <div class="flex items-center gap-x-5">
-            <div class="w-13 h-13 rounded-lg bg-primary flex items-center justify-center shrink-0 border-e border-gray-200">
-                <i class="bx bxs-group text-2xl text-white"></i>
+    <div class="w-full flex flex-col items-center justify-between gap-5">
+        <div class="w-full flex flex-col md:flex-row md:items-center justify-between gap-5">
+            <div class="flex items-center gap-x-5">
+                <div class="w-13 h-13 rounded-lg bg-primary flex items-center justify-center shrink-0 border-e border-gray-200">
+                    <i class="bx bxs-group text-2xl text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-black text-slate-900">
+                        Pelanggan
+                    </h1>
+                    <p class="text-sm text-slate-500 font-medium mt-1.5">
+                        Kelola data pelanggan.
+                    </p>
+                </div>
             </div>
-            <div>
-                <h1 class="text-2xl font-black text-slate-900">
-                    Pelanggan
-                </h1>
-                <p class="text-sm text-slate-500 font-medium mt-1.5">
-                    Kelola data pelanggan dan informasi piutang cafe.
-                </p>
+
+            <div class="flex flex-row gap-x-3 my-1 shrink-0">
+                <button
+                    type="button"
+                        onclick='showGlobalModal(<?= json_encode([
+                        "title" => "Tambah Pelanggan",
+                        "subtitle" => "Tambahkan data pelanggan baru ke dalam sistem.",
+                        "icon" => "bxs-user-plus",
+                        "iconBg" => "bg-primary",
+                        "method" => "POST",
+                        "buttonText" => "Tambahkan",
+                        "buttonIcon" => "bxs-save",
+                        "buttonColor" => "bg-primary hover:bg-blue-700",
+                        "nameBtn" => "aksi",
+                        "value" => "tambah"
+                    ]) ?>)'
+                    class="w-full h-12 md:w-auto flex items-center justify-center bg-primary text-white font-bold px-6 gap-2 rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
+                >
+                    <i class="bx bxs-plus text-lg"></i>
+                    <span>Tambah Pelanggan</span>
+                </button>
+
             </div>
         </div>
 
-        <div class="flex flex-row gap-x-3 my-1 shrink-0">
-            <button
-                type="button"
-                    onclick='showGlobalModal(<?= json_encode([
-                    "title" => "Tambah Pelanggan",
-                    "subtitle" => "Tambahkan data pelanggan baru ke dalam sistem.",
-                    "icon" => "bxs-user-plus",
-                    "iconBg" => "bg-primary",
-                    "action" => "/pelanggan/store",
-                    "method" => "POST",
-                    "buttonText" => "Simpan pelanggan",
-                    "buttonIcon" => "bxs-save",
-                    "buttonColor" => "bg-primary hover:bg-blue-700",
-                    "value" => ""
-                ]) ?>)'
-                class="w-full h-12 md:w-auto flex items-center justify-center bg-primary text-white font-bold px-6 gap-2 rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
-            >
-                <i class="bx bxs-plus text-lg"></i>
-                <span>Tambah Pelanggan</span>
-            </button>
-        </div>
-    </div>
-
-    <div class="mt-8">
+    <div class="w-full mt-8">
         <form method="GET" autocomplete="off">
             <input type="hidden" name="route" value="<?= htmlspecialchars($_GET['route'] ?? '')?>">
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-5">
@@ -65,7 +67,7 @@
         </form>
     </div>
 
-    <div class="overflow-hidden">
+    <div class="w-full overflow-hidden">
         <table id="selection-table" class="w-full text-sm">
             <thead>
                 <tr class="bg-slate-50 dark:bg-slate-900 text-gray-400">
@@ -76,6 +78,48 @@
                 </tr>
             </thead>
             <tbody id="body-tabel-Pelanggan">
+            <?php if(mysqli_num_rows($dpelanggan)): ?>
+                <?php while($d = mysqli_fetch_assoc($dpelanggan)): ?>
+                    <tr>
+                        <td class="px-5 py-4"><?= $no++ ?></td>
+                        <td class="px-5 py-4"><?= $d['nama_pelanggan'] ?></td>
+                        <td class="px-5 py-4"><?= $d['telepon'] ?></td>
+                        <td class="px-5 py-4">
+                            <div class="flex items-center justify-center gap-2">
+                                <button type="button" 
+                                onclick='showGlobalModal(<?= json_encode([
+                                    "title" => "Edit Pelanggan",
+                                    "subtitle" => "Perbarui data pelanggan.",
+                                    "icon" => "bxs-edit",
+                                    "iconBg" => "bg-amber-500",
+                                    "method" => "POST",
+                                    "buttonText" => "Simpan Perubahan",
+                                    "buttonIcon" => "bxs-save",
+                                    "buttonColor" => "bg-amber-500 hover:bg-amber-600",
+                                    "nameBtn" => "aksi",
+                                    "value" => "edit"
+                                ]) ?>)
+                                 modalEdit(this)
+                                 '
+                                class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Edit menu"
+                                data-id="<?= htmlspecialchars($d['id_pelanggan']) ?>" data-nama="<?= htmlspecialchars($d['nama_pelanggan']) ?>" data-telp="<?= htmlspecialchars($d['telepon']) ?>">
+                                    <i class="bx bxs-pencil"></i>
+                                </button>
+                                <button type="button" 
+                                onclick="showConfirm(
+                                    'Hapus Pelanggan',
+                                    'Yakin ingin menghapus pelanggan ini?',
+                                    'Ya, Hapus',
+                                    'danger'
+                                )"    
+                                class="w-10 h-10 rounded-lg bg-red-500 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Hapus menu">
+                                    <i class="bx bxs-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+            <?php else: ?>
                 <tr>
                     <td colspan="4">
                         <div class="flex flex-col items-center justify-center py-12 px-4 text-center bg-gray-50">
@@ -89,18 +133,18 @@
                                 Belum ada data Pelanggan yang ditambahkan atau hasil pencarian tidak cocok.
                             </p>
                             <button 
-                                type="button" 
+                                type="button"
                                 onclick='showGlobalModal(<?= json_encode([
                                     "title" => "Tambah Pelanggan",
                                     "subtitle" => "Tambahkan data pelanggan baru ke dalam sistem.",
                                     "icon" => "bxs-user-plus",
                                     "iconBg" => "bg-primary",
-                                    "action" => "/pelanggan/store",
                                     "method" => "POST",
-                                    "buttonText" => "Simpan pelanggan",
+                                    "buttonText" => "Tambahkan",
                                     "buttonIcon" => "bxs-save",
                                     "buttonColor" => "bg-primary hover:bg-blue-700",
-                                    "value" => ""
+                                    "nameBtn" => "aksi",
+                                    "value" => "tambah"
                                 ]) ?>)'
                                 class="px-4 py-3 bg-primary text-white text-sm font-bold rounded-lg hover:opacity-90 transition-all flex items-center gap-2"
                             >
@@ -110,6 +154,7 @@
                         </div>
                     </td>
                 </tr>
+            <?php endif; ?>
             </tbody>
         </table>
     </div>
@@ -166,28 +211,29 @@
                         <i class="bx bxs-x text-2xl" aria-hidden="true"></i>
                     </button>
                 </div>
-                <form id="globalModalForm" action="" method="POST" class="p-5 sm:p-6">
+                <form id="globalModalForm" action="" method="POST" class="p-5 sm:p-6" autocomplete="off">
+                    <input type="hidden" name="id" id="id">
                     <div class="grid grid-cols-1 gap-5">
                         <div class="flex flex-col gap-1.5 w-full">
-                            <label for="globalModalInput" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
-                            Nama Lengkap <span class="text-red-500" aria-hidden="true">*</span>
+                            <label for="nama" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
+                            Nama Pelanggan <span class="text-red-500" aria-hidden="true">*</span>
                             </label>
                             <div class="relative flex items-center w-full group">
                             <div class="absolute left-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors">
                                 <i class="bx bxs-user text-xl" aria-hidden="true"></i>
                             </div>
-                            <input type="text" name="namaLengkap" id="globalModalInput" placeholder="Masukkan nama lengkap" autocomplete="off" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all" required>
+                            <input type="text" name="nama" id="nama" placeholder="Masukkan nama pelanggan" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all" required>
                             </div>
                         </div>
                         <div class="flex flex-col gap-1.5 w-full">
-                            <label for="noTelepon" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
+                            <label for="telepon" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
                             No. Telepon <span class="text-red-500" aria-hidden="true">*</span>
                             </label>
                             <div class="relative flex items-center w-full group">
                             <div class="absolute left-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors">
                                 <i class="bx bxs-phone text-xl" aria-hidden="true"></i>
                             </div>
-                            <input type="text" name="noTelepon" id="noTelepon" placeholder="Contoh: 081234567890" autocomplete="off" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all" required>
+                            <input type="text" name="telepon" inputmode="numeric" pattern="[0-9]{12}" minlength="12" maxlength="12" id="telepon" placeholder="Contoh: 081234567890" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all" required>
                             </div>
                         </div>
                     </div>
@@ -197,7 +243,7 @@
                         </button>
                         <button id="globalModalSubmit" type="submit" class="w-full sm:w-auto flex items-center justify-center bg-primary hover:bg-blue-700 text-white font-black px-6 py-3 gap-2 rounded-lg text-sm transition-all">
                             <i id="globalModalSubmitIcon" class="bx bxs-save text-lg" aria-hidden="true"></i>
-                            <span id="globalModalSubmitText">Simpan Karyawan</span>
+                            <span id="globalModalSubmitText"></span>
                         </button>
                     </div>
                 </form>
@@ -206,3 +252,11 @@
     </div>
 
 </section>
+
+<script>
+    function modalEdit(btn){
+      $('#id').val(btn.dataset.id);
+      $('#nama').val(btn.dataset.nama);
+      $('#telepon').val(btn.dataset.telp);
+    }
+</script>

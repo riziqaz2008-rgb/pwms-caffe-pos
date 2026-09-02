@@ -1,4 +1,5 @@
 <?php
+    session_start();
     require_once __DIR__ . '/../../../app/Global.Controller.php';
     require_once __DIR__ . '/../../../routes/web.php';
     ob_start();
@@ -127,12 +128,13 @@
 
             // INI GLOBAL TOAST JS YE..
 
-            function showToast(message, type = 'success') {
+            // function showToast(message, type = 'success') {
+            function showToast(d) {
                 const toast = document.getElementById('liveToast');
                 const pesan = document.getElementById('pesanToast');
                 const icon = document.getElementById('toastIcon');
 
-                pesan.textContent = message;
+                pesan.textContent = d.pesan;
 
                 toast.classList.remove(
                     'bg-emerald-600',
@@ -141,16 +143,16 @@
                     'bg-blue-600'
                 );
 
-                if (type === 'success') {
+                if (d.bg === 'success') {
                     toast.classList.add('bg-emerald-600');
                     icon.className = 'bx bxs-check-circle text-xl text-white';
-                } else if (type === 'error') {
+                } else if (d.bg === 'error') {
                     toast.classList.add('bg-red-600');
                     icon.className = 'bx bxs-x-circle text-xl text-white';
-                } else if (type === 'warning') {
+                } else if (d.bg === 'warning') {
                     toast.classList.add('bg-amber-500');
                     icon.className = 'bx bxs-error text-xl text-white';
-                } else if (type === 'info') {
+                } else if (d.bg === 'info') {
                     toast.classList.add('bg-blue-600');
                     icon.className = 'bx bxs-info-circle text-xl text-white';
                 }
@@ -510,6 +512,7 @@
 
             function closeGlobalModal(){
                 const modal=document.getElementById('global-modal');
+                document.querySelector('#global-modal form').reset();
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
             }
