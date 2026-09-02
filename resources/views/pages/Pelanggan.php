@@ -23,33 +23,43 @@ unset($_SESSION['toast']);
 ?>
 <section id="Pelanggan">
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-5">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-5">
         <div class="flex items-center gap-x-5">
             <div class="w-13 h-13 rounded-lg bg-primary flex items-center justify-center shrink-0 border-e border-gray-200">
                 <i class="bx bxs-group text-2xl text-white"></i>
             </div>
-            <div class="flex flex-row gap-x-3 my-1 shrink-0">
-                <button
-                    type="button"
-                     onclick='showGlobalModal(<?= json_encode([
-                        "title" => "Tambah Pelanggan",
-                        "subtitle" => "Tambahkan data pelanggan baru ke dalam sistem.",
-                        "icon" => "bxs-user-plus",
-                        "iconBg" => "bg-primary",
-                        "action" => "/pelanggan/store",
-                        "method" => "POST",
-                        "buttonText" => "Simpan pelanggan",
-                        "buttonIcon" => "bxs-save",
-                        "buttonColor" => "bg-primary hover:bg-blue-700",
-                        "nameBtn" => "aksi",
-                        "value" => "tambah"
-                    ]) ?>)'
-                    class="w-full h-12 md:w-auto flex items-center justify-center bg-primary text-white font-bold px-6 gap-2 rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
-                >
-                    <i class="bx bx-plus text-lg"></i>
-                    <span>Tambah Pelanggan</span>
-                </button>
+            <div>
+                <h1 class="text-2xl font-black text-slate-900">
+                    Pelanggan
+                </h1>
+                <p class="text-sm text-slate-500 font-medium mt-1.5">
+                    Kelola data pelanggan dan informasi piutang cafe.
+                </p>
             </div>
         </div>
+
+        <div class="flex flex-row gap-x-3 my-1 shrink-0">
+            <button
+                type="button"
+                    onclick='showGlobalModal(<?= json_encode([
+                    "title" => "Tambah Pelanggan",
+                    "subtitle" => "Tambahkan data pelanggan baru ke dalam sistem.",
+                    "icon" => "bxs-user-plus",
+                    "iconBg" => "bg-primary",
+                    "action" => "/pelanggan/store",
+                    "method" => "POST",
+                    "buttonText" => "Simpan pelanggan",
+                    "buttonIcon" => "bxs-save",
+                    "buttonColor" => "bg-primary hover:bg-blue-700",
+                    "value" => ""
+                ]) ?>)'
+                class="w-full h-12 md:w-auto flex items-center justify-center bg-primary text-white font-bold px-6 gap-2 rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
+            >
+                <i class="bx bxs-plus text-lg"></i>
+                <span>Tambah Pelanggan</span>
+            </button>
+        </div>
+    </div>
 
         <div class="mt-8">
             <form method="GET" autocomplete="off">
