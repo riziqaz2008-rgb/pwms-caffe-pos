@@ -95,7 +95,7 @@
                                     </button>
                                     <button type="button" 
                                     onclick="showConfirm(
-                                        'Hapus Data?',
+                                        'Hapus Data',
                                         'Yakin ingin menghapus data ini?',
                                         'Ya, Hapus',
                                         'danger'

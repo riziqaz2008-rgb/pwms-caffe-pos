@@ -4,7 +4,7 @@ $role = fetchAllAssoc("SELECT * FROM roles");
 $cari = trim($_GET['cari'] ?? '');
 $rolef = (int)($_GET['rolef'] ?? 0);
 $statusf = $_GET['statusf'] ?? '';
-$sql = "SELECT u.*, a.nama_lengkap, a.telepon, r.nama_role FROM users u LEFT JOIN anggota a ON u.id_anggota = a.id_anggota LEFT JOIN roles r ON u.id_role = r.id_role WHERE 1=1";
+$sql = "SELECT u.*, a.nama, a.telepon, r.nama_role FROM users u LEFT JOIN anggota a ON u.id_anggota = a.id_anggota LEFT JOIN roles r ON u.id_role = r.id_role WHERE 1=1";
 $params = [];
 $types = "";
 if(!empty($cari)){
@@ -34,11 +34,36 @@ $dkaryawan = mysqli_stmt_get_result($stmt);
 
 function tambah($d){
     $nama = $d['nama'];
-    $telp = $d['telepon'];
+    $telp = trim($d['telepon'] ?? '');
     $role = (int)($d['role'] ?? 0);
     $user = $d['username'];
     $pw = $d['password'];
 
+    if(empty($nama) || $nama == ''){
+        return [
+            'status' => false,
+            'bg' => 'warning',
+            'icon' => 'info-circle',
+            'pesan' => 'Nama kosong, harap diisi.'
+        ];
+    }
+
+    if($telp === ''){
+        return [
+            'status' => false,
+            'bg' => 'warning',
+            'icon' => 'info-circle',
+            'pesan' => 'Nomor telepon kosong, harap diisi.'
+        ];
+    } elseif(!preg_match('/^08[0-9]{9,14}$/', $telp)){
+        return [
+            'status' => false,
+            'bg' => 'warning',
+            'icon' => 'info-circle',
+            'pesan' => 'Nomor telepon harus diawali 08 dan terdiri dari 10 sampai 15 digit angka.'
+        ];
+    }
+    
     $ca = query("SELECT username FROM users WHERE username='$user'");
     if($ca){
         return [
