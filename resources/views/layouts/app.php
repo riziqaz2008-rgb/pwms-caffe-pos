@@ -295,6 +295,7 @@
                 form.action=data.action??'#';
 
                 form.method=data.method??'POST';
+
                 
                 submit.value = data.value ?? '';
                 submit.name = data.nameBtn ?? '';

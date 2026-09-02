@@ -30,48 +30,49 @@ function cariKategori() {
 }
 
 
-function tambahKategori($d){ 
+function tambahKategori($d){
 
-    $n = htmlspecialchars(trim($d['namaKategori'])); 
+    global $conn;
+
+    $n = trim($d['namaKategori']);
+    $n = mysqli_real_escape_string($conn, $n);
 
     $cek = query("
-        SELECT * FROM kategori 
+        SELECT id_kategori
+        FROM kategori
         WHERE nama_kategori = '$n'
-    "); 
+    ");
 
-    if(mysqli_num_rows($cek) > 0){ 
+    if(mysqli_num_rows($cek) > 0){
 
-        return [ 
-            'status' => false, 
-            'bg' => 'info', 
-            'icon' => 'info-circle', 
-            'pesan' => 'Nama kategori tersebut sudah ada.'         
-        ]; 
-
-    } 
+        return [
+            'bg' => 'info',
+            'pesan' => 'Kategori sudah ada.'
+        ];
+    }
 
     $q = query("
-        INSERT INTO kategori (nama_kategori) 
+        INSERT INTO kategori (nama_kategori)
         VALUES ('$n')
-    "); 
+    ");
 
-    if($q){ 
+    if($q){
 
-        return [ 
-            'status' => true, 
-            'bg' => 'success', 
-            'icon' => 'check-circle', 
-            'pesan' => 'Kategori berhasil ditambahkan.' 
-        ]; 
+        return [
+           
+            'bg' => 'success',
+            
+            'pesan' => 'Kategori berhasil ditambahkan.'
+        ];
 
-    } 
+    }
 
-    return [ 
-        'status' => false, 
-        'bg' => 'danger', 
-        'icon' => 'alert-triangle', 
-        'pesan' => 'Kategori gagal ditambahkan. Harap coba lagi.' 
-    ]; 
+    return [
+       
+        'bg' => 'danger',
+       
+        'pesan' => 'Kategori gagal ditambahkan. Harap coba lagi.'
+    ];
 }
 
 
@@ -125,11 +126,14 @@ function editKategori($d){
     global $conn;
 
     $id = (int) $d['id_kategori'];
-    $n = htmlspecialchars(trim($d['namaKategori']));
+
+    $n = trim($d['namaKategori']);
+    $n = mysqli_real_escape_string($conn, $n);
 
     $cek = query("
-        SELECT * FROM kategori 
-        WHERE nama_kategori = '$n' 
+        SELECT id_kategori 
+        FROM kategori 
+        WHERE nama_kategori = '$n'
         AND id_kategori != $id
     ");
 
