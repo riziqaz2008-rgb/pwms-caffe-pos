@@ -4,7 +4,7 @@ $role = fetchAllAssoc("SELECT * FROM roles");
 $cari = trim($_GET['cari'] ?? '');
 $rolef = (int)($_GET['rolef'] ?? 0);
 $statusf = $_GET['statusf'] ?? '';
-$sql = "SELECT u.*, a.nama, a.telepon, r.nama_role FROM users u LEFT JOIN anggota a ON u.id_anggota = a.id_anggota LEFT JOIN roles r ON u.id_role = r.id_role WHERE 1=1";
+$sql = "SELECT u.*, a.nama_lengkap, a.telepon, r.nama_role FROM users u LEFT JOIN anggota a ON u.id_anggota = a.id_anggota LEFT JOIN roles r ON u.id_role = r.id_role WHERE 1=1";
 $params = [];
 $types = "";
 if(!empty($cari)){

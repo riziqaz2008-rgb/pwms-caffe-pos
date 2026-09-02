@@ -675,6 +675,44 @@
                                 <i class="bx bxs-basket text-xl"></i>
                                 Simpan Pesanan
                             </button>
+                            <script>
+function showToast(message, type = 'success') {
+    alert('FUNCTION JALAN');
+
+    const toast = document.getElementById('liveToast');
+    const pesan = document.getElementById('pesanToast');
+    const icon = document.getElementById('toastIcon');
+
+    console.log('toast:', toast);
+    console.log('pesan:', pesan);
+    console.log('icon:', icon);
+
+    if (!toast || !pesan || !icon) {
+        console.error('ELEMENT TOAST TIDAK DITEMUKAN');
+        return;
+    }
+
+    pesan.textContent = message;
+
+    toast.classList.remove(
+        'bg-emerald-600',
+        'bg-red-600',
+        'bg-amber-500',
+        'bg-blue-600'
+    );
+
+    if (type === 'success') {
+        toast.classList.add('bg-emerald-600');
+        icon.className = 'bx bxs-check-circle text-xl text-white';
+    }
+
+    toast.classList.remove('hidden');
+
+    setTimeout(() => {
+        toast.classList.add('hidden');
+    }, 3000);
+}
+</script>
                         </div>
                     </div>
                 </div>

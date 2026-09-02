@@ -45,36 +45,6 @@
             sidebarOpen: $persist(false),
             Menu: $persist(false),
             Pengguna: $persist(false),
-            
-            showToast: false,
-            showConfirmDelete: false,
-
-            showConfirm: false,
-            confirmTitle: '',
-            confirmMessage: '',
-            confirmButton: '',
-            confirmIcon: 'alert-triangle',
-            confirmColor: 'rose',
-            confirmAction: null,
-
-            modalKonfirmasi(data) {
-                this.confirmTitle = data.judul;
-                this.confirmMessage = data.pesan;
-                this.confirmButton = data.btn;
-                this.confirmIcon = data.icon ?? 'alert-triangle';
-                this.confirmColor = data.warnaBtn ?? 'rose';
-                this.confirmAction = data.callback ?? null;
-
-                this.showConfirm = true;
-            },
-
-            jalankanKonfirmasi() {
-                if (this.confirmAction) {
-                    this.confirmAction();
-                }
-
-                this.showConfirm = false;
-            }
         }"  >
         <main>
             <section id="MainContent">
@@ -133,30 +103,7 @@
 
                             <h3 id="confirmTitle" class="text-xl font-bold text-slate-900 dark:text-white tracking-tight"></h3>
                             <p id="confirmMessage" class="text-sm text-slate-500 dark:text-slate-400 mt-2 mb-8 leading-relaxed"></p>
-
-                            <div class="flex items-center gap-3">
-                                <button 
-                                    type="button" 
-                                    id="confirmCancelBtn"
-                                    class="flex-1 py-3 px-4 rounded-lg bg-gray-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer"
-                                ></button>
-
-                                <button 
-                                    type="button" 
-                                    id="confirmActionBtn"
-                                    class="flex-1 py-3 px-4 rounded-lg text-white text-sm font-semibold shadow-md transition-colors cursor-pointer"
-                                ></button>
-
-                            <h3
-                                id="confirmTitle"
-                                class="text-xl font-bold text-slate-900 dark:text-white tracking-tight"
-                            ></h3>
-
-                            <p
-                                id="confirmMessage"
-                                class="text-sm text-slate-500 dark:text-slate-400 mt-2 mb-8 leading-relaxed"
-                            ></p>
-
+                      
                             <div class="flex items-center gap-3">
                                 <button
                                     type="button"
@@ -176,55 +123,65 @@
                                 </button>
 
                             </div>
-                        </div>
+
                     </div>
 
                     
                 </div>
 
             </section>
-        </main> 
+        </main>     
     
         <script>
 
             // INI GLOBAL TOAST JS YE..
 
             function showToast(message, type = 'success') {
-            const toast = document.getElementById('liveToast');
-            const pesan = document.getElementById('pesanToast');
-            const icon = document.getElementById('toastIcon');
+                const toast = document.getElementById('liveToast');
+                const pesan = document.getElementById('pesanToast');
+                const icon = document.getElementById('toastIcon');
 
-            pesan.textContent = message;
+                pesan.textContent = message;
 
-            toast.classList.remove(
-                'bg-emerald-600',
-                'bg-red-600',
-                'bg-amber-500',
-                'bg-blue-600'
-            );
+                toast.classList.remove(
+                    'bg-emerald-600',
+                    'bg-red-600',
+                    'bg-amber-500',
+                    'bg-blue-600'
+                );
 
-            if (type === 'success') {
-                toast.classList.add('bg-emerald-600');
-                icon.className = 'bx bxs-check-circle text-xl text-white';
-            } else if (type === 'error') {
-                toast.classList.add('bg-red-600');
-                icon.className = 'bx bxs-x-circle text-xl text-white';
-            } else if (type === 'warning') {
-                toast.classList.add('bg-amber-500');
-                icon.className = 'bx bxs-error text-xl text-white';
-            } else if (type === 'info') {
-                toast.classList.add('bg-blue-600');
-                icon.className = 'bx bxs-info-circle text-xl text-white';
+                if (type === 'success') {
+                    toast.classList.add('bg-emerald-600');
+                    icon.className = 'bx bxs-check-circle text-xl text-white';
+                } else if (type === 'error') {
+                    toast.classList.add('bg-red-600');
+                    icon.className = 'bx bxs-x-circle text-xl text-white';
+                } else if (type === 'warning') {
+                    toast.classList.add('bg-amber-500');
+                    icon.className = 'bx bxs-error text-xl text-white';
+                } else if (type === 'info') {
+                    toast.classList.add('bg-blue-600');
+                    icon.className = 'bx bxs-info-circle text-xl text-white';
+                }
+
+                toast.classList.remove('hidden');
+
+                requestAnimationFrame(() => {
+                    toast.classList.remove('opacity-0', 'translate-y-2');
+                    toast.classList.add('opacity-100', 'translate-y-0');
+                });
+
+                setTimeout(() => {
+                    toast.classList.remove('opacity-100', 'translate-y-0');
+                    toast.classList.add('opacity-0', 'translate-y-2');
+
+                    setTimeout(() => {
+                        toast.classList.add('hidden');
+                    }, 300);
+                }, 3000);
             }
 
-            toast.classList.remove('hidden');
-
-            setTimeout(() => {
-                toast.classList.add('hidden');
-            }, 3000);
-        }
-
-        // INI ANU ADALAH POKOKNYA INI MODAL GLOBAL
+        // INI ANU ADALAH POKOKNYA INI MODAL KONFIRMASI GLOBAL
 
             const confirmModal = document.getElementById('confirmModal');
 
@@ -304,16 +261,15 @@
                 confirmModal.classList.remove('flex');
             });
 
-
+            // INI MODAL UTAMA GLOBAL YANG ADA FORM NYA
 
             function showGlobalModal(data){
                 const modal=document.getElementById('global-modal');
                 const title=document.getElementById('globalModalTitle');
                 const subtitle=document.getElementById('globalModalSubtitle');
-                const iconContainer=document.getElementById('globalModalIconContainer');
+                const iconContainer=document.querySelectorAll('.globalModalIconContainer');
                 const icon=document.getElementById('globalModalIcon');
                 const form=document.getElementById('globalModalForm');
-                const input=document.getElementById('globalModalInput');
                 const submit=document.getElementById('globalModalSubmit');
                 const submitIcon=document.getElementById('globalModalSubmitIcon');
                 const submitText=document.getElementById('globalModalSubmitText');
@@ -321,20 +277,24 @@
                 title.textContent=data.title??'';
                 subtitle.textContent=data.subtitle??'';
                 
-                iconContainer.className=`flex w-12 h-12 rounded-lg items-center justify-center shrink-0 ${data.iconBg??'bg-primary'}`;
-                icon.className=`bx ${data.icon??'bx-plus'} text-2xl text-white`;
+                iconContainer.forEach(iconContainer => {
+                    iconContainer.className = `globalModalIconContainer flex w-12 h-12 rounded-lg items-center justify-center shrink-0 ${data.iconBg ?? 'bg-primary'}`;
+                });
 
+                icon.className = `bx ${data.icon ?? 'bx-plus'} text-2xl text-white`;
+                
                 form.action=data.action??'#';
                 form.method=data.method??'POST';
+                
+                submit.value = data.value ?? '';
+                submit.name = data.nameBtn ?? '';
 
-                input.value=data.value??'';
                 submit.className=`w-full sm:w-auto flex items-center justify-center text-white font-black px-6 py-3 gap-2 rounded-lg text-sm transition-all ${data.buttonColor??'bg-primary hover:bg-blue-700'}`;
                 submitIcon.className=`bx ${data.buttonIcon??'bxs-save'} text-lg`;
                 
                 submitText.textContent=data.buttonText??'Simpan';
                 modal.classList.remove('hidden');
-                modal.classList.add('flex');
-                input.focus();
+                modal.classList.add('flex');                
             }
 
             function closeGlobalModal(){
@@ -348,270 +308,34 @@
             document.addEventListener('keydown',function(event){
                 if(event.key==='Escape')closeGlobalModal();
             });
-            </section>
-        </main>      
 
-        <script>
-            let toastTimeout;
+            const globalModalForm = document.getElementById('globalModalForm');
+            const namaKategori = document.getElementById('namaKategori');
+            const namaKategoriError = document.getElementById('namaKategoriError');
 
-            window.showToast = function(d) {
-              if (!d) return;
+            globalModalForm.addEventListener('submit', function(event) {
 
-              const $toast = $('#liveToast');
-              const $pesan = $('#pesanToast');
-              const $icon = $('#toastIcon');
+                if (namaKategori.value.trim() === '') {
+                    event.preventDefault();
 
-              if (!$toast.length) return;
+                    namaKategori.classList.remove('border-gray-200/80');
+                    namaKategori.classList.add('border-red-500', 'bg-red-50');
 
-              const message = d.pesan || d.message || '';
-              let type = d.bg || d.type || 'success';
-              if (type === 'danger') type = 'error';
+                    namaKategoriError.classList.remove('hidden');
 
-              $pesan.text(message);
+                    return;
+                }
 
-              // Reset class warna & ikon
-              $toast.removeClass('bg-emerald-600 bg-rose-600 bg-amber-500 bg-sky-600');
-              $icon.removeClass('bxs-check-circle bxs-x-circle bxs-error bxs-info-circle');
+                namaKategori.classList.remove(
+                    'border-red-500',
+                    'bg-red-50'
+                );
 
-              // Mapping class sesuai Alpine.js sebelumnya
-              const config = {
-                success: { bg: 'bg-emerald-600', icon: 'bxs-check-circle' },
-                error: { bg: 'bg-rose-600', icon: 'bxs-x-circle' },
-                warning: { bg: 'bg-amber-500', icon: 'bxs-error' },
-                info: { bg: 'bg-sky-600', icon: 'bxs-info-circle' }
-              };
+                namaKategori.classList.add('border-gray-200/80');
 
-              const currentConfig = config[type] || config.success;
-              $toast.addClass(currentConfig.bg);
-              $icon.addClass(currentConfig.icon);
-
-              // Animasi muncul
-              $toast.removeClass('hidden');
-              setTimeout(() => {
-                $toast.removeClass('opacity-0 translate-y-2').addClass('opacity-100 translate-y-0');
-              }, 10);
-
-              // Auto-hide
-              clearTimeout(toastTimeout);
-              toastTimeout = setTimeout(() => {
-                hideToast();
-              }, 4000);
-            };
-
-            window.hideToast = function() {
-              const $toast = $('#liveToast');
-              if (!$toast.length) return;
-
-              $toast.removeClass('opacity-100 translate-y-0').addClass('opacity-0 translate-y-2');
-
-              setTimeout(() => {
-                $toast.addClass('hidden');
-              }, 300);
-            };
-
-            $(document).on('click', '#toastCloseBtn', function() {
-              hideToast();
+                namaKategoriError.classList.add('hidden');
             });
-
-            let confirmCallback = null;
-
-            window.showConfirm = function(options) {
-              const config = {
-                title: options.title || 'Konfirmasi',
-                message: options.message || 'Apakah Anda yakin?',
-                icon: options.icon || 'help-circle',
-                type: options.type || 'info',
-                buttonText: options.buttonText || 'Ya, Lanjutkan',
-                cancelText: options.cancelText || 'Batal',
-                onConfirm: options.onConfirm || null
-              };
-
-              confirmCallback = config.onConfirm;
-
-              $('#confirmTitle').text(config.title);
-              $('#confirmMessage').html(config.message);
-              $('#confirmCancelBtn').text(config.cancelText);
-              $('#confirmActionBtn').text(config.buttonText);
-
-              $('#confirmIcon').attr('class', `bx bx-${config.icon} text-4xl`);
-
-              const styles = {
-                danger: {
-                  iconBg: 'bg-rose-50 dark:bg-rose-950/50 text-rose-500',
-                  btnBg: 'bg-rose-600 hover:bg-rose-700 shadow-rose-600/20'
-                },
-                warning: {
-                  iconBg: 'bg-amber-50 dark:bg-amber-950/50 text-amber-500',
-                  btnBg: 'bg-amber-600 hover:bg-amber-700 shadow-amber-600/20'
-                },
-                success: {
-                  iconBg: 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-500',
-                  btnBg: 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/20'
-                },
-                info: {
-                  iconBg: 'bg-sky-50 dark:bg-sky-950/50 text-sky-500',
-                  btnBg: 'bg-sky-600 hover:bg-sky-700 shadow-sky-600/20'
-                }
-              };
-
-              const selectedStyle = styles[config.type] || styles.info;
-
-              $('#confirmIconContainer')
-                .removeClass('bg-rose-50 dark:bg-rose-950/50 text-rose-500 bg-amber-50 dark:bg-amber-950/50 text-amber-500 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-500 bg-sky-50 dark:bg-sky-950/50 text-sky-500')
-                .addClass(selectedStyle.iconBg);
-
-              $('#confirmActionBtn')
-                .removeClass('bg-rose-600 hover:bg-rose-700 shadow-rose-600/20 bg-amber-600 hover:bg-amber-700 shadow-amber-600/20 bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/20 bg-sky-600 hover:bg-sky-700 shadow-sky-600/20')
-                .addClass(selectedStyle.btnBg);
-
-              const $modal = $('#confirmModal');
-              const $box = $('#confirmBox');
-
-              $modal.removeClass('hidden').addClass('flex');
-
-              setTimeout(() => {
-                $modal.removeClass('opacity-0').addClass('opacity-100');
-                $box.removeClass('scale-95 translate-y-2').addClass('scale-100 translate-y-0');
-              }, 10);
-            };
-
-            window.hideConfirm = function() {
-              const $modal = $('#confirmModal');
-              const $box = $('#confirmBox');
-
-              $modal.removeClass('opacity-100').addClass('opacity-0');
-              $box.removeClass('scale-100 translate-y-0').addClass('scale-95 translate-y-2');
-
-              setTimeout(() => {
-                $modal.removeClass('flex').addClass('hidden');
-                confirmCallback = null;
-              }, 200);
-            };
-
-            $(document).ready(function() {
-              $('#confirmCancelBtn, #confirmOverlay').on('click', function() {
-                hideConfirm();
-              });
-
-              $('#confirmActionBtn').on('click', function() {
-                if (typeof confirmCallback === 'function') {
-                  confirmCallback();
-                }
-                hideConfirm();
-              });
-
-              $(document).on('keydown', function(e) {
-                if (e.key === 'Escape' && !$('#confirmModal').hasClass('hidden')) {
-                  hideConfirm();
-                }
-              });
-            });
-
-
-            // INI MODAK TANPA FORM
-
-            window.showGlobalForm = function(options) {
-              const config = {
-                title: options.title || 'Konfirmasi',
-                message: options.message || '',
-                type: options.type || 'danger',
-                icon: options.icon || 'error-circle',
-                buttonText: options.buttonText || 'Lanjutkan',
-                cancelText: options.cancelText || 'Batal',
-                actionUrl: options.actionUrl || '#',
-                method: options.method || 'POST',
-                inputs: options.inputs || []
-              };
-
-              $('#globalFormTitle').text(config.title);
-              $('#globalFormMessage').html(config.message);
-              $('#globalFormCancelBtn').text(config.cancelText);
-              $('#globalFormSubmitBtn').text(config.buttonText);
-              $('#globalFormElement').attr('action', config.actionUrl).attr('method', config.method);
-
-              $('#globalFormIcon').attr('class', `bx bx-${config.icon} text-4xl`);
-
-              const styles = {
-                danger: {
-                  iconBg: 'bg-rose-600 dark:bg-rose-950/50 text-white',
-                  btnBg: 'bg-rose-600 hover:bg-rose-700 shadow-rose-600/20'
-                },
-                warning: {
-                  iconBg: 'bg-amber-50 dark:bg-amber-950/50 text-amber-500',
-                  btnBg: 'bg-amber-600 hover:bg-amber-700 shadow-amber-600/20'
-                },
-                success: {
-                  iconBg: 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-500',
-                  btnBg: 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/20'
-                },
-                info: {
-                  iconBg: 'bg-primary dark:bg-sky-950/50 text-white',
-                  btnBg: 'bg-primary hover:bg-sky-700 shadow-primary/20'
-                }
-              };
-
-              const selectedStyle = styles[config.type] || styles.info;
-
-              $('#globalFormIconContainer')
-                .removeClass('bg-rose-50 dark:bg-rose-950/50 text-rose-500 bg-amber-50 dark:bg-amber-950/50 text-amber-500 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-500 bg-sky-50 dark:bg-sky-950/50 text-sky-500')
-                .addClass(selectedStyle.iconBg);
-
-              $('#globalFormSubmitBtn')
-                .removeClass('bg-rose-600 hover:bg-rose-700 shadow-rose-600/20 bg-amber-600 hover:bg-amber-700 shadow-amber-600/20 bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/20 bg-sky-600 hover:bg-sky-700 shadow-sky-600/20')
-                .addClass(selectedStyle.btnBg);
-
-              const $inputsContainer = $('#globalFormInputsContainer');
-              $inputsContainer.empty();
-
-              config.inputs.forEach(item => {
-                let inputHtml = '<div>';
-                if (item.label) {
-                  inputHtml += `<label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">${item.label}</label>`;
-                }
-                inputHtml += `<input 
-                  type="${item.type || 'text'}" 
-                  name="${item.name || ''}" 
-                  value="${item.value || ''}" 
-                  placeholder="${item.placeholder || ''}"
-                  class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 transition"
-                /></div>`;
-                $inputsContainer.append(inputHtml);
-              });
-
-              const $modal = $('#globalFormModal');
-              const $box = $('#globalFormBox');
-
-              $modal.removeClass('hidden').addClass('flex');
-
-              setTimeout(() => {
-                $modal.removeClass('opacity-0').addClass('opacity-100');
-                $box.removeClass('scale-95 translate-y-2').addClass('scale-100 translate-y-0');
-              }, 10);
-            };
-
-        window.hideGlobalForm = function() {
-          const $modal = $('#globalFormModal');
-          const $box = $('#globalFormBox');
-
-          $modal.removeClass('opacity-100').addClass('opacity-0');
-          $box.removeClass('scale-100 translate-y-0').addClass('scale-95 translate-y-2');
-
-          setTimeout(() => {
-            $modal.removeClass('flex').addClass('hidden');
-          }, 200);
-        };
-
-        $(document).ready(function() {
-          $('#globalFormCancelBtn, #globalFormOverlay').on('click', function() {
-            hideGlobalForm();
-          });
-        
-          $(document).on('keydown', function(e) {
-            if (e.key === 'Escape' && !$('#globalFormModal').hasClass('hidden')) {
-              hideGlobalForm();
-            }
-          });
-        });
+            
         </script>
     </body>
 </html>
