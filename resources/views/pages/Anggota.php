@@ -1,3 +1,26 @@
+<?php
+if(isset($_POST['aksi'])){
+  if($_POST['aksi'] == 'tambah'){
+    $hasil = tambah($_POST);
+    $_SESSION['toast'] = $hasil;
+    header("Location: ".htmlspecialchars($_GET['route'] ?? '')."");
+    exit;
+  } elseif($_POST['aksi'] == 'edit'){
+    $hasil = edit($_POST);
+    $_SESSION['toast'] = $hasil;
+    header("Location: ".htmlspecialchars($_GET['route'] ?? '')."");
+    exit;
+  } elseif($_POST['aksi'] == 'hapus'){
+    $hasil = hapus($_POST);
+    $_SESSION['toast'] = $hasil;
+    header("Location: ".htmlspecialchars($_GET['route'] ?? '')."");
+    exit;
+  }
+}
+
+$hasil = $_SESSION['toast'] ?? null;
+unset($_SESSION['toast']);
+?>
 <section id="Anggota">
     <div class="bg-white dark:bg-slate-900 mb-6">
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 pb-6 dark:border-slate-800">
@@ -17,7 +40,7 @@
                 </div>
             </div>
 
-            <button type="button" 
+            <button type="button"
                 onclick='showGlobalModal(<?= json_encode([
                     "title" => "Tambah Anggota",
                     "subtitle" => "Tambahkan data anggota baru ke dalam sistem.",
@@ -31,7 +54,8 @@
                     "nameBtn" => "aksi",
                     "value" => "tambah"
                 ]) ?>)'
-                class="w-full sm:w-auto flex items-center justify-center gap-2 bg-primary text-white font-bold px-6 py-3 rounded-lg hover:bg-blue-700 active:scale-95 transition-all duration-200">
+                class="btn-aksi w-full sm:w-auto flex items-center justify-center gap-2 bg-primary text-white font-bold px-6 py-3 rounded-lg hover:bg-blue-700 active:scale-95 transition-all duration-200"
+                value="tambah">
             <i class="bx bxs-user-id-card text-xl"></i>
             <span>Tambah Anggota</span>
         </button>
@@ -96,7 +120,7 @@
                     <th class="text-left font-bold px-5 py-4">Nama</th>
                     <th class="text-left font-bold px-5 py-4">No. Telepon</th>
                     <th class="text-left font-bold px-5 py-4">Role</th>
-                    <th class="text-left font-bold px-5 py-4">Status Karyawan</th>
+                    <th class="text-left font-bold px-5 py-4">Status Anggota</th>
                     <th class="text-center font-bold px-5 py-4">Aksi</th>
                 </tr>
             </thead>
@@ -111,7 +135,26 @@
                         <td><?= $d['nama_role'] ?></td>
                         <td><?= $d['status'] ?></td>
                         <td>
-                            <button type="button">Halo</button>
+                            <button 
+                                type="button" 
+                                onclick='showGlobalModal(<?= json_encode([
+                                    "title" => "Edit Anggota",
+                                    "subtitle" => "Perbarui data anggota baru ke dalam sistem.",
+                                    "icon" => "bxs-user-plus",
+                                    "iconBg" => "bg-primary",
+                                    "action" => "/pelanggan/store",
+                                    "method" => "POST",
+                                    "buttonText" => "Simpan pelanggan",
+                                    "buttonIcon" => "bxs-save",
+                                    "buttonColor" => "bg-primary hover:bg-blue-700",
+                                    "nameBtn" => "aksi",
+                                    "value" => "tambah"
+                                ]) ?>)'
+                                class="px-4 py-3 bg-primary text-white text-sm font-bold rounded-lg hover:opacity-90 transition-all flex items-center gap-2"
+                            >
+                                <i class="bx bx-plus text-base"></i>
+                                <span>Tambah Pelanggan</span>
+                            </button>
                         </td>
                     </tr>
                     <?php endwhile; ?>
@@ -169,21 +212,21 @@
                         <i class="bx bxs-x text-2xl" aria-hidden="true"></i>
                     </button>
                 </div>
-                <form id="globalModalForm" action="" method="POST" class="p-5 sm:p-6">
+                <form id="globalModalForm" action="" method="POST" class="p-5 sm:p-6" autocomplete="off">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div class="col-span-1 md:col-span-2 flex items-center gap-3 pb-2 border-b border-gray-100 dark:border-slate-800">
                             <i class="bx bxs-id-card text-primary text-xl" aria-hidden="true"></i>
                             <h4 class="text-sm font-bold uppercase tracking-wider text-slate-800 dark:text-gray-300">Data Diri</h4>
                         </div>
                     <div class="flex flex-col gap-1.5 w-full">
-                        <label for="globalModalInput" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
-                            Nama Lengkap <span class="text-red-500" aria-hidden="true">*</span>
+                        <label for="nama" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
+                            Nama <span class="text-red-500" aria-hidden="true">*</span>
                         </label>
                         <div class="relative flex items-center w-full group">
                             <div class="absolute left-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors">
                                 <i class="bx bxs-user text-xl" aria-hidden="true"></i>
                             </div>
-                            <input type="text" name="username" minlength="1" maxlength="100" id="globalModalInput" placeholder="Contoh: budi.santoso" autocomplete="off" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring focus:ring-primary focus:border-primary transition-all" required>
+                            <input type="text" name="nama" minlength="1" maxlength="100" id="nama" placeholder="Contoh: budi santoso" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring focus:ring-primary focus:border-primary transition-all" required>
                         </div>
                     </div>
                     <div class="flex flex-col gap-1.5 w-full">
@@ -194,18 +237,18 @@
                             <div class="absolute left-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors">
                                 <i class="bx bxs-phone text-xl" aria-hidden="true"></i>
                             </div>
-                            <input type="text" name="telepon" inputmode="numeric" pattern="[0-9]{12}" minlength="12" maxlength="12" id="telepon" placeholder="Contoh: 081234567890" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring focus:ring-primary focus:border-primary transition-all" required>
+                            <input type="text" name="telepon" inputmode="numeric" pattern="[0-9]{12}" minlength="12" maxlength="12" id="telepon" placeholder="Contoh: 081234567890" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring focus:ring-primary focus:border-primary transition-all" required>
                         </div>
                     </div>
                         <div class="flex flex-col gap-1.5 w-full">
-                            <label for="roleKaryawan" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
+                            <label for="role" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
                                 Role <span class="text-red-500" aria-hidden="true">*</span>
                             </label>
                             <div class="relative flex items-center w-full group">
                                 <div class="absolute left-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors">
                                     <i class="bx bxs-briefcase-alt-2 text-xl" aria-hidden="true"></i>
                                 </div>
-                                <select name="role" id="roleKaryawan" class="w-full pl-11 pr-10 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-bold rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring focus:ring-primary focus:border-primary transition-all appearance-none cursor-pointer" required>
+                                <select name="role" id="role" class="w-full pl-11 pr-10 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-bold rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring focus:ring-primary focus:border-primary transition-all appearance-none cursor-pointer" required>
                                     <option value="">Pilih role...</option>
                                     <?php foreach($role as $d): ?>
                                     <option value="<?= $d['id_role'] ?>"><?= $d['nama_role'] ?></option>
@@ -216,15 +259,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="flex flex-col gap-1.5 w-full">
+                        <div class="flex flex-col gap-1.5 w-full" id="g-status">
                             <label class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
-                                Status <span class="text-red-500" aria-hidden="true">*</span>
+                                Status Anggota<span class="text-red-500" aria-hidden="true">*</span>
                             </label>
                             <div class="w-full px-4 py-3 bg-white dark:bg-slate-800 rounded-lg border-2 border-gray-200/80 dark:border-slate-700 flex items-center">
                                 <label class="inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" name="status" id="statusKaryawan" value="aktif" class="sr-only peer" checked>
+                                    <input type="checkbox" name="status" id="status" value="" class="sr-only peer" checked>
                                     <div class="relative w-10 h-5.5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/50 dark:peer-focus:ring-primary/30 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4.5 after:w-4.5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
-                                    <span class="ms-3 text-sm font-bold text-slate-700 dark:text-slate-300">Akun Aktif</span>
+                                    <span class="ms-3 text-sm font-bold text-slate-700 dark:text-slate-300">Aktif</span>
                                 </label>
                             </div>
                         </div>
@@ -269,3 +312,15 @@
         </div>
     </div>
 </section>
+
+<script>
+    $('.btn-aksi').click(function() {
+        let v = $(this).val();
+        if(v == "tambah"){
+            $('#g-status').addClass('hidden');
+        } else{
+            $('#g-status').removeClass('hidden');
+            $('#status').prop('checked', status == '1');
+        }
+    });
+</script>

@@ -50,8 +50,117 @@
                     <span class="text-xs font-bold text-gray-400">metode</span>
                 </div>
             </div>
-            <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-primary text-white group-hover:scale-110 transition-transform duration-300 shrink-0">
-                <i class="bx bxs-credit-card text-2xl"></i>
+            <div class="overflow-x-auto overflow-y-auto max-h-[700px] p-1">
+                <table id="selection-table" class="w-full min-w-[600px] text-sm">
+                    <thead class="sticky top-0 bg-slate-50 dark:bg-slate-900 z-10">
+                        <tr class="text-gray-400">
+                            <th class="text-left font-bold px-5 py-4">#</th>
+                            <th class="text-left font-bold px-5 py-4">Nama</th>
+                            <th class="text-left font-bold px-5 py-4">Tipe</th>
+                            <th class="text-left font-bold px-5 py-4">Status</th>
+                            <th class="text-center font-bold px-5 py-4">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="body-tabel-kategori">
+                        <tr>
+                            <td class="px-5 py-4 font-bold text-gray-500 w-12">1</td>
+                            <td class="px-5 py-4">
+                                <span class="font-bold text-slate-800">Bank Mandiri</span>
+                            </td>
+                            <td class="px-5 py-4">
+                                <span class="font-bold text-slate-800">Transfer</span>
+                            </td>
+                            <td class="px-5 py-4">
+                                <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary text-xs font-bold text-white">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+                                    Aktif
+                                </span>
+                            </td>
+                            <td class="px-5 py-4 w-36 whitespace-nowrap">
+                                <div class="flex items-center justify-center gap-2">
+                                    <button type="button" 
+                                    onclick='showGlobalModal(<?= json_encode([
+                                        "title" => "Edit Metode Pembayaran",
+                                        "subtitle" => "Perbarui informasi metode pembayaran cafe.",
+                                        "icon" => "bxs-edit",
+                                        "iconBg" => "bg-amber-500",
+                                        "method" => "POST",
+                                        "buttonText" => "Simpan Perubahan",
+                                        "buttonIcon" => "bxs-save",
+                                        "buttonColor" => "bg-amber-500 hover:bg-amber-600",
+                                        "value" => "Cash / Tunai"
+                                    ]) ?>)'
+                                    class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Edit menu">
+                                        <i class="bx bxs-pencil"></i>
+                                    </button>
+                                    <button type="button" 
+                                    onclick="showConfirm(
+                                        'Hapus Data',
+                                        'Yakin ingin menghapus data ini?',
+                                        'Ya, Hapus',
+                                        'danger'
+                                    )"    
+                                    class="w-10 h-10 rounded-lg bg-red-500 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Hapus menu">
+                                        <i class="bx bxs-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        <!-- YANG DI BAWAH INI CONTOH JIKA VALUE NYA KOSONG. -->
+
+                            <!-- <td colspan="5">
+                                <div class="flex flex-col items-center justify-center py-12 px-4 text-center bg-gray-50">
+                                    <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4 border border-gray-200/80">
+                                        <i class="bx bx-credit-card text-4xl text-gray-300"></i>
+                                    </div>
+                                    <h3 class="text-base font-black text-slate-800 mb-1">Metode Belum Tersedia</h3>
+                                    <p class="text-xs text-gray-400 max-w-sm mb-5">
+                                        Belum ada metode pembayaran yang ditambahkan atau hasil pencarian tidak cocok.
+                                    </p>
+                                    <button type="button" @click="TambahMetode = true" class="px-4 py-3 bg-primary text-white text-sm font-bold rounded-lg hover:opacity-90 transition-all flex items-center gap-2">
+                                        <i class="bx bxs-plus text-base"></i>
+                                        <span>Tambah Metode</span>
+                                    </button>
+                                </div>
+                            </td> -->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="w-full flex justify-center mt-6">
+                <nav aria-label="Pagination">
+                    <ul class="inline-flex items-center gap-1.5 p-1.5 rounded-lg border-2 border-gray-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm font-medium">
+
+                        <li>
+                            <a href="?page=1"
+                                class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-400 dark:text-slate-500 opacity-50 cursor-not-allowed pointer-events-none">
+                                Previous
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="?page=1"
+                                class="flex items-center justify-center w-9 h-9 rounded-lg bg-primary text-white font-bold shadow-sm">
+                                1
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="?page=2"
+                                class="flex items-center justify-center w-9 h-9 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                                2
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="?page=2"
+                                class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                                Next
+                            </a>
+                        </li>
+
+                    </ul>
+                </nav>
             </div>
         </div>
 
