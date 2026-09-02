@@ -1,6 +1,6 @@
 <?php
 $cari = trim($_GET['cari'] ?? '');
-$sql = "SELECT p.* FROM pelanggan WHERE 1=1";
+$sql = "SELECT p.* FROM pelanggan p WHERE 1=1";
 $params = [];
 $types = "";
 if(!empty($cari)){

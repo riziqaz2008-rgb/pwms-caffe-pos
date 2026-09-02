@@ -1,3 +1,26 @@
+<?php
+if(isset($_POST['aksi'])){
+  if($_POST['aksi'] == 'tambah'){
+    $hasil = tambah($_POST);
+    $_SESSION['toast'] = $hasil;
+    header("Location: ".htmlspecialchars($_GET['route'] ?? '')."");
+    exit;
+  } elseif($_POST['aksi'] == 'edit'){
+    $hasil = edit($_POST);
+    $_SESSION['toast'] = $hasil;
+    header("Location: mapel.php");
+    exit;
+  } elseif($_POST['aksi'] == 'hapus'){
+    $hasil = hapus($_POST);
+    $_SESSION['toast'] = $hasil;
+    header("Location: mapel.php");
+    exit;
+  }
+}
+
+$hasil = $_SESSION['toast'] ?? null;
+unset($_SESSION['toast']);
+?>
 <section id="Pelanggan">
     <div>
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-5">
@@ -28,7 +51,8 @@
                         "buttonText" => "Simpan pelanggan",
                         "buttonIcon" => "bxs-save",
                         "buttonColor" => "bg-primary hover:bg-blue-700",
-                        "value" => ""
+                        "nameBtn" => "aksi",
+                        "value" => "tambah"
                     ]) ?>)'
                     class="w-full h-12 md:w-auto flex items-center justify-center bg-primary text-white font-bold px-6 gap-2 rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
                 >
@@ -100,7 +124,8 @@
                                             "buttonText" => "Simpan pelanggan",
                                             "buttonIcon" => "bxs-save",
                                             "buttonColor" => "bg-primary hover:bg-blue-700",
-                                            "value" => ""
+                                            "nameBtn" => "aksi",
+                                            "value" => "tambah"
                                         ]) ?>)'
                                         class="px-4 py-3 bg-primary text-white text-sm font-bold rounded-lg hover:opacity-90 transition-all flex items-center gap-2"
                                     >
@@ -137,7 +162,7 @@
                         </button>
                     </div>
 
-                    <form id="globalModalForm" action="" method="POST" class="p-5 sm:p-6">
+                    <form id="globalModalForm" action="" method="POST" class="p-5 sm:p-6" autocomplete="off">
                         
                         <div class="grid grid-cols-1 gap-5">                    
 
@@ -149,7 +174,7 @@
                                     <div class="absolute left-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors">
                                         <i class="bx bxs-user text-xl" aria-hidden="true"></i>
                                     </div>
-                                    <input type="text" name="namaLengkap" id="globalModalInput" placeholder="Masukkan nama lengkap" autocomplete="off" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all" required>
+                                    <input type="text" name="nama" id="nama" placeholder="Masukkan nama lengkap" autocomplete="off" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all" required>
                                 </div>
                             </div>
                         
@@ -161,7 +186,7 @@
                                     <div class="absolute left-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors">
                                         <i class="bx bxs-phone text-xl" aria-hidden="true"></i>
                                     </div>
-                                    <input type="text" name="noTelepon" id="noTelepon" placeholder="Contoh: 081234567890" autocomplete="off" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all" required>
+                                    <input type="text" name="nama" id="nama" placeholder="Contoh: 081234567890" autocomplete="off" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all" required>
                                 </div>
                             </div>
 

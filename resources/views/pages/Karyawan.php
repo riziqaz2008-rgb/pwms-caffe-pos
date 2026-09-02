@@ -1,5 +1,29 @@
 
-<?php $isEdit = isset($_GET['edit']) && !empty($_GET['edit']); ?>
+<?php
+$isEdit = isset($_GET['edit']) && !empty($_GET['edit']);
+
+if(isset($_POST['aksi'])){
+  if($_POST['aksi'] == 'tambah'){
+    $hasil = tambah($_POST);
+    $_SESSION['toast'] = $hasil;
+    header("Location: ".htmlspecialchars($_GET['route'] ?? '')."");
+    exit;
+  } elseif($_POST['aksi'] == 'edit'){
+    $hasil = edit($_POST);
+    $_SESSION['toast'] = $hasil;
+    header("Location: mapel.php");
+    exit;
+  } elseif($_POST['aksi'] == 'hapus'){
+    $hasil = hapus($_POST);
+    $_SESSION['toast'] = $hasil;
+    header("Location: mapel.php");
+    exit;
+  }
+}
+
+$hasil = $_SESSION['toast'] ?? null;
+unset($_SESSION['toast']);
+?>
 <section id="Karyawan">
 
     <div
@@ -60,7 +84,7 @@
                         "buttonText" => "Simpan Karyawan",
                         "buttonIcon" => "bxs-save",
                         "buttonColor" => "bg-primary hover:bg-blue-700",
-                        "value" => ""
+                        "value" => "tambah"
                     ]) ?>)'
                     class="w-full sm:w-auto flex items-center justify-center gap-2 bg-primary text-white font-bold px-6 py-3 rounded-lg hover:bg-blue-700 active:scale-95 transition-all duration-200">
                 <i class="bx bxs-user-plus text-xl"></i>
@@ -167,8 +191,34 @@
                                 <td><?= $d['telepon'] ?></td>
                                 <td><?= $d['nama_role'] ?></td>
                                 <td><?= $d['status'] ?></td>
-                                <td>
-                                    <button type="button">Halo</button>
+                                <td class="px-5 py-4 w-36 whitespace-nowrap">
+                                    <div class="flex items-center justify-center gap-2">
+                                        <button type="button" 
+                                        onclick='showGlobalModal(<?= json_encode([
+                                            "title" => "Edit Metode Pembayaran",
+                                            "subtitle" => "Perbarui informasi metode pembayaran cafe.",
+                                            "icon" => "bxs-edit",
+                                            "iconBg" => "bg-amber-500",
+                                            "method" => "POST",
+                                            "buttonText" => "Simpan Perubahan",
+                                            "buttonIcon" => "bxs-save",
+                                            "buttonColor" => "bg-amber-500 hover:bg-amber-600",
+                                            "value" => "Cash / Tunai"
+                                        ]) ?>)'
+                                        class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Edit menu">
+                                            <i class="bx bxs-pencil"></i>
+                                        </button>
+                                        <button type="button" 
+                                        onclick="showConfirm(
+                                            'Hapus Data?',
+                                            'Yakin ingin menghapus data ini?',
+                                            'Ya, Hapus',
+                                            'danger'
+                                        )"    
+                                        class="w-10 h-10 rounded-lg bg-red-500 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Hapus menu">
+                                            <i class="bx bxs-trash"></i>
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                             <?php endwhile; ?>
@@ -183,18 +233,17 @@
                                     <p class="text-xs text-gray-400 max-w-sm mb-5">
                                         Belum ada karyawan pembayaran yang ditambahkan atau hasil pencarian tidak cocok.
                                     </p>
-                                    <button type="button" 
+                                    <button type="button"
                                         onclick='showGlobalModal(<?= json_encode([
                                             "title" => "Tambah Karyawan",
                                             "subtitle" => "Tambahkan data karyawan baru ke dalam sistem.",
                                             "icon" => "bxs-user-plus",
                                             "iconBg" => "bg-primary",
-                                            "action" => "/karyawan/store",
                                             "method" => "POST",
                                             "buttonText" => "Simpan Karyawan",
                                             "buttonIcon" => "bxs-save",
                                             "buttonColor" => "bg-primary hover:bg-blue-700",
-                                            "value" => ""
+                                            "value" => "tambah"
                                         ]) ?>)'
                                         class="w-full sm:w-auto flex items-center justify-center gap-2 bg-primary text-white font-bold px-6 py-3 rounded-lg hover:bg-blue-700 active:scale-95 transition-all duration-200">
                                     <i class="bx bxs-user-plus text-xl"></i>
@@ -301,7 +350,7 @@
                                     <label class="inline-flex items-center cursor-pointer">
                                         <input type="checkbox" name="status" id="statusKaryawan" value="aktif" class="sr-only peer" checked>
                                         <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/50 dark:peer-focus:ring-primary/30 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
-                                        <span class="ms-3 text-sm font-bold text-slate-700 dark:text-slate-300">Akun Aktif</span>
+                                        <span class="ms-3 text-sm font-bold text-slate-700 dark:text-slate-300">Aktif</span>
                                     </label>
                                 </div>
                             </div>

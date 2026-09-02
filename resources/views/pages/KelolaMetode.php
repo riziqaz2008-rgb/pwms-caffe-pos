@@ -160,7 +160,6 @@
                                         "subtitle" => "Perbarui informasi metode pembayaran cafe.",
                                         "icon" => "bxs-edit",
                                         "iconBg" => "bg-amber-500",
-                                        "action" => "/metode-pembayaran/update/1",
                                         "method" => "POST",
                                         "buttonText" => "Simpan Perubahan",
                                         "buttonIcon" => "bxs-save",

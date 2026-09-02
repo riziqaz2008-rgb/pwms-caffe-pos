@@ -669,7 +669,7 @@
 
                             <button
                                 type="button"
-                                onclick="showToast('Data berhasil disimpan!', 'success')"     
+                                onclick="showToast('Data berhasil disimpan!', 'success')"
                                 class="w-full flex items-center justify-center bg-primary text-white font-black px-8 py-3.5 gap-2 rounded-lg cursor-pointer transition-all shadow-md mt-4"
                             >
                                 <i class="bx bxs-basket text-xl"></i>
