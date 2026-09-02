@@ -57,76 +57,59 @@
                         </main>
                     </div>
                 </div>
-                   <div>
-                    <!-- INI TOAST JIR -->
-                     <div 
-                        id="liveToast" 
-                        class="fixed top-28 right-5 z-50 flex items-center w-full max-w-xs p-4 rounded-lg shadow-lg text-white hidden opacity-0 transition-all duration-300 transform translate-y-2 bg-emerald-600"
-                        role="alert"
-                        >
-                            <i id="toastIcon" class="bx bxs-check-circle text-xl text-white"></i>
 
-                            <div id="pesanToast" class="ms-2.5 text-white text-sm font-bold border-s border-white/30 ps-3.5"></div>
+                <!-- INI TOAST JIR -->
+                <div id="liveToast" class="fixed top-28 right-5 z-50 flex items-center w-full max-w-xs p-4 rounded-lg shadow-lg text-white hidden opacity-0 transition-all duration-300 transform translate-y-2 bg-emerald-600" role="alert">
+                    <i id="toastIcon" class="bx bxs-check-circle text-xl text-white"></i>
+                    <div id="pesanToast" class="ms-2.5 text-white text-sm font-bold border-s border-white/30 ps-3.5"></div>
+                    <button type="button" id="toastCloseBtn" class="ms-auto flex items-center justify-center text-white hover:bg-white/20 font-medium rounded text-sm h-8 w-8 focus:outline-none transition" aria-label="Close">
+                        <span class="sr-only">Close</span>
+                        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
+                        </svg>
+                    </button>
+                </div>
 
-                            <button 
-                                type="button"
-                                id="toastCloseBtn"
-                                class="ms-auto flex items-center justify-center text-white hover:bg-white/20 font-medium rounded text-sm h-8 w-8 focus:outline-none transition"
-                                aria-label="Close"
-                            >
-                                <span class="sr-only">Close</span>
-                                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
-                                </svg>
-                            </button>
+                <!-- INI MODAL KONFIRMASI TANPA FORM -->
+                <div id="confirmModal" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-[9999] items-center justify-center p-4 overflow-y-auto">
+                    <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
+                    <div id="confirmBox" class="relative w-full max-w-md p-6 sm:p-8 bg-white dark:bg-slate-900 rounded-3xl shadow-2xl text-center z-10">
+                        <div id="confirmIconContainer" class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5">
+                            <i id="confirmIcon" class="bx text-4xl"></i>
+                        </div>
+                        <h3 id="confirmTitle" class="text-xl font-bold text-slate-900 dark:text-white tracking-tight"></h3>
+                        <p id="confirmMessage" class="text-sm text-slate-500 dark:text-slate-400 mt-2 mb-6 leading-relaxed"></p>
+                        <div class="flex items-center gap-3">
+                            <button type="button" id="confirmCancelBtn" class="flex-1 py-3 px-4 rounded-lg bg-gray-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Batal</button>
+                            <button type="button" id="confirmActionBtn" class="flex-1 py-3 px-4 rounded-lg text-white text-sm font-semibold shadow-md transition-colors">Hapus</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- INI MODAL KONFIRMASI FORM -->
+                <div id="confirmModalId" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-[9999] items-center justify-center p-4 overflow-y-auto">
+                    <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
+                    <div id="confirmFormBox" class="relative z-10 w-full max-w-md p-6 sm:p-8 bg-white dark:bg-slate-900 rounded-3xl shadow-2xl">
+                        <div class="text-center mb-6">
+                            <div id="confirmFormIconContainer" class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5">
+                                <i id="confirmFormIcon" class="bx text-4xl"></i>
+                            </div>
+                            <h3 id="confirmFormTitle" class="text-xl font-bold text-slate-900 dark:text-white tracking-tight"></h3>
+                            <p id="confirmFormMessage" class="text-sm text-slate-500 dark:text-slate-400 mt-2 leading-relaxed"></p>
                         </div>
 
-                    <div>
+                        <form method="POST" id="confirmForm">
+                            <input type="hidden" name="aksi" id="confirmFormAksi">
+                            <input type="hidden" name="id" id="confirmFormId">
 
-                    <div
-                        id="confirmModal"
-                        tabindex="-1"
-                        aria-hidden="true"
-                        class="hidden fixed inset-0 z-[9999] items-center justify-center p-4 overflow-y-auto"
-                    >
-                        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
+                            <div id="confirmFormInputs" class="space-y-4 mb-6"></div>
 
-                        <div
-                            id="confirmBox"
-                            class="relative w-full max-w-md p-6 sm:p-8 bg-white dark:bg-slate-900 rounded-3xl shadow-2xl text-center z-10"
-                        >
-                            <div
-                                id="confirmIconContainer"
-                                class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5">
-                                <i id="confirmIcon" class="bx text-4xl"></i>
-                            </div>
-
-                            <h3 id="confirmTitle" class="text-xl font-bold text-slate-900 dark:text-white tracking-tight"></h3>
-                            <p id="confirmMessage" class="text-sm text-slate-500 dark:text-slate-400 mt-2 mb-8 leading-relaxed"></p>
-                      
                             <div class="flex items-center gap-3">
-                                <button
-                                    type="button"
-                                    id="confirmCancelBtn"
-                                    data-modal-hide="confirmModal"
-                                    class="flex-1 py-3 px-4 rounded-lg bg-gray-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-                                >
-                                    Batal
-                                </button>
-
-                                <button
-                                    type="button"
-                                    id="confirmActionBtn"
-                                    class="flex-1 py-3 px-4 rounded-lg text-white text-sm font-semibold shadow-md transition-colors"
-                                >
-                                    Hapus
-                                </button>
-
+                                <button type="button" id="confirmFormCancelBtn" class="flex-1 py-3 px-4 rounded-lg bg-gray-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Batal</button>
+                                <button type="submit" id="confirmFormActionBtn" class="flex-1 py-3 px-4 rounded-lg text-white text-sm font-semibold shadow-md transition-colors">Tolak</button>
                             </div>
-
+                        </form>
                     </div>
-
-                    
                 </div>
 
             </section>
@@ -191,83 +174,301 @@
 
         // INI ANU ADALAH POKOKNYA INI MODAL KONFIRMASI GLOBAL
 
-            const confirmModal = document.getElementById('confirmModal');
-
-            function showConfirm(
-                title = 'Hapus Data?',
-                message = 'Data yang dihapus tidak dapat dikembalikan.',
-                actionText = 'Hapus',
-                type = 'danger'
-            ) {
-                const titleElement = document.getElementById('confirmTitle');
-                const messageElement = document.getElementById('confirmMessage');
-                const actionButton = document.getElementById('confirmActionBtn');
-                const iconContainer = document.getElementById('confirmIconContainer');
-                const icon = document.getElementById('confirmIcon');
-
-                titleElement.textContent = title;
-                messageElement.textContent = message;
-                actionButton.textContent = actionText;
-
-                actionButton.classList.remove(
+        const confirmModal = document.getElementById('confirmModal');
+        let confirmAction = null;
+        
+        function showConfirm(
+            title = 'Konfirmasi',
+            message = 'Apakah kamu yakin?',
+            actionText = 'Ya',
+            type = 'danger',
+            onConfirm = null
+        ) {
+        
+            const titleElement = confirmModal.querySelector('#confirmTitle');
+            const messageElement = confirmModal.querySelector('#confirmMessage');
+            const actionButton = confirmModal.querySelector('#confirmActionBtn');
+            const iconContainer = confirmModal.querySelector('#confirmIconContainer');
+            const icon = confirmModal.querySelector('#confirmIcon');
+        
+            titleElement.textContent = title;
+            messageElement.textContent = message;
+            actionButton.textContent = actionText;
+        
+            confirmAction = onConfirm;
+        
+            actionButton.classList.remove(
+                'bg-red-600',
+                'hover:bg-red-700',
+                'bg-emerald-600',
+                'hover:bg-emerald-700',
+                'bg-amber-500',
+                'hover:bg-amber-600',
+                'bg-blue-600',
+                'hover:bg-blue-700'
+            );
+        
+            iconContainer.classList.remove(
+                'bg-red-100',
+                'text-red-600',
+                'bg-emerald-100',
+                'text-emerald-600',
+                'bg-amber-100',
+                'text-amber-600',
+                'bg-blue-100',
+                'text-blue-600'
+            );
+        
+            if (type === 'danger') {
+        
+                actionButton.classList.add(
                     'bg-red-600',
-                    'hover:bg-red-700',
+                    'hover:bg-red-700'
+                );
+        
+                iconContainer.classList.add(
+                    'bg-red-100',
+                    'text-red-600'
+                );
+        
+                icon.className = 'bx bx-trash text-4xl';
+        
+            } else if (type === 'success') {
+        
+                actionButton.classList.add(
                     'bg-emerald-600',
-                    'hover:bg-emerald-700',
+                    'hover:bg-emerald-700'
+                );
+        
+                iconContainer.classList.add(
+                    'bg-emerald-100',
+                    'text-emerald-600'
+                );
+        
+                icon.className = 'bx bx-check-circle text-4xl';
+        
+            } else if (type === 'warning') {
+        
+                actionButton.classList.add(
                     'bg-amber-500',
-                    'hover:bg-amber-600',
+                    'hover:bg-amber-600'
+                );
+        
+                iconContainer.classList.add(
+                    'bg-amber-100',
+                    'text-amber-600'
+                );
+        
+                icon.className = 'bx bx-error text-4xl';
+        
+            } else if (type === 'info') {
+        
+                actionButton.classList.add(
+                    'bg-blue-600',
+                    'hover:bg-blue-700'
+                );
+        
+                iconContainer.classList.add(
+                    'bg-blue-100',
+                    'text-blue-600'
+                );
+        
+                icon.className = 'bx bx-info-circle text-4xl';
+            }
+        
+            confirmModal.classList.remove('hidden');
+            confirmModal.classList.add('flex');
+        }
+        
+        
+        function closeConfirm() {
+        
+            confirmModal.classList.add('hidden');
+            confirmModal.classList.remove('flex');
+        
+            confirmAction = null;
+        }
+        
+        
+        confirmModal.querySelector('#confirmActionBtn')
+            .addEventListener('click', function () {
+        
+                if (typeof confirmAction === 'function') {
+                    confirmAction();
+                }
+        
+                closeConfirm();
+            });
+        
+        
+        confirmModal.querySelector('#confirmCancelBtn')
+            .addEventListener('click', closeConfirm);
+        
+        
+        confirmModal.querySelector('.fixed.inset-0')
+            .addEventListener('click', closeConfirm);
+
+
+
+            // INI MODAL ID LOGIKA JS MODAL YG ADA FORM NYA
+
+    const confirmModalId = document.getElementById('confirmModalId');
+
+        function showConfirmForm({
+            title = 'Konfirmasi',
+            message = 'Apakah kamu yakin?',
+            actionText = 'Ya',
+            type = 'danger',
+            inputs = [],
+            action = '',
+            method = 'POST',
+            values = {}
+        }) {
+            const titleElement = confirmModalId.querySelector('#confirmFormTitle');
+            const messageElement = confirmModalId.querySelector('#confirmFormMessage');
+            const actionButton = confirmModalId.querySelector('#confirmFormActionBtn');
+            const iconContainer = confirmModalId.querySelector('#confirmFormIconContainer');
+            const icon = confirmModalId.querySelector('#confirmFormIcon');
+            const form = confirmModalId.querySelector('#confirmForm');
+            const inputWrapper = confirmModalId.querySelector('#confirmFormInputs');
+
+            titleElement.textContent = title;
+            messageElement.textContent = message;
+            actionButton.textContent = actionText;
+
+            form.action = action;
+            form.method = method;
+
+            inputWrapper.innerHTML = '';
+
+            inputs.forEach((item, index) => {
+                const wrapper = document.createElement('div');
+
+                wrapper.innerHTML = `
+                    <label
+                        for="confirmFormInput${index}"
+                        class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300"
+                    >
+                        ${item.label ?? ''}
+                    </label>
+
+                    <input
+                        type="${item.type ?? 'text'}"
+                        id="confirmFormInput${index}"
+                        name="${item.name ?? ''}"
+                        placeholder="${item.placeholder ?? ''}"
+                        value="${values[item.name] ?? item.value ?? ''}"
+                        ${item.required ? 'required' : ''}
+                        class="w-full px-4 py-3 rounded-lg
+                            bg-white dark:bg-slate-800
+                            text-slate-900 dark:text-white
+                            text-sm
+                            border-2 border-gray-200 dark:border-slate-700
+                            focus:outline-none
+                            focus:border-primary
+                            focus:ring-2 focus:ring-primary/20
+                            transition-all"
+                    >
+                `;
+
+                inputWrapper.appendChild(wrapper);
+            });
+
+            actionButton.classList.remove(
+                'bg-red-600',
+                'hover:bg-red-700',
+                'bg-emerald-600',
+                'hover:bg-emerald-700',
+                'bg-amber-500',
+                'hover:bg-amber-600',
+                'bg-blue-600',
+                'hover:bg-blue-700'
+            );
+
+            iconContainer.classList.remove(
+                'bg-red-100',
+                'text-red-600',
+                'bg-emerald-100',
+                'text-emerald-600',
+                'bg-amber-100',
+                'text-amber-600',
+                'bg-blue-100',
+                'text-blue-600'
+            );
+
+            if (type === 'danger') {
+                actionButton.classList.add(
+                    'bg-red-600',
+                    'hover:bg-red-700'
+                );
+
+                iconContainer.classList.add(
+                    'bg-red-100',
+                    'text-red-600'
+                );
+
+                icon.className = 'bx bx-trash text-4xl';
+
+            } else if (type === 'success') {
+                actionButton.classList.add(
+                    'bg-emerald-600',
+                    'hover:bg-emerald-700'
+                );
+
+                iconContainer.classList.add(
+                    'bg-emerald-100',
+                    'text-emerald-600'
+                );
+
+                icon.className = 'bx bx-check-circle text-4xl';
+
+            } else if (type === 'warning') {
+                actionButton.classList.add(
+                    'bg-amber-500',
+                    'hover:bg-amber-600'
+                );
+
+                iconContainer.classList.add(
+                    'bg-amber-100',
+                    'text-amber-600'
+                );
+
+                icon.className = 'bx bx-error text-4xl';
+
+            } else if (type === 'info') {
+                actionButton.classList.add(
                     'bg-blue-600',
                     'hover:bg-blue-700'
                 );
 
-                iconContainer.classList.remove(
-                    'bg-red-100',
-                    'text-red-600',
-                    'bg-emerald-100',
-                    'text-emerald-600',
-                    'bg-amber-100',
-                    'text-amber-600',
+                iconContainer.classList.add(
                     'bg-blue-100',
                     'text-blue-600'
                 );
 
-                if (type === 'danger') {
-                    actionButton.classList.add('bg-red-600', 'hover:bg-red-700');
-                    iconContainer.classList.add('bg-red-100', 'text-red-600');
-                    icon.className = 'bx bx-trash text-4xl';
-                }
-
-                if (type === 'success') {
-                    actionButton.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
-                    iconContainer.classList.add('bg-emerald-100', 'text-emerald-600');
-                    icon.className = 'bx bx-check-circle text-4xl';
-                }
-
-                if (type === 'warning') {
-                    actionButton.classList.add('bg-amber-500', 'hover:bg-amber-600');
-                    iconContainer.classList.add('bg-amber-100', 'text-amber-600');
-                    icon.className = 'bx bx-error text-4xl';
-                }
-
-                if (type === 'info') {
-                    actionButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
-                    iconContainer.classList.add('bg-blue-100', 'text-blue-600');
-                    icon.className = 'bx bx-info-circle text-4xl';
-                }
-
-                confirmModal.classList.remove('hidden');
-                confirmModal.classList.add('flex');
+                icon.className = 'bx bx-info-circle text-4xl';
             }
 
-            document.getElementById('confirmCancelBtn').addEventListener('click', function () {
-                confirmModal.classList.add('hidden');
-                confirmModal.classList.remove('flex');
-            });
+            confirmModalId.classList.remove('hidden');
+            confirmModalId.classList.add('flex');
+        }
 
-            confirmModal.querySelector('.fixed.inset-0').addEventListener('click', function () {
-                confirmModal.classList.add('hidden');
-                confirmModal.classList.remove('flex');
-            });
+        function closeConfirmForm() {
+            confirmModalId.classList.add('hidden');
+            confirmModalId.classList.remove('flex');
+
+            confirmModalId
+                .querySelector('#confirmFormInputs')
+                .innerHTML = '';
+        }
+
+        confirmModalId
+            .querySelector('#confirmFormCancelBtn')
+            .addEventListener('click', closeConfirmForm);
+
+        confirmModalId
+            .querySelector('.fixed.inset-0')
+            .addEventListener('click', closeConfirmForm);
 
             // INI MODAL UTAMA GLOBAL YANG ADA FORM NYA
 

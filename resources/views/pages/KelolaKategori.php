@@ -231,37 +231,34 @@
 
                 <form id="globalModalForm" action="" method="POST" enctype="multipart/form-data" class="w-full">
                     <div class="grid grid-cols-1 gap-x-6 gap-y-5">       
-                        <div class="flex flex-col gap-1.5 w-full">
-                            <label for="" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 ml-1">
-                                Nama Kategori
-                                <span class="text-red-500">*</span>
+                       <div class="flex flex-col gap-1.5 w-full form-group">
+                            <label for="namaKategori" class="label-field text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 ml-1 transition-colors">
+                                Nama Kategori <span class="text-red-500">*</span>
                             </label>
+
                             <div class="relative flex items-center w-full group">
-    <div class="absolute left-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors duration-200">
-        <i class="bx bxs-bookmark text-xl sm:text-lg"></i>
-    </div>
+                                <div class="icon-field absolute left-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors duration-200">
+                                    <i class="bx bxs-bookmark text-xl sm:text-lg"></i>
+                                </div>
 
-    <input
-        type="text"
-        name="namaKategori"
-        maxlength="20"
-        id="namaKategori"
-        placeholder="Contoh: Makanan Utama"
-        autocomplete="off"
-        oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')"
-        class="w-full pl-10 sm:pl-11 pr-4 py-3 bg-white text-slate-900 text-sm font-medium rounded-lg border-2 border-gray-200/80 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-        required
-    >
-</div>
+                                <input
+                                    type="text"
+                                    name="namaKategori"
+                                    maxlength="20"
+                                    id="namaKategori"
+                                    placeholder="Contoh: Makanan Utama"
+                                    autocomplete="off"
+                                    data-letters-only="true"
+                                    class="validate-input w-full pl-10 sm:pl-11 pr-4 py-3 bg-white text-slate-900 text-sm font-medium rounded-lg border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                                    required
+                                >
+                            </div>
 
-<!-- PESAN ERROR -->
-<p
-    id="namaKategoriError"
-    class="hidden mt-2 text-sm text-red-600"
->
-    <span class="font-medium">Nama kategori wajib diisi.</span>
-</p>
-                        </div>   
+                            <p class="error-msg hidden text-xs text-red-600 font-medium ml-1">
+                                <span class="font-bold">Oops!</span> Kolom ini wajib diisi.
+                            </p>
+                        </div>
+
                     </div>
 
                     <div class="w-full flex flex-col-reverse sm:flex-row justify-end mt-6 sm:mt-8 pt-5 border-t border-gray-100 gap-3">

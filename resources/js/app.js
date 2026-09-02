@@ -166,3 +166,77 @@ $(document).ready(function () {
   });
 });
 
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.validate-input').forEach(input => {
+        
+  
+        input.addEventListener('input', (e) => {
+            if (input.dataset.lettersOnly === 'true') {
+                input.value = input.value.replace(/[^a-zA-Z\s]/g, '');
+            }
+            validateGlobalInput(input);
+        });
+
+        input.addEventListener('blur', () => {
+            validateGlobalInput(input);
+        });
+    });
+});
+
+
+function validateGlobalInput(input) {
+    const container = input.closest('.form-group');
+    if (!container) return;
+
+    const label = container.querySelector('.label-field');
+    const icon = container.querySelector('.icon-field');
+    const errorMsg = container.querySelector('.error-msg');
+
+    const isValid = input.value.trim() !== '';
+
+    if (!isValid && input.hasAttribute('required')) { 
+    // State Error
+    input.classList.add(
+        'border-gray-200',     
+        'ring-2',              
+        'ring-red-500',        
+        'focus:ring-0',         
+        'bg-red-50', 
+        'text-red-900'
+    ); 
+
+    input.classList.remove(
+        'bg-white', 
+        'text-slate-900', 
+        'focus:ring-primary'
+    ); 
+
+    if (label) label.classList.add('text-red-700'); 
+    if (icon) icon.classList.add('text-red-500'); 
+    if (errorMsg) errorMsg.classList.remove('hidden'); 
+
+} else { 
+
+    input.classList.remove(
+        'ring-2', 
+        'ring-red-500', 
+        'focus:ring-0',  
+        'bg-red-50', 
+        'text-red-900'
+    ); 
+
+    input.classList.add(
+        'border-gray-200', 
+        'bg-white', 
+        'text-slate-900', 
+        'focus:ring-primary'
+    ); 
+
+    if (label) label.classList.remove('text-red-700'); 
+    if (icon) icon.classList.remove('text-red-500'); 
+    if (errorMsg) errorMsg.classList.add('hidden'); 
+}
+
+    return isValid;
+}
