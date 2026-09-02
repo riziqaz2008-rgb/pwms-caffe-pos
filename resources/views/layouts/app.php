@@ -132,6 +132,14 @@
             </section>
         </main>     
     
+        <?php if(isset($hasil)): ?>
+          <script>
+            document.addEventListener('DOMContentLoaded', function (){
+              showToast(<?= json_encode($hasil) ?>);
+            });
+          </script>
+        <?php endif; ?>
+
         <script>
 
             // INI GLOBAL TOAST JS YE..
@@ -281,9 +289,11 @@
                     iconContainer.className = `globalModalIconContainer flex w-12 h-12 rounded-lg items-center justify-center shrink-0 ${data.iconBg ?? 'bg-primary'}`;
                 });
 
+
                 icon.className = `bx ${data.icon ?? 'bx-plus'} text-2xl text-white`;
                 
                 form.action=data.action??'#';
+
                 form.method=data.method??'POST';
                 
                 submit.value = data.value ?? '';
