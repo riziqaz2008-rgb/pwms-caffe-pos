@@ -1,11 +1,5 @@
 <section id="Metodepembayaran">
-    <div
-        x-data="{
-            layoutModeToggle: $persist(true),
-            filterToggle: $persist(true),
-            TambahMetode: false,
-            FilterMetode: false
-        }">
+    <div>
         <div class="bg-white dark:bg-slate-900 mb-6">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 dark:border-slate-800 gap-4">
                 <div class="flex items-center gap-4 min-w-0">

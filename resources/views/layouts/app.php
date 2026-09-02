@@ -45,36 +45,6 @@
             sidebarOpen: $persist(false),
             Menu: $persist(false),
             Pengguna: $persist(false),
-            
-            showToast: false,
-            showConfirmDelete: false,
-
-            showConfirm: false,
-            confirmTitle: '',
-            confirmMessage: '',
-            confirmButton: '',
-            confirmIcon: 'alert-triangle',
-            confirmColor: 'rose',
-            confirmAction: null,
-
-            modalKonfirmasi(data) {
-                this.confirmTitle = data.judul;
-                this.confirmMessage = data.pesan;
-                this.confirmButton = data.btn;
-                this.confirmIcon = data.icon ?? 'alert-triangle';
-                this.confirmColor = data.warnaBtn ?? 'rose';
-                this.confirmAction = data.callback ?? null;
-
-                this.showConfirm = true;
-            },
-
-            jalankanKonfirmasi() {
-                if (this.confirmAction) {
-                    this.confirmAction();
-                }
-
-                this.showConfirm = false;
-            }
         }"  >
         <main>
             <section id="MainContent">
@@ -133,30 +103,7 @@
 
                             <h3 id="confirmTitle" class="text-xl font-bold text-slate-900 dark:text-white tracking-tight"></h3>
                             <p id="confirmMessage" class="text-sm text-slate-500 dark:text-slate-400 mt-2 mb-8 leading-relaxed"></p>
-
-                            <div class="flex items-center gap-3">
-                                <button 
-                                    type="button" 
-                                    id="confirmCancelBtn"
-                                    class="flex-1 py-3 px-4 rounded-lg bg-gray-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer"
-                                ></button>
-
-                                <button 
-                                    type="button" 
-                                    id="confirmActionBtn"
-                                    class="flex-1 py-3 px-4 rounded-lg text-white text-sm font-semibold shadow-md transition-colors cursor-pointer"
-                                ></button>
-
-                            <h3
-                                id="confirmTitle"
-                                class="text-xl font-bold text-slate-900 dark:text-white tracking-tight"
-                            ></h3>
-
-                            <p
-                                id="confirmMessage"
-                                class="text-sm text-slate-500 dark:text-slate-400 mt-2 mb-8 leading-relaxed"
-                            ></p>
-
+                      
                             <div class="flex items-center gap-3">
                                 <button
                                     type="button"
@@ -176,14 +123,14 @@
                                 </button>
 
                             </div>
-                        </div>
+
                     </div>
 
                     
                 </div>
 
             </section>
-        </main> 
+        </main>     
     
         <?php if(isset($hasil)): ?>
           <script>
@@ -198,41 +145,51 @@
             // INI GLOBAL TOAST JS YE..
 
             function showToast(message, type = 'success') {
-            const toast = document.getElementById('liveToast');
-            const pesan = document.getElementById('pesanToast');
-            const icon = document.getElementById('toastIcon');
+                const toast = document.getElementById('liveToast');
+                const pesan = document.getElementById('pesanToast');
+                const icon = document.getElementById('toastIcon');
 
-            pesan.textContent = message;
+                pesan.textContent = message;
 
-            toast.classList.remove(
-                'bg-emerald-600',
-                'bg-red-600',
-                'bg-amber-500',
-                'bg-blue-600'
-            );
+                toast.classList.remove(
+                    'bg-emerald-600',
+                    'bg-red-600',
+                    'bg-amber-500',
+                    'bg-blue-600'
+                );
 
-            if (type === 'success') {
-                toast.classList.add('bg-emerald-600');
-                icon.className = 'bx bxs-check-circle text-xl text-white';
-            } else if (type === 'error') {
-                toast.classList.add('bg-red-600');
-                icon.className = 'bx bxs-x-circle text-xl text-white';
-            } else if (type === 'warning') {
-                toast.classList.add('bg-amber-500');
-                icon.className = 'bx bxs-error text-xl text-white';
-            } else if (type === 'info') {
-                toast.classList.add('bg-blue-600');
-                icon.className = 'bx bxs-info-circle text-xl text-white';
+                if (type === 'success') {
+                    toast.classList.add('bg-emerald-600');
+                    icon.className = 'bx bxs-check-circle text-xl text-white';
+                } else if (type === 'error') {
+                    toast.classList.add('bg-red-600');
+                    icon.className = 'bx bxs-x-circle text-xl text-white';
+                } else if (type === 'warning') {
+                    toast.classList.add('bg-amber-500');
+                    icon.className = 'bx bxs-error text-xl text-white';
+                } else if (type === 'info') {
+                    toast.classList.add('bg-blue-600');
+                    icon.className = 'bx bxs-info-circle text-xl text-white';
+                }
+
+                toast.classList.remove('hidden');
+
+                requestAnimationFrame(() => {
+                    toast.classList.remove('opacity-0', 'translate-y-2');
+                    toast.classList.add('opacity-100', 'translate-y-0');
+                });
+
+                setTimeout(() => {
+                    toast.classList.remove('opacity-100', 'translate-y-0');
+                    toast.classList.add('opacity-0', 'translate-y-2');
+
+                    setTimeout(() => {
+                        toast.classList.add('hidden');
+                    }, 300);
+                }, 3000);
             }
 
-            toast.classList.remove('hidden');
-
-            setTimeout(() => {
-                toast.classList.add('hidden');
-            }, 3000);
-        }
-
-        // INI ANU ADALAH POKOKNYA INI MODAL GLOBAL
+        // INI ANU ADALAH POKOKNYA INI MODAL KONFIRMASI GLOBAL
 
             const confirmModal = document.getElementById('confirmModal');
 
@@ -312,16 +269,15 @@
                 confirmModal.classList.remove('flex');
             });
 
-
+            // INI MODAL UTAMA GLOBAL YANG ADA FORM NYA
 
             function showGlobalModal(data){
                 const modal=document.getElementById('global-modal');
                 const title=document.getElementById('globalModalTitle');
                 const subtitle=document.getElementById('globalModalSubtitle');
-                const iconContainer=document.getElementById('globalModalIconContainer');
+                const iconContainer=document.querySelectorAll('.globalModalIconContainer');
                 const icon=document.getElementById('globalModalIcon');
                 const form=document.getElementById('globalModalForm');
-                const input=document.getElementById('globalModalInput');
                 const submit=document.getElementById('globalModalSubmit');
                 const submitIcon=document.getElementById('globalModalSubmitIcon');
                 const submitText=document.getElementById('globalModalSubmitText');
@@ -329,21 +285,26 @@
                 title.textContent=data.title??'';
                 subtitle.textContent=data.subtitle??'';
                 
-                iconContainer.className=`flex w-12 h-12 rounded-lg items-center justify-center shrink-0 ${data.iconBg??'bg-primary'}`;
-                icon.className=`bx ${data.icon??'bx-plus'} text-2xl text-white`;
+                iconContainer.forEach(iconContainer => {
+                    iconContainer.className = `globalModalIconContainer flex w-12 h-12 rounded-lg items-center justify-center shrink-0 ${data.iconBg ?? 'bg-primary'}`;
+                });
 
-                // form.action=data.action??'#';
+
+                icon.className = `bx ${data.icon ?? 'bx-plus'} text-2xl text-white`;
+                
+                form.action=data.action??'#';
+
                 form.method=data.method??'POST';
+                
+                submit.value = data.value ?? '';
+                submit.name = data.nameBtn ?? '';
 
-                submit.value=data.value??'';
-                submit.name=data.nameBtn??'';
                 submit.className=`w-full sm:w-auto flex items-center justify-center text-white font-black px-6 py-3 gap-2 rounded-lg text-sm transition-all ${data.buttonColor??'bg-primary hover:bg-blue-700'}`;
                 submitIcon.className=`bx ${data.buttonIcon??'bxs-save'} text-lg`;
                 
                 submitText.textContent=data.buttonText??'Simpan';
                 modal.classList.remove('hidden');
-                modal.classList.add('flex');
-                input.focus();
+                modal.classList.add('flex');                
             }
 
             function closeGlobalModal(){
@@ -357,8 +318,34 @@
             document.addEventListener('keydown',function(event){
                 if(event.key==='Escape')closeGlobalModal();
             });
-      
-     
+
+            const globalModalForm = document.getElementById('globalModalForm');
+            const namaKategori = document.getElementById('namaKategori');
+            const namaKategoriError = document.getElementById('namaKategoriError');
+
+            globalModalForm.addEventListener('submit', function(event) {
+
+                if (namaKategori.value.trim() === '') {
+                    event.preventDefault();
+
+                    namaKategori.classList.remove('border-gray-200/80');
+                    namaKategori.classList.add('border-red-500', 'bg-red-50');
+
+                    namaKategoriError.classList.remove('hidden');
+
+                    return;
+                }
+
+                namaKategori.classList.remove(
+                    'border-red-500',
+                    'bg-red-50'
+                );
+
+                namaKategori.classList.add('border-gray-200/80');
+
+                namaKategoriError.classList.add('hidden');
+            });
+            
         </script>
     </body>
 </html>

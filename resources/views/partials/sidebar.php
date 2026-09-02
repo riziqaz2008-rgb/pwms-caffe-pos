@@ -97,9 +97,9 @@
                 </div>
                 <div class="w-full">
                     <li>
-                        <button type="button" @click="if (!sidebarOpen) { sidebarOpen = true; Pengguna = true; } else { Pengguna = !Pengguna; }" class="relative w-full justify-between flex items-center px-4 py-4 rounded-lg cursor-pointer <?= $route === "pelanggan" || $route === "karyawan" ? 'bg-gray-50 text-primary font-bold' : 'text-gray-400/80 hover:bg-black/5 duration-300 transition-all ease-in-out' ?>">
+                        <button type="button" @click="if (!sidebarOpen) { sidebarOpen = true; Pengguna = true; } else { Pengguna = !Pengguna; }" class="relative w-full justify-between flex items-center px-4 py-4 rounded-lg cursor-pointer <?= $route === "pelanggan" || $route === "anggota" ? 'bg-gray-50 text-primary font-bold' : 'text-gray-400/80 hover:bg-black/5 duration-300 transition-all ease-in-out' ?>">
                             <div class="flex items-center gap-4">
-                                <?php if ($route === "pelanggan" || $route === "karyawan"): ?>
+                                <?php if ($route === "pelanggan" || $route === "anggota"): ?>
                                     <span class="absolute left-0 w-1.5 h-7 bg-primary rounded-r-full"></span>
                                 <?php endif; ?>
                                 <i class="bx bxs-group text-xl shrink-0"></i>
@@ -112,10 +112,10 @@
                         <div class="grid transition-all duration-300 ease-out" :class="Pengguna && sidebarOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'">
                             <div class="overflow-hidden">
                                 <div class="ml-5 mt-2 pl-4 border-l-2 border-gray-100 space-y-1">
-                                    <a href="?route=karyawan" class="<?= $route === "karyawan" ? 'flex items-center gap-x-3 font-medium text-primary px-4 py-4 rounded-lg' : 'flex items-center gap-3 px-4 py-3 rounded-lg text-gray-400/80 hover:bg-black/5 transition-all' ?>">
+                                    <a href="?route=anggota" class="<?= $route === "anggota" ? 'flex items-center gap-x-3 font-medium text-primary px-4 py-4 rounded-lg' : 'flex items-center gap-3 px-4 py-3 rounded-lg text-gray-400/80 hover:bg-black/5 transition-all' ?>">
                                         <i class="bx bxs-user-id-card text-lg shrink-0"></i>
                                         <span x-show="sidebarOpen" x-transition class="whitespace-nowrap">
-                                            Karyawan
+                                            Anggota
                                         </span>
                                     </a>
                                     <a href="?route=pelanggan" class="<?= $route === "pelanggan" ? 'flex items-center gap-x-3 font-medium text-primary px-4 py-4 rounded-lg' : 'flex items-center gap-3 px-4 py-3 rounded-lg text-gray-400/80 hover:bg-black/5 transition-all' ?>">

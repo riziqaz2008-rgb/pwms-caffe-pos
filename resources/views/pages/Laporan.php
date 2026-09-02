@@ -194,7 +194,7 @@
                                 <span class="font-bold text-slate-800">Transfer</span>
                             </td>       
                             <td class="px-5 py-4">
-                                <div class="inline-flex rounded-lg shadow-sm" role="group">
+                                <div class="inline-flex gap-2" role="group">
                                     <button type="button" 
                                         @click="openDetail({
                                             kode: 'TRX-001',
@@ -209,16 +209,12 @@
                                             ],
                                             total: 75000
                                         })"
-                                        class="w-10 h-10 rounded-l-lg bg-slate-800 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all border-r border-purple-700" 
+                                        class="w-10 h-10 rounded-lg bg-slate-800 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all border-r border-purple-700" 
                                         title="Lihat detail">
                                         <i class="bx bxs-eye"></i>
                                     </button>
 
-                                    <button type="button" onclick="editMenu(1)" class="w-10 h-10 bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all border-r border-primary/20" title="Edit menu">
-                                        <i class="bx bxs-pencil"></i>
-                                    </button>
-
-                                    <button type="button" onclick="hapusMenu(1)" class="w-10 h-10 rounded-r-lg bg-red-500 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Hapus menu">
+                                    <button type="button" onclick="hapusMenu(1)" class="w-10 h-10 rounded-lg bg-red-500 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Hapus menu">
                                         <i class="bx bxs-trash"></i>
                                     </button>
                                 </div>
