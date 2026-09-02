@@ -1,14 +1,19 @@
 <?php
-
 if (isset($_POST['btnSimpanKategori'])) {
     $hasil = tambahKategori($_POST);
     $_SESSION['toast'] = $hasil;
     header("Location: ?route=menu/kategori");
     exit;
 }
+if (isset($_POST['btnEditKategori'])) {
+    $hasil = editKategori($_POST);
+    $_SESSION['toast'] = $hasil;
+    header("Location: ?route=menu/kategori");
+    exit;
+}
 
 $keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
-$kategori = cariKategori();
+$kategori = cariKategori($keyword);
 
 ?>
 <section id="Kategorikategori">
@@ -36,23 +41,29 @@ $kategori = cariKategori();
                     </div>
                 </div>
                 <div class="flex items-center gap-2 w-full lg:w-auto">
-                    <button type="button" 
-                       onclick='showGlobalModal(<?= json_encode([
-                            "title" => "Tambah Kategori",
-                            "subtitle" => "Kelola kategori menu cafe.",
-                            "icon" => "bxs-book-add",
-                            "iconBg" => "bg-primary",
-                            "action" => "/kategori/store",
-                            "method" => "POST",
-                            "buttonText" => "Simpan Kategori",
-                            "buttonIcon" => "bxs-save",
-                            "buttonColor" => "bg-primary hover:bg-blue-700",
-                            "value" => ""
-                        ]) ?>)'
-                        class="flex-1 flex items-center justify-center bg-primary text-white font-bold px-5 py-3 gap-2 rounded-lg cursor-pointer whitespace-nowrap  hover:opacity-90 transition">
-                        <i class="bx bxs-plus text-lg"></i>
-                        <span>Tambah Kategori</span>
-                    </button>
+                    <button 
+    type="button"
+    onclick='showGlobalModal(<?= json_encode([
+        "title" => "Tambah Kategori",
+        "subtitle" => "Kelola kategori menu cafe.",
+        "icon" => "bxs-book-add",
+        "iconBg" => "bg-primary",
+        "action" => "?route=menu/kategori",
+        "method" => "POST",
+        "buttonText" => "Simpan Kategori",
+        "buttonIcon" => "bxs-save",
+        "buttonColor" => "bg-primary hover:bg-blue-700",
+        "buttonName" => "btnSimpanKategori",
+        "id_kategori" => "",
+        "value" => ""
+    ]) ?>)'
+    class="flex-1 flex items-center justify-center bg-primary text-white font-bold px-5 py-3 gap-2 rounded-lg cursor-pointer whitespace-nowrap hover:opacity-90 transition">
+
+    <i class="bx bxs-plus text-lg"></i>
+
+    <span>Tambah Kategori</span>
+
+</button>
                 </div>
             </div>     
         </div>
@@ -122,22 +133,28 @@ $kategori = cariKategori();
 
                                 <td class="px-5 py-4">
                                     <div class="flex items-center justify-center gap-2">
-                                        <button type="button" 
+                                      <button 
+                                        type="button" 
                                         onclick='showGlobalModal(<?= json_encode([
-                                            "title" => "Edit Kategori",
-                                            "subtitle" => "Perbarui informasi kategori menu.",
-                                            "icon" => "bxs-edit",
-                                            "iconBg" => "bg-amber-500",
-                                            "action" => "/kategori/update/1",
-                                            "method" => "POST",
-                                            "buttonText" => "Simpan Perubahan",
-                                            "buttonIcon" => "bxs-save",
-                                            "buttonColor" => "bg-amber-500 hover:bg-amber-600",
-                                            "value" => "Makanan"
-                                        ]) ?>)'
-                                        class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Edit menu">
-                                            <i class="bx bxs-pencil"></i>
-                                        </button>
+                                        "title" => "Edit Kategori",
+        "subtitle" => "Perbarui informasi kategori menu.",
+        "icon" => "bxs-edit",
+        "iconBg" => "bg-amber-500",
+        "action" => "?route=menu/kategori",
+        "method" => "POST",
+        "buttonText" => "Simpan Perubahan",
+        "buttonIcon" => "bxs-save",
+        "buttonColor" => "bg-amber-500 hover:bg-amber-600",
+        "buttonName" => "btnEditKategori",
+        "id_kategori" => $k['id_kategori'],
+        "value" => $k['nama_kategori']
+    ]) ?>)'
+    class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all"
+    title="Edit kategori">
+
+    <i class="bx bxs-pencil"></i>
+
+</button>
                                         <button type="button" onclick="hapusMenu(1)" class="w-10 h-10 rounded-lg bg-red-500 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Hapus menu">
                                             <i class="bx bxs-trash"></i>
                                         </button>
@@ -219,6 +236,7 @@ $kategori = cariKategori();
                         </button>
                     </div>
                     <form id="globalModalForm" action="" method="POST" class="p-5 sm:p-6">
+                        <input type="hidden" name="id_kategori" id="globalModalIdKategori" value="">
                         <div class="flex flex-col gap-1.5 w-full">
                             <label for="globalModalInput" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 ml-1">
                                 Nama Kategori
@@ -235,56 +253,21 @@ $kategori = cariKategori();
                             <button type="button" onclick="closeGlobalModal()" class="w-full sm:w-auto bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-6 py-3 rounded-lg text-sm transition-all">
                                 Batal
                             </button>
-                            <button id="globalModalSubmit" type="submit" class="w-full sm:w-auto flex items-center justify-center bg-primary hover:bg-blue-700 text-white font-black px-6 py-3 gap-2 rounded-lg text-sm transition-all">
+                            <button id="globalModalSubmit" type="submit" name="" class="w-full sm:w-auto flex items-center justify-center bg-primary hover:bg-blue-700 text-white font-black px-6 py-3 gap-2 rounded-lg text-sm transition-all">
                                 <i id="globalModalSubmitIcon" class="bx bxs-save text-lg"></i>
                                 <span id="globalModalSubmitText">Simpan Kategori</span>
                             </button>
                         </div>
-<<<<<<< HEAD
-                        <form action="" method="POST" class="w-full">
-                            <div class="grid grid-cols-1 gap-5">
-                                <div class="flex flex-col gap-1.5 w-full">
-                                    <label for="namaKategori" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 ml-1">
-                                        Nama Kategori
-                                        <span class="text-red-500">*</span>
-                                    </label>
-                                    <div class="relative flex items-center w-full group">
-                                        <div class="absolute left-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors duration-200">
-                                            <i class="bx bxs-bookmark text-xl sm:text-lg"></i>
-                                        </div>    
-                                        <input
-                                            type="text"
-                                            name="namaKategori"
-                                            id="namaKategori"
-                                            placeholder="Contoh: Makanan Utama"
-                                            autocomplete="off"
-                                            class="w-full pl-10 sm:pl-11 pr-4 py-3 bg-white text-slate-900 text-sm font-medium rounded-lg sm:rounded-lg border-2 border-gray-200/80 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-                                            required
-                                        >    
-                                    </div>
-                                </div>    
-                            </div>
+                        
                          
-                            <div class="w-full flex flex-col-reverse sm:flex-row justify-end mt-6 sm:mt-8 pt-5 border-t border-gray-100 gap-3 sm:gap-3">    
-                                <button type="button" @click="kategori = false"
-                                    class="w-full sm:w-auto flex items-center justify-center bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-6 py-3 gap-2 rounded-lg sm:rounded-lg cursor-pointer transition-all active:scale-95">
-                                    <span>Batal</span>
-                                </button>
-                                <button type="submit" name="btnSimpanKategori"
-                                    class="w-full sm:w-auto flex items-center justify-center bg-primary hover:bg-primary/90 text-white font-black px-6 py-3 gap-2 rounded-lg sm:rounded-lg cursor-pointer transition-all active:scale-95">
-                                        <i class="bx bxs-save text-lg"></i>
-                                        <span>Simpan Kategori</span>
-                                </button>    
-                            </div>
-                        </form>    
                     </div>    
                 </div>    
             </div>    
-=======
-                    </form>
+    
+        </form>
                 </div>
             </div>
->>>>>>> 7e57b615230b0ad1a82366af887a8a867a742bf4
+
         </div>
     
     </div>
@@ -304,6 +287,7 @@ searchKategori.addEventListener('input', function () {
     }, 500);
 
 });
+
 </script>
 
 

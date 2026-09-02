@@ -1,5 +1,5 @@
 <?php
-$kategori = query("SELECT * FROM kategori");
+$kategori = query("SELECT * FROM kategori ORDER BY id_kategori ASC");
 
 function cariKategori() {
 
@@ -16,7 +16,7 @@ function cariKategori() {
         $sql .= " WHERE nama_kategori LIKE '%$keywordEscaped%'";
     }
 
-    $sql .= " ORDER BY nama_kategori ASC";
+    $sql .= " ORDER BY id_kategori ASC";
 
     $result = query($sql);
 
@@ -29,29 +29,41 @@ function cariKategori() {
     return $rows;
 }
 
+
 function tambahKategori($d){ 
+
     $n = htmlspecialchars(trim($d['namaKategori'])); 
- 
-    $cek = query("SELECT * FROM kategori WHERE nama_kategori = '$n'"); 
+
+    $cek = query("
+        SELECT * FROM kategori 
+        WHERE nama_kategori = '$n'
+    "); 
 
     if(mysqli_num_rows($cek) > 0){ 
+
         return [ 
             'status' => false, 
             'bg' => 'info', 
             'icon' => 'info-circle', 
             'pesan' => 'Nama kategori tersebut sudah ada.'         
         ]; 
+
     } 
- 
-    $q = query("INSERT INTO kategori (nama_kategori) VALUES ('$n')"); 
+
+    $q = query("
+        INSERT INTO kategori (nama_kategori) 
+        VALUES ('$n')
+    "); 
 
     if($q){ 
+
         return [ 
             'status' => true, 
             'bg' => 'success', 
             'icon' => 'check-circle', 
             'pesan' => 'Kategori berhasil ditambahkan.' 
         ]; 
+
     } 
 
     return [ 
@@ -61,23 +73,26 @@ function tambahKategori($d){
         'pesan' => 'Kategori gagal ditambahkan. Harap coba lagi.' 
     ]; 
 }
+
+
 function hapusKategori($id){
 
     $id = (int) $id;
 
-    // Cek apakah kategori ada
     $cek = query("
         SELECT * FROM kategori 
         WHERE id_kategori = '$id'
     ");
 
     if(mysqli_num_rows($cek) == 0){
+
         return [
             'status' => false,
             'bg' => 'info',
             'icon' => 'info-circle',
             'pesan' => 'Kategori tidak ditemukan.'
         ];
+
     }
 
     $q = query("
@@ -86,12 +101,14 @@ function hapusKategori($id){
     ");
 
     if($q){
+
         return [
             'status' => true,
             'bg' => 'success',
             'icon' => 'check-circle',
             'pesan' => 'Kategori berhasil dihapus.'
         ];
+
     }
 
     return [
@@ -102,52 +119,53 @@ function hapusKategori($id){
     ];
 }
 
+
 function editKategori($d){ 
+
+    global $conn;
 
     $id = (int) $d['id_kategori'];
     $n = htmlspecialchars(trim($d['namaKategori']));
 
-    // Cek apakah nama kategori sudah digunakan kategori lain
     $cek = query("
         SELECT * FROM kategori 
         WHERE nama_kategori = '$n' 
-        AND id_kategori != '$id'
+        AND id_kategori != $id
     ");
 
     if(mysqli_num_rows($cek) > 0){ 
+
         return [ 
             'status' => false, 
             'bg' => 'info', 
             'icon' => 'info-circle', 
             'pesan' => 'Nama kategori tersebut sudah digunakan.'         
         ]; 
+
     } 
 
-    $q = query("
+    $q = mysqli_query($conn, "
         UPDATE kategori 
         SET nama_kategori = '$n' 
-        WHERE id_kategori = '$id'
+        WHERE id_kategori = $id
     ");
 
     if($q){ 
+
         return [ 
             'status' => true, 
             'bg' => 'success', 
             'icon' => 'check-circle', 
             'pesan' => 'Kategori berhasil diperbarui.' 
         ]; 
+
     } 
 
     return [ 
         'status' => false, 
         'bg' => 'danger', 
-        'icon' => 'exclamation-triangle', 
+        'icon' => 'exclamation-triangle',
         'pesan' => 'Kategori gagal diperbarui. Harap coba lagi.' 
     ]; 
 }
-
-
-
-
-
 ?>
