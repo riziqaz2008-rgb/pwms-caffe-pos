@@ -255,19 +255,31 @@
                                                     modalEdit(this) '
                                                     class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Edit menu"
                                                      data-id="<?= htmlspecialchars($m['id_menu']) ?>" data-foto="<?= htmlspecialchars($m['foto']) ?>" data-nama="<?= htmlspecialchars($m['nama']) ?>" data-harga="<?= number_format($m['harga'], 0, ',', '.') ?>" data-kategori="<?= htmlspecialchars($m['id_kategori']) ?>" data-deskripsi="<?= htmlspecialchars($m['deskripsi']) ?>" data-menu="<?= htmlspecialchars($m['menu_tersedia']) ?>" data-status="<?= htmlspecialchars($m['status_menu']) ?>">
-
                                                     <i class="bx bxs-pencil"></i>
                                                 </button>
                                                 <button type="button" 
-                                                    onclick="showConfirm(
-                                                    'Hapus Data?',
-                                                    'Yakin ingin menghapus data ini?',
-                                                    'Ya, Hapus',
-                                                    'danger'
-                                                )"    
-                                                class="w-10 h-10 rounded-lg bg-red-500 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Hapus menu">
-                                                    <i class="bx bxs-trash"></i>
-                                                </button>
+                                onclick="showConfirmForm({
+                                    title: 'Hapus Menu',
+                                    message: 'Apakah Anda yakin ingin hapus menu <?= htmlspecialchars($m['nama']) ?>?.',
+                                    actionText: 'Ya, hapus',
+                                    type: 'danger',
+                                    nameAksi: 'hapus',
+                                    inputs: [
+                                        {
+                                            name: 'aksi',
+                                            type: 'hidden',
+                                            value: 'hapus'
+                                        },
+                                        {
+                                            name: 'id',
+                                            type: 'hidden',
+                                            value: <?= htmlspecialchars($m['id_menu']) ?>
+                                        }
+                                    ]
+                                });"    
+                                class="w-10 h-10 rounded-lg bg-red-500 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Hapus menu">
+                                    <i class="bx bxs-trash"></i>
+                                </button>
                                             </div>
                                         </td>           
                                                                     

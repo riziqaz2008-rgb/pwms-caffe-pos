@@ -201,12 +201,13 @@
 
                                                 <button
                                                     type="button"
-                                                    onclick="showConfirm(
-                                                        'Hapus Data?',
-                                                        'Yakin ingin menghapus data ini?',
-                                                        'Ya, Hapus',
-                                                        'danger'
-                                                    )"                                                  
+                                                    onclick="showConfirm({
+                                                        title: 'Hapus Data',
+                                                        message: 'Yakin ingin menghapus data ini?',
+                                                        actionText: 'Ya',
+                                                        type: 'danger',
+                                                        onConfirm: null
+                                                    })"                                                 
                                                     class="w-10 h-10 rounded-lg bg-red-500 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all"
                                                     title="Hapus menu"
                                                 >
@@ -278,18 +279,28 @@
                                                 </button>
 
                                             <button
-                                                type="button"
-                                                onclick="showConfirm(
-                                                    'Hapus Data?',
-                                                    'Yakin ingin menghapus data ini?',
-                                                    'Ya, Hapus',
-                                                    'danger'
-                                                )"
-                                                class="w-10 h-10 rounded-xl bg-red-600 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all shrink-0"
-                                                title="Hapus menu"
-                                            >
-                                                <i class="bx bxs-trash text-lg"></i>
-                                            </button>
+                                            type="button"
+                                            onclick="showConfirmForm({
+                                            title: 'Tolak Pesanan?',
+                                            message: 'Masukkan informasi penolakan.',
+                                            actionText: 'Tolak',
+                                            type: 'danger',
+                                            inputs: [
+                                                {
+                                                    name: 'alasan_penolakan',
+                                                    type: 'hidden'
+                                                },
+                                                {
+                                                    name: 'catatan',
+                                                    type: 'hidden'
+                                                }
+                                            ]
+                                        });"
+                                            class="w-10 h-10 rounded-xl bg-red-600 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all shrink-0"
+                                            title="Tolak pesanan"
+                                        >
+                                            <i class="bx bxs-trash text-lg"></i>
+                                        </button>
                                         </div>
                                     </div>
                                 </div>

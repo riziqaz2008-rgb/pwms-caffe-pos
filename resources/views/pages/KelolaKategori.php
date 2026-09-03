@@ -100,119 +100,232 @@
                             <th class="text-center font-bold px-5 py-4">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody id="body-tabel-kategori">
-                        <?php $no = 1; ?>
-                        <?php foreach ($kategori as $k): ?>
-                        <tr>
-                            <td class="px-5 py-4">
-                                <span class="font-bold text-slate-800"><?= $no++ ?></span>
-                            </td>
-                            <td class="px-5 py-4">
-                                <span class="inline-flex items-center gap-2 px-6 py-2 rounded-lg bg-primary text-white text-sm font-bold">
-                                    <?= $k['nama_kategori']; ?>
-                                </span>
-                            </td>
-                            <td class="px-5 py-4">
-                                <div class="flex items-center justify-center gap-2">
-                                    <button type="button"  
-                                        onclick='showGlobalModal(<?= json_encode([ 
-                                            "title" => "Edit Kategori", 
-                                            "subtitle" => "Perbarui informasi kategori menu.", 
-                                            "icon" => "bxs-edit", 
-                                            "iconBg" => "bg-amber-500", 
-                                            "action" => "?route=menu/kategori", 
-                                            "method" => "POST", 
-                                            "buttonText" => "Simpan Perubahan", 
-                                            "buttonIcon" => "bxs-save", 
-                                            "buttonColor" => "bg-amber-500 hover:bg-amber-600",
-                                            "nameBtn" => "aksi", 
-                                            "value" => "edit" 
-                                        ]) ?>)
-                                        modalEdit(this)'
-                                        class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" 
-                                         data-id="<?= htmlspecialchars($k['id_kategori']) ?>" data-nama="<?= htmlspecialchars($k['nama_kategori']) ?>">
-                                        <i class="bx bxs-pencil"></i> 
-                                                            
-                                                            
-                                    </button>
-                                    <button type="button" 
-                                                    onclick="showConfirm(
-                                                    'Hapus Data?',
-                                                    'Yakin ingin menghapus data ini?',
-                                                    'Ya, Hapus',
-                                                    'danger'
-                                                )"    
-                                                class="w-10 h-10 rounded-lg bg-red-500 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Hapus menu">
-                                                    <i class="bx bxs-trash"></i>
-                                                </button>
-                                </div>
-                            </td> 
-                            <?php endforeach; ?>
-                            <!-- YANG DI BAWAH INI CONTOH JIKA VALUE NYA KOSONG. -->
-                                <!-- ====== WARNING !!!!!! YANG HAPUS KU SUNAT !!!!!! ====== -->
+                    
+<tbody id="body-tabel-kategori">
 
-                            <!-- <td colspan="3">
-                                <div class="flex flex-col items-center justify-center py-12 px-4 text-center bg-gray-50">
-                                    <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4 border border-gray-200/80">
-                                        <i class="bx bx-book-bookmark text-4xl text-gray-300"></i>
+    <?php if (!empty($kategori)): ?>
 
-                                    </div>
-                                    <h3 class="text-base font-black text-slate-800 mb-1">Kategori Belum Tersedia</h3>
-                                    <p class="text-xs text-gray-400 max-w-sm mb-5">
-                                        Belum ada data kategori yang ditambahkan atau hasil pencarian tidak cocok.
-                                    </p>
-                                    <button type="button" 
-                                    onclick='showGlobalModal(<?= json_encode([
-                                        "title" => "Tambah Kategori",
-                                        "subtitle" => "Kelola daftar kategori menu cafe.",
-                                        "icon" => "bxs-book-bookmark",
-                                        "iconBg" => "bg-primary",
-                                        "method" => "POST",
-                                        "buttonText" => "Simpan Kategori",
-                                        "buttonIcon" => "bxs-save",
-                                        "buttonColor" => "bg-primary hover:bg-blue-700",
+        <?php
+        
+        $no = (($paginationKategori['halaman'] - 1) * $paginationKategori['perHalaman']) + 1;
+        ?>
 
-                                        "nameBtn" => "aksi",
-                                        "value" => "tambah"
-                                    ]) ?>)'
-                                    class="px-4 py-3 bg-primary text-white text-sm font-bold rounded-lg hover:opacity-90 transition-all flex items-center gap-2">
-                                        <i class="bx bx-plus text-base"></i>
-                                        <span>Tambah Kategori</span>
-                                    </button>
-                                </div>
-                            </td> -->                         
-                        </tr>
-                    </tbody>
+        <?php foreach ($kategori as $k): ?>
+
+            <tr>
+
+                <td class="px-5 py-4">
+                    <span class="font-bold text-slate-800 dark:text-white">
+                        <?= $no++; ?>
+                    </span>
+                </td>
+
+                <td class="px-5 py-4">
+                    <span class="inline-flex items-center gap-2 px-6 py-2 rounded-lg bg-primary text-white text-sm font-bold">
+                        <?= htmlspecialchars($k['nama_kategori']); ?>
+                    </span>
+                </td>
+                                        <td class="px-5 py-4">
+                                            <div class="flex items-center justify-center gap-2">
+                                                <button type="button" 
+                                                    onclick='showGlobalModal(<?= json_encode([
+                                                        "title" => "Edit Kategori",
+                                                        "subtitle" => "Perbarui informasi kategori menu.",
+                                                        "icon" => "bxs-edit",
+                                                        "iconBg" => "bg-amber-500",
+                                                        "method" => "POST",
+                                                        "buttonText" => "Simpan Perubahan",
+                                                        "buttonIcon" => "bxs-save",
+                                                        "buttonColor" => "bg-amber-500 hover:bg-amber-600",
+                                                        
+                                                        "nameBtn" => "aksi",
+                                                        "value" => "edit"          
+                                                    ]) ?>)
+                                                    modalEdit(this) '
+                            class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Edit menu"
+                            data-id="<?= htmlspecialchars($k['id_kategori']); ?>"
+                            data-nama="<?= htmlspecialchars($k['nama_kategori']); ?>">
+                            <i class="bx bxs-pencil"></i>
+                        </button>
+                        <button
+                            type="button"
+                            onclick="showConfirmForm({
+                                title: 'Hapus Kategori',
+                                message: 'Apakah Anda yakin ingin hapus kategori <?= htmlspecialchars($k['nama_kategori'], ENT_QUOTES); ?>?',
+                                actionText: 'Ya, hapus',
+                                type: 'danger',
+
+                                inputs: [
+                                    {
+                                        name: 'aksi',
+                                        type: 'hidden',
+                                        value: 'hapus'
+                                    },
+                                    {
+                                        name: 'id',
+                                        type: 'hidden',
+                                        value: <?= (int) $k['id_kategori']; ?>
+                                    }
+                                ]
+                            });"
+
+                            class="w-10 h-10 rounded-lg bg-red-500 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all"
+
+                            title="Hapus kategori"
+                        >
+
+                            <i class="bx bxs-trash"></i>
+
+                        </button>
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+        <?php endforeach; ?>
+
+
+    <?php else: ?>
+
+        
+
+        <tr>
+
+            <td colspan="3">
+
+                <div class="flex flex-col items-center justify-center py-12 px-4 text-center bg-gray-50 dark:bg-slate-900">
+
+                    <div class="w-20 h-20 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4 border border-gray-200/80">
+
+                        <i class="bx bx-book-bookmark text-4xl text-gray-300"></i>
+
+                    </div>
+
+                    <h3 class="text-base font-black text-slate-800 dark:text-white mb-1">
+                        Kategori Belum Tersedia
+                    </h3>
+
+                    <p class="text-xs text-gray-400 max-w-sm mb-5">
+
+                        <?php if (!empty($keyword)): ?>
+
+                            Belum ada kategori yang cocok dengan pencarian
+                            <strong>"<?= htmlspecialchars($keyword); ?>"</strong>.
+
+                        <?php else: ?>
+
+                            Belum ada data kategori yang ditambahkan.
+
+                        <?php endif; ?>
+
+                    </p>
+
+                    <button
+                        type="button"
+
+                        onclick='showGlobalModal(<?= json_encode([
+                            "title" => "Tambah Kategori",
+                            "subtitle" => "Kelola daftar kategori menu cafe.",
+                            "icon" => "bxs-book-bookmark",
+                            "iconBg" => "bg-primary",
+                            "method" => "POST",
+                            "buttonText" => "Simpan Kategori",
+                            "buttonIcon" => "bxs-save",
+                            "buttonColor" => "bg-primary hover:bg-blue-700",
+                            "nameBtn" => "aksi",
+                            "value" => "tambah"
+                        ]) ?>)'
+
+                        class="px-4 py-3 bg-primary text-white text-sm font-bold rounded-lg hover:opacity-90 transition-all flex items-center gap-2"
+                    >
+
+                        <i class="bx bx-plus text-base"></i>
+
+                        <span>Tambah Kategori</span>
+
+                    </button>
+
+                </div>
+
+            </td>
+
+        </tr>
+
+    <?php endif; ?>
+
+</tbody>
+
+
                 </table>
             </div>  
         </div>
 
-        <div class="w-full flex justify-center mt-6">
-            <nav aria-label="Pagination">
-                <ul class="inline-flex items-center gap-1.5 p-1.5 rounded-lg border-2 border-gray-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm font-medium">
+        
                     
-                    <li>
-                        <a href="?page=1" class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-400 dark:text-slate-500 opacity-50 cursor-not-allowed pointer-events-none">
+<?php if ($pagination['totalData'] > 0): ?>
+    <div class="w-full flex justify-center mt-6">
+        <nav aria-label="Pagination">
+            <ul class="inline-flex items-center gap-1.5 p-1.5 rounded-lg border-2 border-gray-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm font-medium">
+                <li>
+                    <?php if ($halaman > 1): ?>
+                        <a
+                            href="?route=menu/kategori&page=<?= $halaman - 1; ?><?= !empty($keyword) ? '&keyword=' . urlencode($keyword) : ''; ?>"
+                            class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                        >
+                            <i class="bx bx-chevron-left"></i>
                             Previous
                         </a>
-                    </li>
-
+                    <?php else: ?>
+                        <span
+                            class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-400 opacity-50 cursor-not-allowed"
+                        >
+                            <i class="bx bx-chevron-left"></i>
+                            Previous
+                        </span>
+                    <?php endif; ?>
+                </li>
+                <?php for ($i = 1; $i <= $totalHalaman; $i++): ?>
                     <li>
-                        <a href="?page=1" class="flex items-center justify-center w-9 h-9 rounded-lg bg-primary text-white font-bold shadow-sm">
-                            1
-                        </a>
+                        <?php if ($i == $halaman): ?>
+                            <span
+                                class="flex items-center justify-center w-9 h-9 rounded-lg bg-primary text-white font-bold shadow-sm"
+                            >
+                                <?= $i; ?>
+                            </span>
+                        <?php else: ?>
+                            <a
+                                href="?route=menu/kategori&page=<?= $i; ?><?= !empty($keyword) ? '&keyword=' . urlencode($keyword) : ''; ?>"
+                                class="flex items-center justify-center w-9 h-9 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                            >
+                                <?= $i; ?>
+                            </a>
+                        <?php endif; ?>
                     </li>
-
-                    <li>
-                        <a href="?page=2" class="flex items-center justify-center w-9 h-9 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
-                            2
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="?page=2" class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                <?php endfor; ?>
+                <li> 
+                    <?php if ($halaman < $totalHalaman): ?>
+                        <a
+                            href="?route=menu/kategori&page=<?= $halaman + 1; ?><?= !empty($keyword) ? '&keyword=' . urlencode($keyword) : ''; ?>"
+                            class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                        >
                             Next
+                            <i class="bx bx-chevron-right"></i>
                         </a>
+                    <?php else: ?>
+                        <span
+                            class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-400 opacity-50 cursor-not-allowed"
+                        >
+                            Next
+                            <i class="bx bx-chevron-right"></i>
+                        </span>
+                    <?php endif; ?>
+                </li>
+            </ul>
+        </nav>
+    </div>
+<?php endif; ?>
                     </li>    
                 </ul>
             </nav>
@@ -250,40 +363,34 @@
                 <form id="globalModalForm" action="" method="POST" enctype="multipart/form-data" class="w-full">
                     <input type="hidden" id="id" name="id">
                     <div class="grid grid-cols-1 gap-x-6 gap-y-5">       
-                            
-                        <div class="flex flex-col gap-1.5 w-full">
-                            <label for="" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 ml-1">
-                                Nama Kategori
-                                <span class="text-red-500">*</span>
+                       <div class="flex flex-col gap-1.5 w-full form-group">
+                            <label for="namaKategori" class="label-field text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 ml-1 transition-colors">
+                                Nama Kategori <span class="text-red-500">*</span>
                             </label>
+
                             <div class="relative flex items-center w-full group">
+                                <div class="icon-field absolute left-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors duration-200">
+                                    <i class="bx bxs-bookmark text-xl sm:text-lg"></i>
+                                </div>
 
-               
-    <div class="absolute left-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors duration-200">
-        <i class="bx bxs-bookmark text-xl sm:text-lg"></i>
-    </div>
+                                <input
+                                    type="text"
+                                    name="nama"
+                                    maxlength="20"
+                                    id="nama"
+                                    placeholder="Contoh: Makanan Utama"
+                                    autocomplete="off"
+                                    data-letters-only="true"
+                                    class="validate-input w-full pl-10 sm:pl-11 pr-4 py-3 bg-white text-slate-900 text-sm font-medium rounded-lg border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                                    required
+                                >
+                            </div>
 
-    <input
-        type="text"
-        name="nama"
-        maxlength="20"
-        id="nama"
-        placeholder="Contoh: Makanan Utama"
-        autocomplete="off"
-        oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')"
-        class="w-full pl-10 sm:pl-11 pr-4 py-3 bg-white text-slate-900 text-sm font-medium rounded-lg border-2 border-gray-200/80 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-        required
-    >
-</div>
+                            <p class="error-msg hidden text-xs text-red-600 font-medium ml-1">
+                                <span class="font-bold">Oops!</span> Kolom ini wajib diisi.
+                            </p>
+                        </div>
 
-<!-- PESAN ERROR -->
-<p
-    id="namaKategoriError"
-    class="hidden mt-2 text-sm text-red-600"
->
-    <span class="font-medium">Nama kategori wajib diisi.</span>
-</p>
-                        </div>   
                     </div>
 
                     <div class="w-full flex flex-col-reverse sm:flex-row justify-end mt-6 sm:mt-8 pt-5 border-t border-gray-100 gap-3">

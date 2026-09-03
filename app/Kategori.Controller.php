@@ -1,12 +1,22 @@
 <?php
-$kategori = query("SELECT * FROM kategori ORDER BY id_kategori ASC");
+
+
 
 function cariKategori() {
-
-    $keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
-
     global $conn;
+    $keyword = isset($_GET['keyword'])
+        ? trim($_GET['keyword'])
+        : '';
+    $halaman = isset($_GET['page'])
+        ? (int) $_GET['page']
+        : 1;
 
+    if ($halaman < 1) {
+        $halaman = 1;
+    }
+    $perHalaman = 5;
+
+    $offset = ($halaman - 1) * $perHalaman;
     $sql = "SELECT * FROM kategori";
 
     if (!empty($keyword)) {
@@ -15,19 +25,38 @@ function cariKategori() {
 
         $sql .= " WHERE nama_kategori LIKE '%$keywordEscaped%'";
     }
-
     $sql .= " ORDER BY id_kategori ASC";
+    $sqlTotal = "SELECT COUNT(*) AS total FROM kategori";
+    if (!empty($keyword)) {
 
+        $sqlTotal .= " WHERE nama_kategori LIKE '%$keywordEscaped%'";
+    }
+    $resultTotal = query($sqlTotal);
+    $dataTotal = mysqli_fetch_assoc($resultTotal);
+    $totalData = (int) $dataTotal['total'];
+
+    // INI YANG DITAMBAHKAN
+    $totalHalaman = max(1, ceil($totalData / $perHalaman));
+    if ($halaman > $totalHalaman) {
+        $halaman = $totalHalaman;
+
+        $offset = ($halaman - 1) * $perHalaman;
+    }
+    $sql .= " LIMIT $offset, $perHalaman";
     $result = query($sql);
-
     $rows = [];
-
     while ($row = mysqli_fetch_assoc($result)) {
         $rows[] = $row;
     }
-
+    $GLOBALS['paginationKategori'] = [
+        'halaman' => $halaman,
+        'perHalaman' => $perHalaman,
+        'totalData' => $totalData,
+        'totalHalaman' => $totalHalaman
+    ];
     return $rows;
 }
+
 
 
 function tambahKategori($d){
@@ -72,50 +101,70 @@ function tambahKategori($d){
     ];
 }
 
-
 function hapusKategori($id){
+
+    global $conn;
 
     $id = (int) $id;
 
+    
     $cek = query("
-        SELECT * FROM kategori 
-        WHERE id_kategori = '$id'
+        SELECT id_kategori
+        FROM kategori
+        WHERE id_kategori = $id
     ");
 
     if(mysqli_num_rows($cek) == 0){
 
         return [
-            'status' => false,
+            
             'bg' => 'info',
-            'icon' => 'info-circle',
+    
             'pesan' => 'Kategori tidak ditemukan.'
         ];
 
     }
+    $cekMenu = query("
+        SELECT id_menu
+        FROM menu
+        WHERE id_kategori = $id
+        LIMIT 1
+    ");
 
+    if(mysqli_num_rows($cekMenu) > 0){
+
+        return [
+           
+            'bg' => 'info',
+            'icon' => 'exclamation-triangle',
+            'pesan' => 'Kategori tidak dapat dihapus karena masih ada menu yang menggunakan kategori tersebut.'
+        ];
+
+    }
     $q = query("
-        DELETE FROM kategori 
-        WHERE id_kategori = '$id'
+        DELETE FROM kategori
+        WHERE id_kategori = $id
     ");
 
     if($q){
 
         return [
-            'status' => true,
+           
             'bg' => 'success',
-            'icon' => 'check-circle',
+  
             'pesan' => 'Kategori berhasil dihapus.'
         ];
 
     }
 
     return [
-        'status' => false,
         'bg' => 'danger',
         'icon' => 'exclamation-triangle',
         'pesan' => 'Kategori gagal dihapus. Harap coba lagi.'
     ];
 }
+
+
 
 
 function editKategori($d){ 
@@ -182,10 +231,19 @@ if (isset($_POST['aksi']) && $_POST['aksi'] === 'edit') {
     header("Location: ?route=menu/kategori");
     exit;
 }
+if (isset($_POST['aksi']) && $_POST['aksi'] === 'hapus') {
+    $hasil = hapusKategori($_POST['id']);
+    $_SESSION['toast'] = $hasil;
+    header("Location: ?route=menu/kategori");
+    exit;
+}
 $hasil = $_SESSION['toast'] ?? null;
 unset($_SESSION['toast']);
 
-$keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
-$kategori = cariKategori($keyword);
+$keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : ''; 
+$kategori = cariKategori();
+$pagination = $paginationKategori;
+$halaman = $pagination['halaman'];
+$totalHalaman = $pagination['totalHalaman'];
 
 ?>

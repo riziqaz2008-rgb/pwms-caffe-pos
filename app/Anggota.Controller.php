@@ -30,7 +30,7 @@ if(!empty($params)){
     mysqli_stmt_bind_param($stmt, $types, ...$params);
 }
 mysqli_stmt_execute($stmt);
-$dkaryawan = mysqli_stmt_get_result($stmt);
+$danggota = mysqli_stmt_get_result($stmt);
 
 function tambah($d){
     $nama = $d['nama'];
@@ -41,36 +41,39 @@ function tambah($d){
 
     if(empty($nama) || $nama == ''){
         return [
-            'status' => false,
             'bg' => 'warning',
-            'icon' => 'info-circle',
             'pesan' => 'Nama kosong, harap diisi.'
         ];
     }
 
     if($telp === ''){
         return [
-            'status' => false,
             'bg' => 'warning',
-            'icon' => 'info-circle',
             'pesan' => 'Nomor telepon kosong, harap diisi.'
         ];
     } elseif(!preg_match('/^08[0-9]{9,14}$/', $telp)){
         return [
-            'status' => false,
             'bg' => 'warning',
-            'icon' => 'info-circle',
             'pesan' => 'Nomor telepon harus diawali 08 dan terdiri dari 10 sampai 15 digit angka.'
         ];
     }
-    
-    $ca = query("SELECT username FROM users WHERE username='$user'");
-    if($ca){
+
+    $qcu = query("SELECT username FROM users WHERE username='$user'");
+    $cu = mysqli_fetch_assoc($qcu);
+    if($cu){
         return [
-            'status' => false,
             'bg' => 'info',
-            'icon' => 'info-circle',
-            'pesan' => 'Username sudah digunakan. Harap ganti username yang lain.',
+            'pesan' => 'Username '.$cu['username'].' sudah digunakan. Harap ganti username yang lain.',
+        ];
+    }
+
+    // ERROR
+    $qct = query("SELECT * FROM anggota WHERE telepon='$telp'");
+    $ct = mysqli_fetch_assoc($qct);
+    if(mysqli_num_rows($ct) > 0){
+        return [
+            'bg' => 'info',
+            'pesan' => 'Nomor telepon '.$ct['telepon'].' sudah ada. Harap ganti telepon yang lain.'
         ];
     }
 
@@ -81,17 +84,13 @@ function tambah($d){
         query("INSERT INTO users (username, password, id_role, id_anggota) VALUES ('$user', '$pw', '$role', '$ida')");
         mysqli_commit($conn);
         return [
-            'status' => true,
             'bg' => 'success',
-            'icon' => 'check-circle',
             'pesan' => 'Anggota berhasil ditambahkan.'        
         ];
     } catch(Exception $e){
         mysqli_rollback($conn);
         return [
-            'status' => false,
             'bg' => 'danger',
-            'icon' => 'alert-triangle',
             'pesan' => 'Anggota gagal ditambahkan. Harap coba lagi.'
         ];
     }
@@ -106,13 +105,12 @@ function edit($d){
     $pw = $d['password'];
     $s = isset($d['status']) ? 1 : 0;
 
-    $ca = query("SELECT username FROM users WHERE username='$user'");
-    if($ca){
+    $qca = query("SELECT username FROM users WHERE username='$user' AND id_user != '$id'");
+    $ca = mysqli_fetch_assoc($qca);
+    if(mysqli_num_rows($ca) > 0){
         return [
-            'status' => false,
             'bg' => 'info',
-            'icon' => 'info-circle',
-            'pesan' => 'Username sudah digunakan. Harap ganti username yang lain.',
+            'pesan' => 'Username '.$ca['username'].' sudah digunakan. Harap ganti username yang lain.'
         ];
     }
 
@@ -122,40 +120,44 @@ function edit($d){
         query("UPDATE users SET username='$user', password='$pw', id_role='$role' WHERE id_anggota='$id'");
         mysqli_commit($conn);
         return [
-            'status' => true,
             'bg' => 'success',
-            'icon' => 'check-circle',
             'pesan' => 'Anggota berhasil diperbarui.'        
         ];
     } catch(Exception $e){
         mysqli_rollback($conn);
         return [
-            'status' => false,
             'bg' => 'danger',
-            'icon' => 'alert-triangle',
             'pesan' => 'Anggota gagal diperbarui. Harap coba lagi.'
         ];
     }
 }
 
 function hapus($d){
-    $id = $d['id'];
+    $id = (int)$d['id'];
 
-    $q = query("DELETE FROM anggota WHERE id_anggota='$id'");
-    if($q){
+    $c = query("SELECT * FROM users WHERE id_users='$id'");
+    if(mysqli_num_rows($c) == 0){
         return [
-            'status' => true,
-            'bg' => 'success',
-            'icon' => 'check-circle',
-            'pesan' => 'Anggota berhasil dihapus.',
+            'bg' => 'info',
+            'pesan' => 'ID pelanggan tidak ditemukan.',
         ];
     }
-    
-    return [
-        'status' => false,
-        'bg' => 'danger',
-        'icon' => 'alert-triangle',
-        'pesan' => 'Anggota gagal dihapus. Harap coba lagi',
-    ];
+
+    mysqli_begin_transaction($conn);
+    try{
+        query("DELETE FROM users WHERE id_anggota='$id'");
+        query("DELETE FROM anggota WHERE id_anggota='$id'");
+        mysqli_commit($conn);
+        return [
+            'bg' => 'success',
+            'pesan' => 'Anggota berhasil dihapus.'        
+        ];
+    } catch(Exception $e){
+        mysqli_rollback($conn);
+        return [
+            'bg' => 'danger',
+            'pesan' => 'Anggota gagal dihapus. Harap coba lagi.'
+        ];
+    }
 }
 ?>

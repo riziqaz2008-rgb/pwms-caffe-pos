@@ -324,6 +324,56 @@ function editMenu($d){
     ];
 }
 
+function hapusMenu($d){
+    global $conn;
+    // Ambil ID menu
+    $id = (int) ($d['id'] ?? 0);
+    if($id <= 0){
+        return [
+            'bg' => 'error',
+            'pesan' => 'Data menu tidak valid.'
+        ];
+    }
+    $data = query("
+        SELECT foto
+        FROM menu
+        WHERE id_menu = $id
+    ");
+    if(mysqli_num_rows($data) == 0){
+        return [
+            'bg' => 'error',
+            'pesan' => 'Data menu tidak ditemukan.'
+        ];
+    }
+    $menu = mysqli_fetch_assoc($data);
+    // Nama file foto dari database
+    $foto = $menu['foto'] ?? '';
+    $q = query("
+        DELETE FROM menu
+        WHERE id_menu = $id
+    ");
+    if(!$q){
+        return [
+            'bg' => 'error',
+            'pesan' => 'Menu gagal dihapus. Harap coba lagi.'
+        ];
+    }
+    if(!empty($foto)){
+
+        $folder = 'public/images/';
+        $fileFoto = $folder . $foto;
+
+        if(file_exists($fileFoto)){
+            unlink($fileFoto);
+        }
+    }
+    return [
+        'bg' => 'success',
+        'pesan' => 'Menu berhasil dihapus.'
+    ];
+}
+
+
 
 
 
@@ -336,6 +386,12 @@ if (isset($_POST['aksi']) && $_POST['aksi'] === 'tambah') {
 }
 if (isset($_POST['aksi']) && $_POST['aksi'] === 'edit') {
     $hasil = editMenu($_POST);
+    $_SESSION['toast'] = $hasil;
+    header("Location: ?route=menu");
+    exit;
+}
+if (isset($_POST['aksi']) && $_POST['aksi'] === 'hapus') {
+    $hasil = hapusMenu($_POST);
     $_SESSION['toast'] = $hasil;
     header("Location: ?route=menu");
     exit;
