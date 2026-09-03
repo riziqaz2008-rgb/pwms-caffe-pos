@@ -34,7 +34,7 @@ function tambahKategori($d){
 
     global $conn;
 
-    $n = trim($d['namaKategori']);
+    $n = trim($d['nama']);
     $n = mysqli_real_escape_string($conn, $n);
 
     $cek = query("
@@ -51,6 +51,7 @@ function tambahKategori($d){
         ];
     }
 
+   
     $q = query("
         INSERT INTO kategori (nama_kategori)
         VALUES ('$n')
@@ -59,18 +60,14 @@ function tambahKategori($d){
     if($q){
 
         return [
-           
             'bg' => 'success',
-            
             'pesan' => 'Kategori berhasil ditambahkan.'
         ];
 
     }
 
     return [
-       
-        'bg' => 'danger',
-       
+        'bg' => 'error',
         'pesan' => 'Kategori gagal ditambahkan. Harap coba lagi.'
     ];
 }
@@ -125,9 +122,8 @@ function editKategori($d){
 
     global $conn;
 
-    $id = (int) $d['id_kategori'];
-
-    $n = trim($d['namaKategori']);
+    $id = (int) $d['id'];
+    $n = trim($d['nama']);
     $n = mysqli_real_escape_string($conn, $n);
 
     $cek = query("
@@ -172,4 +168,24 @@ function editKategori($d){
         'pesan' => 'Kategori gagal diperbarui. Harap coba lagi.' 
     ]; 
 }
+
+
+if (isset($_POST['aksi']) && $_POST['aksi'] === 'tambah') {
+    $hasil = tambahKategori($_POST);
+    $_SESSION['toast'] = $hasil;
+    header("Location: ?route=menu/kategori");
+    exit;
+}
+if (isset($_POST['aksi']) && $_POST['aksi'] === 'edit') {
+    $hasil = editKategori($_POST);
+    $_SESSION['toast'] = $hasil;
+    header("Location: ?route=menu/kategori");
+    exit;
+}
+$hasil = $_SESSION['toast'] ?? null;
+unset($_SESSION['toast']);
+
+$keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
+$kategori = cariKategori($keyword);
+
 ?>

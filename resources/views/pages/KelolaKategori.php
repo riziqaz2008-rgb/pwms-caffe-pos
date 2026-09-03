@@ -1,29 +1,3 @@
-<?php
-if (isset($_POST['aksi']) && $_POST['aksi'] === 'tambah') {
-    $hasil = tambahKategori($_POST);
-    $_SESSION['toast'] = $hasil;
-    header("Location: ?route=menu/kategori");
-    exit;
-}
-if (isset($_POST['aksi']) && $_POST['aksi'] === 'edit') {
-    $hasil = editKategori($_POST);
-    $_SESSION['toast'] = $hasil;
-    header("Location: ?route=menu/kategori");
-    exit;
-}
-$keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
-$kategori = cariKategori($keyword);
-?>
-<?php if (isset($_SESSION['toast'])): ?>
-
-<script>
-    showToast(
-        <?= json_encode($_SESSION['toast']['pesan']) ?>,
-        <?= json_encode($_SESSION['toast']['bg']) ?>
-    );
-</script>
-
-<?php unset($_SESSION['toast']); endif; ?>
 
 <section id="Kategori">
     <div class="bg-white dark:bg-slate-900 mb-6">
@@ -141,29 +115,36 @@ $kategori = cariKategori($keyword);
                             <td class="px-5 py-4">
                                 <div class="flex items-center justify-center gap-2">
                                     <button type="button"  
-    onclick='showGlobalModal(<?= json_encode([ 
-        "title" => "Edit Kategori", 
-        "subtitle" => "Perbarui informasi kategori menu.", 
-        "icon" => "bxs-edit", 
-        "iconBg" => "bg-amber-500", 
-        "action" => "?route=menu/kategori", 
-        "method" => "POST", 
-        "buttonText" => "Simpan Perubahan", 
-        "buttonIcon" => "bxs-save", 
-        "buttonColor" => "bg-amber-500 hover:bg-amber-600",
-        "nameBtn" => "aksi", 
-        "value" => "edit" 
-    ]) ?>)' 
-    class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" 
-    title="Edit kategori">
-
-    <i class="bx bxs-pencil"></i> 
-    <modaledit()>
-    <modaldata-id><?= $k['id_kategori'] ?></modaldata-id>
-</button>
-                                    <button type="button" onclick="hapusMenu(1)" class="w-10 h-10 rounded-lg bg-red-500 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Hapus menu">
-                                        <i class="bx bxs-trash"></i>
+                                        onclick='showGlobalModal(<?= json_encode([ 
+                                            "title" => "Edit Kategori", 
+                                            "subtitle" => "Perbarui informasi kategori menu.", 
+                                            "icon" => "bxs-edit", 
+                                            "iconBg" => "bg-amber-500", 
+                                            "action" => "?route=menu/kategori", 
+                                            "method" => "POST", 
+                                            "buttonText" => "Simpan Perubahan", 
+                                            "buttonIcon" => "bxs-save", 
+                                            "buttonColor" => "bg-amber-500 hover:bg-amber-600",
+                                            "nameBtn" => "aksi", 
+                                            "value" => "edit" 
+                                        ]) ?>)
+                                        modalEdit(this)'
+                                        class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" 
+                                         data-id="<?= htmlspecialchars($k['id_kategori']) ?>" data-nama="<?= htmlspecialchars($k['nama_kategori']) ?>">
+                                        <i class="bx bxs-pencil"></i> 
+                                                            
+                                                            
                                     </button>
+                                    <button type="button" 
+                                                    onclick="showConfirm(
+                                                    'Hapus Data?',
+                                                    'Yakin ingin menghapus data ini?',
+                                                    'Ya, Hapus',
+                                                    'danger'
+                                                )"    
+                                                class="w-10 h-10 rounded-lg bg-red-500 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Hapus menu">
+                                                    <i class="bx bxs-trash"></i>
+                                                </button>
                                 </div>
                             </td> 
                             <?php endforeach; ?>
@@ -267,7 +248,7 @@ $kategori = cariKategori($keyword);
                 </div>
 
                 <form id="globalModalForm" action="" method="POST" enctype="multipart/form-data" class="w-full">
-                    <input type="hidden" name="id_kategori" id="globalModalIdKategori">
+                    <input type="hidden" id="id" name="id">
                     <div class="grid grid-cols-1 gap-x-6 gap-y-5">       
                             
                         <div class="flex flex-col gap-1.5 w-full">
@@ -284,9 +265,9 @@ $kategori = cariKategori($keyword);
 
     <input
         type="text"
-        name="namaKategori"
+        name="nama"
         maxlength="20"
-        id="namaKategori"
+        id="nama"
         placeholder="Contoh: Makanan Utama"
         autocomplete="off"
         oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')"
@@ -346,6 +327,9 @@ searchKategori.addEventListener('input', function () {
     }, 500);
 
 });
-
+function modalEdit(btn){
+      $('#id').val(btn.dataset.id);
+      $('#nama').val(btn.dataset.nama);
+    }
 </script>
 
