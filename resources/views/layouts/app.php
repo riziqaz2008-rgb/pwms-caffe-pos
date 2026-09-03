@@ -151,7 +151,7 @@
                     icon.className = 'bx bxs-x-circle text-xl text-white';
                 } else if (d.bg === 'warning') {
                     toast.classList.add('bg-amber-500');
-                    icon.className = 'bx bxs-error text-xl text-white';
+                    icon.className = 'bx bxs-alert-triangle text-xl text-white';
                 } else if (d.bg === 'info') {
                     toast.classList.add('bg-blue-600');
                     icon.className = 'bx bxs-info-circle text-xl text-white';

@@ -41,8 +41,9 @@ switch ($route) {
 
         break;
 
-    case 'transaksi':
+    case 'metode':
         
+        include  __DIR__ . '../../app/Metode.Controller.php';
         $page = __DIR__ . '/../resources/views/pages/KelolaMetode.php';
 
         break;
