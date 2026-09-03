@@ -71,8 +71,8 @@
                         </div>
                     </li>
                     <li>
-                        <a href="?route=transaksi" class="relative flex justify-start items-center px-4 py-4 rounded-lg gap-4 <?= $route === "transaksi" ? 'bg-gray-50 text-primary font-bold' : 'text-gray-400/80 hover:bg-black/5 duration-300 transition-all ease-in-out' ?>">
-                            <?php if ($route === 'transaksi'): ?>
+                        <a href="?route=metode" class="relative flex justify-start items-center px-4 py-4 rounded-lg gap-4 <?= $route === "metode" ? 'bg-gray-50 text-primary font-bold' : 'text-gray-400/80 hover:bg-black/5 duration-300 transition-all ease-in-out' ?>">
+                            <?php if ($route === 'metode'): ?>
                                 <span class="absolute left-0 w-1.5 h-7 bg-primary rounded-r-full"></span>
                             <?php endif; ?>
                             <i class="bx bxs-credit-card text-xl"></i>

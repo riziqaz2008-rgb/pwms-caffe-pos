@@ -4,7 +4,7 @@ $role = fetchAllAssoc("SELECT * FROM roles");
 $cari = trim($_GET['cari'] ?? '');
 $rolef = (int)($_GET['rolef'] ?? 0);
 $statusf = $_GET['statusf'] ?? '';
-$sql = "SELECT u.*, a.nama, a.telepon, r.nama_role FROM users u LEFT JOIN anggota a ON u.id_anggota = a.id_anggota LEFT JOIN roles r ON u.id_role = r.id_role WHERE 1=1";
+$sql = "SELECT u.*, a.nama, a.telepon, a.status, r.nama_role FROM users u LEFT JOIN anggota a ON u.id_anggota = a.id_anggota LEFT JOIN roles r ON u.id_role = r.id_role WHERE 1=1";
 $params = [];
 $types = "";
 if(!empty($cari)){
@@ -33,6 +33,7 @@ mysqli_stmt_execute($stmt);
 $danggota = mysqli_stmt_get_result($stmt);
 
 function tambah($d){
+    global $conn;
     $nama = $d['nama'];
     $telp = trim($d['telepon'] ?? '');
     $role = (int)($d['role'] ?? 0);
@@ -70,7 +71,7 @@ function tambah($d){
     // ERROR
     $qct = query("SELECT * FROM anggota WHERE telepon='$telp'");
     $ct = mysqli_fetch_assoc($qct);
-    if(mysqli_num_rows($ct) > 0){
+    if(mysqli_num_rows($qct) > 0){
         return [
             'bg' => 'info',
             'pesan' => 'Nomor telepon '.$ct['telepon'].' sudah ada. Harap ganti telepon yang lain.'
@@ -97,6 +98,7 @@ function tambah($d){
 }
 
 function edit($d){
+    global $conn;
     $id = $d['id'];
     $nama = $d['nama'];
     $telp = $d['telepon'];
@@ -107,7 +109,7 @@ function edit($d){
 
     $qca = query("SELECT username FROM users WHERE username='$user' AND id_user != '$id'");
     $ca = mysqli_fetch_assoc($qca);
-    if(mysqli_num_rows($ca) > 0){
+    if(mysqli_num_rows($qca) > 0){
         return [
             'bg' => 'info',
             'pesan' => 'Username '.$ca['username'].' sudah digunakan. Harap ganti username yang lain.'
@@ -160,4 +162,26 @@ function hapus($d){
         ];
     }
 }
+
+if(isset($_POST['aksi'])){
+  if($_POST['aksi'] == 'tambah'){
+    $hasil = tambah($_POST);
+    $_SESSION['toast'] = $hasil;
+    header("Location: ?route=anggota");
+    exit;
+  } elseif($_POST['aksi'] == 'edit'){
+    $hasil = edit($_POST);
+    $_SESSION['toast'] = $hasil;
+    header("Location: ?route=anggota");
+    exit;
+  } elseif($_POST['aksi'] == 'hapus'){
+    $hasil = hapus($_POST);
+    $_SESSION['toast'] = $hasil;
+    header("Location: ?route=anggota");
+    exit;
+  }
+}
+
+$hasil = $_SESSION['toast'] ?? null;
+unset($_SESSION['toast']);
 ?>

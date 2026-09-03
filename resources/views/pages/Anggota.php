@@ -1,26 +1,3 @@
-<?php
-if(isset($_POST['aksi'])){
-  if($_POST['aksi'] == 'tambah'){
-    $hasil = tambah($_POST);
-    $_SESSION['toast'] = $hasil;
-    header("Location: ".htmlspecialchars($_GET['route'] ?? '')."");
-    exit;
-  } elseif($_POST['aksi'] == 'edit'){
-    $hasil = edit($_POST);
-    $_SESSION['toast'] = $hasil;
-    header("Location: ".htmlspecialchars($_GET['route'] ?? '')."");
-    exit;
-  } elseif($_POST['aksi'] == 'hapus'){
-    $hasil = hapus($_POST);
-    $_SESSION['toast'] = $hasil;
-    header("Location: ".htmlspecialchars($_GET['route'] ?? '')."");
-    exit;
-  }
-}
-
-$hasil = $_SESSION['toast'] ?? null;
-unset($_SESSION['toast']);
-?>
 <section id="Anggota">
     <div class="bg-white dark:bg-slate-900 mb-6">
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 pb-6 dark:border-slate-800">
@@ -53,9 +30,10 @@ unset($_SESSION['toast']);
                     
                     "nameBtn" => "aksi",
                     "value" => "tambah"
-                ]) ?>)'
+                ]) ?>);
+                 modalTambah();'
                 class="btn-aksi w-full sm:w-auto flex items-center justify-center gap-2 bg-primary text-white font-bold px-6 py-3 rounded-lg hover:bg-blue-700 active:scale-95 transition-all duration-200"
-                value="tambah">
+                >
             <i class="bx bxs-user-id-card text-xl"></i>
             <span>Tambah Anggota</span>
         </button>
@@ -127,13 +105,26 @@ unset($_SESSION['toast']);
 
             <tbody id="body-tabel-kategori">
                 <?php if(mysqli_num_rows($danggota)): ?>
-                    <?php while($d = mysqli_fetch_assoc($danggota)): ?>
+                    <?php while($d = mysqli_fetch_assoc($danggota)):
+                    if($d['status'] == 1){
+                        $s = 'Aktif';
+                        $ws = 'bg-emerald-600';
+                    } else{
+                        $s = 'Nonaktif';
+                        $ws = 'bg-gray-600';
+                    }
+                    ?>
                     <tr>
                         <td class="px-5 py-4"><?= $no++ ?></td>
                         <td class="px-5 py-4"><?= $d['nama'] ?></td>
                         <td class="px-5 py-4"><?= $d['telepon'] ?></td>
                         <td class="px-5 py-4"><?= $d['nama_role'] ?></td>
-                        <td class="px-5 py-4"><?= $d['status'] ?></td>
+                        <td class="px-5 py-4">
+                            <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg <?= $ws ?> text-xs font-bold text-white">
+                                <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+                                <?= $s ?>
+                            </span>
+                        </td>
                         <td class="px-5 py-4">
                             <div class="flex items-center justify-center gap-2">
                                 <button type="button" 
@@ -148,11 +139,12 @@ unset($_SESSION['toast']);
                                     "buttonColor" => "bg-amber-500 hover:bg-amber-600",
                                     "nameBtn" => "aksi",
                                     "value" => "edit"
-                                ]) ?>)
-                                 modalEdit(this)
+                                ]) ?>);
+                                 modalEdit(this);
                                  '
                                 class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Edit menu"
-                                data-id="<?= htmlspecialchars($d['id_anggota']) ?>" data-nama="<?= htmlspecialchars($d['nama']) ?>" data-telp="<?= htmlspecialchars($d['telepon']) ?>">
+                                data-id="<?= htmlspecialchars($d['id_anggota']) ?>" data-nama="<?= htmlspecialchars($d['nama']) ?>" data-telp="<?= htmlspecialchars($d['telepon']) ?>" data-role="<?= htmlspecialchars($d['id_role']) ?>" data-status="<?= htmlspecialchars($d['status']) ?>" data-user="<?= htmlspecialchars($d['username']) ?>" data-pw="<?= htmlspecialchars($d['password']) ?>"
+                                >
                                     <i class="bx bxs-pencil"></i>
                                 </button>
                                 <button type="button" 
@@ -205,7 +197,8 @@ unset($_SESSION['toast']);
                                     "buttonColor" => "bg-primary hover:bg-blue-700",
                                     "nameBtn" => "aksi",
                                     "value" => "tambah"
-                                ]) ?>)'
+                                ]) ?>);
+                                 modalTambah();'
                                 class="w-full sm:w-auto flex items-center justify-center gap-2 bg-primary text-white font-bold px-6 py-3 rounded-lg hover:bg-blue-700 active:scale-95 transition-all duration-200">
                             <i class="bx bxs-user-id-card text-xl"></i>
                             <span>Tambah Anggota</span>
@@ -289,7 +282,7 @@ unset($_SESSION['toast']);
                             </label>
                             <div class="w-full px-4 py-3 bg-white dark:bg-slate-800 rounded-lg border-2 border-gray-200/80 dark:border-slate-700 flex items-center">
                                 <label class="inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" name="status" id="status" value="" class="sr-only peer" checked>
+                                    <input type="checkbox" name="status" id="status" value="" class="sr-only peer">
                                     <div class="relative w-10 h-5.5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/50 dark:peer-focus:ring-primary/30 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4.5 after:w-4.5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
                                     <span class="ms-3 text-sm font-bold text-slate-700 dark:text-slate-300">Aktif</span>
                                 </label>
@@ -338,13 +331,19 @@ unset($_SESSION['toast']);
 </section>
 
 <script>
-    $('.btn-aksi').click(function() {
-        let v = $(this).val();
-        if(v == "tambah"){
-            $('#g-status').addClass('hidden');
-        } else{
-            $('#g-status').removeClass('hidden');
-            $('#status').prop('checked', status == '1');
-        }
-    });
+    function modalTambah(){
+        $('#g-status').addClass('hidden');
+    }
+
+    function modalEdit(b){
+        let status = b.dataset.status;
+        $('#id').val(b.dataset.id);
+        $('#nama').val(b.dataset.nama);
+        $('#telepon').val(b.dataset.telp);
+        $('#role').val(b.dataset.role);
+        $('#g-status').removeClass('hidden');
+        $('#status').prop('checked', status == '1');
+        $('#username').val(b.dataset.user);
+        $('#password').val(b.dataset.pw);
+    }
 </script>
