@@ -48,14 +48,10 @@ function tambahmenu($d){
 
    
     $h = str_replace('.', '', $h);
-
-    // Escape data
     $n = mysqli_real_escape_string($conn, $n);
     $h = (int) $h;
     $k = (int) $k;
     $deskripsi = mysqli_real_escape_string($conn, $deskripsi);
-
-
     $cek = query("
         SELECT id_menu
         FROM menu
@@ -77,7 +73,6 @@ function tambahmenu($d){
         $tmpFoto  = $_FILES['gambarBarang']['tmp_name'];
         $ukuran   = $_FILES['gambarBarang']['size'];
 
-        // maksimal 2MB
         if($ukuran > 2 * 1024 * 1024){
 
             return [
@@ -85,11 +80,8 @@ function tambahmenu($d){
                 'pesan' => 'Ukuran foto maksimal 2MB.'
             ];
         }
-
-        // took ekstensi file
         $ext = strtolower(pathinfo($namaFoto, PATHINFO_EXTENSION));
 
-        // format fottnya
         $allowed = ['jpg', 'jpeg', 'png', 'webp'];
 
         if(!in_array($ext, $allowed)){
@@ -99,19 +91,14 @@ function tambahmenu($d){
                 'pesan' => 'Format foto tidak valid. Gunakan JPG, PNG, atau WEBP.'
             ];
         }
-
-        // nama file
         $namaFile = uniqid('menu_') . '.' . $ext;
 
-        // Folder upload
         $folder = 'public/images/';
 
-        // Buat folder jika belum ada
         if(!is_dir($folder)){
             mkdir($folder, 0777, true);
         }
 
-        // Upload file
         if(!move_uploaded_file($tmpFoto, $folder . $namaFile)){
 
             return [
@@ -172,20 +159,14 @@ function editMenu($d){
     $h = trim($d['harga'] ?? '');
     $k = trim($d['kategori'] ?? '');
     $deskripsi = trim($d['deskripsi'] ?? '');
-
     $m = isset($d['menu']) ? 1 : 0;
     $s = isset($d['status']) ? 1 : 0;
 
-    // Hapus titik dari format harga
     $h = str_replace('.', '', $h);
-
-    // Escape data
     $n = mysqli_real_escape_string($conn, $n);
     $h = (int) $h;
     $k = (int) $k;
     $deskripsi = mysqli_real_escape_string($conn, $deskripsi);
-
-
 
     if($id <= 0){
 
@@ -225,11 +206,7 @@ function editMenu($d){
     }
 
     $menuLama = mysqli_fetch_assoc($dataLama);
-
-    // Ambil nama foto lama dari kolom foto
     $fotoLama = $menuLama['foto'] ?? '';
-
-    // Default: tetap menggunakan foto lama
     $foto = $fotoLama;
 
     if(isset($_FILES['gambarBarang']) && $_FILES['gambarBarang']['error'] === 0){
@@ -237,9 +214,6 @@ function editMenu($d){
         $namaFoto = $_FILES['gambarBarang']['name'];
         $tmpFoto  = $_FILES['gambarBarang']['tmp_name'];
         $ukuran   = $_FILES['gambarBarang']['size'];
-
-
-
         if($ukuran > 2 * 1024 * 1024){
 
             return [
@@ -247,30 +221,19 @@ function editMenu($d){
                 'pesan' => 'Ukuran foto maksimal 2MB.'
             ];
         }
-
-
-
         $ext = strtolower(pathinfo($namaFoto, PATHINFO_EXTENSION));
-
-
-        // Format yang diperbolehkan
         $allowed = ['jpg', 'jpeg', 'png', 'webp'];
-
         if(!in_array($ext, $allowed)){
-
             return [
                 'bg' => 'error',
                 'pesan' => 'Format foto tidak valid. Gunakan JPG, PNG, atau WEBP.'
             ];
         }
         $folder = 'public/images/';
-
         if(!is_dir($folder)){
             mkdir($folder, 0777, true);
         }
         $namaFile = uniqid('menu_') . '.' . $ext;
-
-
         if(!move_uploaded_file($tmpFoto, $folder . $namaFile)){
 
             return [
@@ -278,13 +241,8 @@ function editMenu($d){
                 'pesan' => 'Foto gagal diupload.'
             ];
         }
-
-
         $foto = mysqli_real_escape_string($conn, $namaFile);
-
-
         if(!empty($fotoLama)){
-
             $fileLama = $folder . $fotoLama;
 
             if(file_exists($fileLama)){
@@ -321,7 +279,6 @@ function editMenu($d){
 
 function hapusMenu($d){
     global $conn;
-    // Ambil ID menu
     $id = (int) ($d['id'] ?? 0);
     if($id <= 0){
         return [
@@ -341,7 +298,6 @@ function hapusMenu($d){
         ];
     }
     $menu = mysqli_fetch_assoc($data);
-    // Nama file foto dari database
     $foto = $menu['foto'] ?? '';
     $q = query("
         DELETE FROM menu
@@ -367,11 +323,6 @@ function hapusMenu($d){
         'pesan' => 'Menu berhasil dihapus.'
     ];
 }
-
-
-
-
-
 
 if (isset($_POST['aksi']) && $_POST['aksi'] === 'tambah') {
     $hasil = tambahmenu($_POST);
@@ -461,12 +412,8 @@ $paginationMenu = [
 ];
 $layoutMode = $_GET['layoutMode'] ?? 'table';
 $kategori = getKategori();
-
-
 $pagination = $paginationMenu;
-
 $halaman = $pagination['halaman'];
 $totalHalaman = $pagination['totalHalaman'];
-
 
 ?>

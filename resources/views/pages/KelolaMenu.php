@@ -292,7 +292,7 @@
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
-                            //ini contoh JIKA VALUE KOSONG HAPUS KU SUNAT
+                 
                             <tr>
                                 <td colspan="8">
                                     <div class="flex flex-col items-center justify-center py-12 px-4 text-center bg-gray-50">
@@ -655,6 +655,12 @@
 <script>
 const searchMenu = document.getElementById('searchMenu');
 const formCariMenu = document.getElementById('formCariMenu');
+const input = document.getElementById('harga');
+input.addEventListener('input', function () {
+   if(this.value.startsWith('0')) {
+      this.value = '';
+   }
+});
 
 let typingTimer;
 
@@ -675,7 +681,7 @@ function modalEdit(btn){
       $('#harga').val(btn.dataset.harga);
       $('#kategori').val(btn.dataset.kategori);
       $('#deskripsi').val(btn.dataset.deskripsi);
-      $('#menu').val(btn.dataset.menu);
-      $('#status').val(btn.dataset.status);
+      $('#menu').prop('checked', btn.dataset.menu == '1');
+      $('#status').prop('checked', btn.dataset.status == '1');
     }
 </script>
