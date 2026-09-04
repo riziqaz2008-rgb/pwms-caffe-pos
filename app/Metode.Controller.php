@@ -4,13 +4,13 @@ $totalMetode = mysqli_fetch_assoc(query("SELECT COUNT(*) AS total FROM metode"))
 $totalMetodeAktif = mysqli_fetch_assoc(query("SELECT COUNT(*) AS total FROM metode WHERE status=1"))['total'];
 
 $cari = trim($_GET['cari'] ?? '');
+$currentPage = max(1, (int) ($_GET['page'] ?? 1));
 $limit = 10;
-$page = max(1, (int) ($_GET['page'] ?? 1));
-$offset = ($page - 1) * $limit;
+$offset = ($currentPage - 1) * $limit;
 $where = "";
 $params = [];
 $types = "";
-// $sql = "SELECT * FROM metode m LEFT JOIN tipe t ON m.id_tipe = t.id_tipe WHERE 1=1";
+
 if($cari !== ''){
     $where .= " AND ( m.nama_metode LIKE ? OR t.nama_tipe LIKE ? )";
     $keyword = "%$cari%";
@@ -18,15 +18,18 @@ if($cari !== ''){
     $params[] = $keyword;
     $types .= "ss";
 }
+
 $sqlCount = "SELECT COUNT(*) AS total FROM metode m LEFT JOIN tipe t ON m.id_tipe = t.id_tipe WHERE 1=1 $where";
 $stmtCount = mysqli_prepare($conn, $sqlCount);
+
 if(!empty($params)){
     mysqli_stmt_bind_param($stmtCount, $types, ...$params);
 }
+
 mysqli_stmt_execute($stmtCount);
-$resultCount = mysqli_stmt_get_result($stmt);
+$resultCount = mysqli_stmt_get_result($stmtCount);
 $totalData = mysqli_fetch_assoc($resultCount)['total'];
-$totalPage = max(1, ceil($totalData / $limit));
+$totalPage = max(1, (int) ceil($totalData / $limit));
 mysqli_stmt_close($stmtCount);
 
 $sql = "SELECT * FROM metode m LEFT JOIN tipe t ON m.id_tipe = t.id_tipe WHERE 1=1 $where LIMIT ? OFFSET ?";
@@ -37,7 +40,7 @@ $paramsData[] = $offset;
 $stmt = mysqli_prepare($conn, $sql);
 mysqli_stmt_bind_param($stmt, $typesData, ...$paramsData);
 mysqli_stmt_execute($stmt);
-$dmetode = mysqli_stmt_get_result($stmt);
+$data = mysqli_stmt_get_result($stmt);
 
 function tambah($d){
     $nama = trim($d['nama'] ?? '');
