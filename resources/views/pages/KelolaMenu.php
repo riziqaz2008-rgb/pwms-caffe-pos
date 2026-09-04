@@ -140,11 +140,11 @@
                     <p class="text-xs font-medium text-slate-400 mt-1 ml-3.5">Kelola menu yang tersedia di KedaiKu.</p>
                 </div>
                 <div class="flex items-center gap-1 p-1.5 rounded-lg border-2 border-gray-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 shrink-0 min-h-[48px]">
-                    <a href="?route=menu&layoutMode=table" title="Tampilan Tabel"
+                    <a href="?route=menu&layoutMode=table&kategori=<?= urlencode($kategoripilih); ?>&keyword=<?= urlencode($keyword); ?>"
                         class="flex items-center justify-center w-9 h-9 rounded-lg text-lg transition-colors <?= $layoutMode == 'table' ? 'bg-primary text-white font-bold shadow-sm' : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200' ?>">
                         <i class="bx bxs-rows"></i>
                     </a>
-                    <a href="?route=menu&layoutMode=grid"  title="Tampilan Grid"
+                  <a href="?route=menu&layoutMode=grid&kategori=<?= urlencode($kategoripilih); ?>&keyword=<?= urlencode($keyword); ?>"
                         class="flex items-center justify-center w-9 h-9 rounded-lg text-lg transition-colors <?= $layoutMode == 'grid' ? 'bg-primary text-white font-bold shadow-sm' : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200' ?>"                    >
                         <i class="bx bxs-grid"></i>
                     </a>
@@ -167,286 +167,384 @@
                                     <th scope="col" class="px-5 py-4 text-center font-bold">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <?php $no = 1; ?>
-                                <?php foreach ($menu as $m): ?>
-                                    <tr class="group hover:bg-slate-50 transition-colors">
-
-                                        <!-- YANG DI KOMENT INI CONTOH JIKA ADA VALUE NYA.
-                                        SILAHKAN DI SESUAIKAN ISI DATABASE. -->
-
-                                        <td class="px-5 py-4 font-bold text-gray-500"><?= $no++ ?></td>
-                                        <td class="px-5 py-4">
-
-                                            <!-- JIKA GAMBAR KOSONG -->
-
-                                            <!-- <div class="w-11 h-11 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
-                                                <i class="bx bxs-bowl-hot text-xl text-gray-400"></i>
-                                            </div> -->
-
-                                            <div class="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center shrink-0 overflow-hidden">
+                        <tbody>
+                        <?php if (mysqli_num_rows($menu) > 0): ?>
+                            <?php
+                            $no = (($paginationMenu['halaman'] - 1) * $paginationMenu['perHalaman']) + 1;
+                            ?>
+                            <?php foreach ($menu as $m): ?>
+                                <tr class="group hover:bg-slate-50 transition-colors">
+                                    <td class="px-5 py-4 font-bold text-gray-500">
+                                        <?= $no++ ?>
+                                    </td>
+                                    <td class="px-5 py-4">
+                                        <div class="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center shrink-0 overflow-hidden">
+                                            <?php if (!empty($m['foto'])): ?>
                                                 <img
-                                                    src="public/images/<?= $m['foto']; ?>"
+                                                    src="public/images/<?= htmlspecialchars($m['foto']); ?>"
                                                     class="w-full h-full object-cover"
-                                                    alt="alt">
-                                            </div>
-                                        </td>
-                                        <td class="px-5 py-4">
-                                            <span class="font-bold text-slate-800"><?= $m['nama'] ?></span>
-                                        </td>
-                                        <td class="px-5 py-4">
-                                            <span class="font-bold text-slate-800">Rp <?= number_format($m['harga'], 0, ',', '.') ?></span>
-                                        </td>
-                                        <td class="px-5 py-4">
-                                            <span class="inline-flex items-center px-6 py-2 rounded-lg bg-primary text-white text-sm font-bold">
-                                                <?= $m['nama_kategori']; ?>
-                                            </span>
-                                        </td>
-                                        <td class="px-5 py-4">
-                                            <?php if ($m['menu_tersedia'] == 1): ?>
-                                            
-                                                <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-green-600 bg-green-50 text-xs font-bold">
-                                                    <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-                                                    Tersedia
-                                                </span>
-                                            
+                                                    alt="<?= htmlspecialchars($m['nama']); ?>">
                                             <?php else: ?>
-                                            
-                                                <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-red-600 bg-red-50 text-xs font-bold">
-                                                    <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
-                                                    Tidak Tersedia
-                                                </span>
-                                            
+                                                <i class="bx bxs-bowl-hot text-xl text-gray-400"></i>
                                             <?php endif; ?>
-                                        </td>
-                                        <td class="px-5 py-4">
-                                            <?php if ($m['status_menu'] == 1): ?>
-                                            
-                                                <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-green-600 bg-green-50 text-xs font-bold">
-                                                    <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-                                                    Aktif
-                                                </span>
-                                            
-                                            <?php else: ?>
-                                            
-                                                <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-red-600 bg-red-50 text-xs font-bold">
-                                                    <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
-                                                    Nonaktif
-                                                </span>
-                                            
-                                            <?php endif; ?>
-                                        </td>
-                                        <td class="px-5 py-4">
-                                            <div class="flex items-center justify-center gap-2">
-                                                <button type="button" 
-                                                    onclick='showGlobalModal(<?= json_encode([
-                                                        "title" => "Edit Menu",
-                                                        "subtitle" => "Perbarui informasi menu cafe.",
-                                                        "icon" => "bxs-edit",
-                                                        "iconBg" => "bg-amber-500",
-                                                        "method" => "POST",
-                                                        "buttonText" => "Simpan Perubahan",
-                                                        "buttonIcon" => "bxs-save",
-                                                        "buttonColor" => "bg-amber-500 hover:bg-amber-600",
-                                                        
-                                                        "nameBtn" => "aksi",
-                                                        "value" => "edit"          
-                                                    ]) ?>)
-                                                    modalEdit(this) '
-                                                    class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Edit menu"
-                                                     data-id="<?= htmlspecialchars($m['id_menu']) ?>" data-foto="<?= htmlspecialchars($m['foto']) ?>" data-nama="<?= htmlspecialchars($m['nama']) ?>" data-harga="<?= number_format($m['harga'], 0, ',', '.') ?>" data-kategori="<?= htmlspecialchars($m['id_kategori']) ?>" data-deskripsi="<?= htmlspecialchars($m['deskripsi']) ?>" data-menu="<?= htmlspecialchars($m['menu_tersedia']) ?>" data-status="<?= htmlspecialchars($m['status_menu']) ?>">
-                                                    <i class="bx bxs-pencil"></i>
-                                                </button>
-                                                <button type="button" 
-                                onclick="showConfirmForm({
-                                    title: 'Hapus Menu',
-                                    message: 'Apakah Anda yakin ingin hapus menu <?= htmlspecialchars($m['nama']) ?>?.',
-                                    actionText: 'Ya, hapus',
-                                    type: 'danger',
-                                    nameAksi: 'hapus',
-                                    inputs: [
-                                        {
-                                            name: 'aksi',
-                                            type: 'hidden',
-                                            value: 'hapus'
-                                        },
-                                        {
-                                            name: 'id',
-                                            type: 'hidden',
-                                            value: <?= htmlspecialchars($m['id_menu']) ?>
+                                        </div>
+                                    </td>
+                                    <td class="px-5 py-4">
+                                        <span class="font-bold text-slate-800">
+                                            <?= htmlspecialchars($m['nama']); ?>
+                                        </span>
+                                    </td>
+                                    <td class="px-5 py-4">
+                                        <span class="font-bold text-slate-800">
+                                            Rp <?= number_format($m['harga'], 0, ',', '.'); ?>
+                                        </span>
+                                    </td>
+                                    <td class="px-5 py-4">
+                                        <span class="inline-flex items-center px-6 py-2 rounded-lg bg-primary text-white text-sm font-bold">
+                                            <?= htmlspecialchars($m['nama_kategori'] ?? 'Tanpa Kategori'); ?>
+                                        </span>
+                                    </td>
+                                    <td class="px-5 py-4">
+                                        <?php
+                                        if ($m['menu_tersedia'] == 1) {
+                                            $s = 'Tersedia';
+                                            $ws = 'bg-emerald-600';
+                                        } else {
+                                            $s = 'Tidak Tersedia';
+                                            $ws = 'bg-gray-600';
                                         }
-                                    ]
-                                });"    
-                                class="w-10 h-10 rounded-lg bg-red-500 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Hapus menu">
-                                    <i class="bx bxs-trash"></i>
-                                </button>
-                                            </div>
-                                        </td>           
-                                                                    
-                                        <!-- YANG DI BAWAH INI CONTOH JIKA VALUE NYA KOSONG. -->
-
-                                        <!-- <td colspan="7">
-                                            <div class="flex flex-col items-center justify-center py-12 px-4 text-center bg-gray-50">
-                                                <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4 border border-gray-200/80">
-                                                    <i class="bx bxs-dish text-4xl text-gray-300"></i>
-                                                </div>
-                                                <h3 class="text-base font-black text-slate-800 mb-1">Menu Belum Tersedia</h3>
-                                                <p class="text-xs text-gray-400 max-w-sm mb-5">
-                                                    Belum ada data menu yang ditambahkan atau hasil pencarian tidak cocok.
-                                                </p>
-                                                <button type="button" 
+                                        ?>
+                                        <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg <?= $ws ?> text-xs font-bold text-white">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+                                            <?= $s ?>
+                                        </span>
+                                    </td>
+                                    <td class="px-5 py-4">
+                                        <?php
+                                        if ($m['status_menu'] == 1) {
+                                            $s = 'Aktif';
+                                            $ws = 'bg-emerald-600';
+                                        } else {
+                                            $s = 'Nonaktif';
+                                            $ws = 'bg-gray-600';
+                                        }
+                                        ?>
+                                        <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg <?= $ws ?> text-xs font-bold text-white">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+                                            <?= $s ?>
+                                        </span>
+                                    </td>
+                                    <td class="px-5 py-4">
+                                        <div class="flex items-center justify-center gap-2">    
+                                            <button
+                                                type="button"
                                                 onclick='showGlobalModal(<?= json_encode([
-                                                    "title" => "Tambah Menu",
-                                                    "subtitle" => "Kelola daftar menu, harga, kategori, dan informasi menu cafe.",
-                                                    "icon" => "bxs-bowl-hot",
-                                                    "iconBg" => "bg-primary",
-                                                    "action" => "/menu/store",
+                                                    "title" => "Edit Menu",
+                                                    "subtitle" => "Perbarui informasi menu cafe.",
+                                                    "icon" => "bxs-edit",
+                                                    "iconBg" => "bg-amber-500",
                                                     "method" => "POST",
-                                                    "buttonText" => "Simpan Menu",
+                                                    "buttonText" => "Simpan Perubahan",
                                                     "buttonIcon" => "bxs-save",
-                                                    "buttonColor" => "bg-primary hover:bg-blue-700",
-                                                    
+                                                    "buttonColor" => "bg-amber-500 hover:bg-amber-600",
                                                     "nameBtn" => "aksi",
-                                                    "value" => "tambah"   
-                                                ]) ?>)' 
-                                                class="px-4 py-3 bg-primary text-white text-sm font-bold rounded-lg hover:opacity-90 transition-all flex items-center gap-2">
-                                                    <i class="bx bxs-plus text-base"></i>
-                                                    <span>Tambah Menu</span>
-                                                </button>
-                                            </div>
-                                        </td> -->
-
-                                    </tr>
-                                <?php endforeach; ?>                        
-                            </tbody>
-                        </table>
+                                                    "value" => "edit"
+                                                ]) ?>); modalEdit(this)'
+                                                class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all"
+                                                title="Edit menu"
+                                                data-id="<?= htmlspecialchars($m['id_menu']); ?>"
+                                                data-foto="<?= htmlspecialchars($m['foto']); ?>"
+                                                data-nama="<?= htmlspecialchars($m['nama']); ?>"
+                                                data-harga="<?= number_format($m['harga'], 0, ',', '.'); ?>"
+                                                data-kategori="<?= htmlspecialchars($m['id_kategori']); ?>"
+                                                data-deskripsi="<?= htmlspecialchars($m['deskripsi']); ?>"
+                                                data-menu="<?= htmlspecialchars($m['menu_tersedia']); ?>"
+                                                data-status="<?= htmlspecialchars($m['status_menu']); ?>">
+                                                <i class="bx bxs-pencil"></i>
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onclick="showConfirmForm({
+                                                    title: 'Hapus Menu',
+                                                    message: 'Apakah Anda yakin ingin hapus menu <?= htmlspecialchars($m['nama']); ?>?',
+                                                    actionText: 'Ya, hapus',
+                                                    type: 'danger',
+                                                    nameAksi: 'hapus',
+                                                    inputs: [
+                                                        {
+                                                            name: 'aksi',
+                                                            type: 'hidden',
+                                                            value: 'hapus'
+                                                        },
+                                                        {
+                                                            name: 'id',
+                                                            type: 'hidden',
+                                                            value: <?= (int) $m['id_menu']; ?>
+                                                        }
+                                                    ]
+                                                });"
+                                                class="w-10 h-10 rounded-lg bg-red-500 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all"
+                                                title="Hapus menu">
+                                                <i class="bx bxs-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            //ini contoh JIKA VALUE KOSONG HAPUS KU SUNAT
+                            <tr>
+                                <td colspan="8">
+                                    <div class="flex flex-col items-center justify-center py-12 px-4 text-center bg-gray-50">
+                                        <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4 border border-gray-200/80">
+                                            <i class="bx bxs-dish text-4xl text-gray-300"></i>
+                                        </div>
+                                        <h3 class="text-base font-black text-slate-800 mb-1">
+                                            Menu Belum Tersedia
+                                        </h3>
+                                        <p class="text-xs text-gray-400 max-w-sm mb-5">
+                                            Belum ada data menu yang ditambahkan atau hasil pencarian tidak cocok.
+                                        </p>
+                                        <button
+                                            type="button"
+                                            onclick='showGlobalModal(<?= json_encode([
+                                                "title" => "Tambah Menu",
+                                                "subtitle" => "Kelola daftar menu, harga, kategori, dan informasi menu cafe.",
+                                                "icon" => "bxs-bowl-hot",
+                                                "iconBg" => "bg-primary",
+                                                "method" => "POST",
+                                                "buttonText" => "Simpan Menu",
+                                                "buttonIcon" => "bxs-save",
+                                                "buttonColor" => "bg-primary hover:bg-blue-700",
+                                                "nameBtn" => "aksi",
+                                                "value" => "tambah"
+                                            ]) ?>)'
+                                            class="px-4 py-3 bg-primary text-white text-sm font-bold rounded-lg hover:opacity-90 transition-all flex items-center gap-2">
+                                            <i class="bx bxs-plus text-base"></i>
+                                            <span>Tambah Menu</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
+                        </tbody>
+                         </table>
                     </div>
-                
 <?php elseif ($layoutMode == 'grid'): ?>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        <?php foreach ($menu as $m): ?>
-
-            <!-- YANG DI KOMENT INI CONTOH JIKA ADA VALUE NYA.
-            SILAHKAN DI SESUAIKAN ISI DATABASE. -->
-
-            <div class="flex flex-row sm:flex-col group bg-white border border-gray-200 rounded-lg overflow-hidden transition-all duration-200">
-                <div class="relative w-36 h-36 shrink-0 sm:w-full sm:h-48 overflow-hidden bg-gray-100">
-                    <img
-                       src="public/images/<?= $m['foto']; ?>"
-                        loading="lazy"
-                        class="w-full h-full object-cover object-center group-hover:scale-105 transition duration-300"
-                        alt="<?= $m['nama']; ?>">
-                    <div class="absolute top-2.5 left-2.5 sm:top-3 sm:left-3">
-                        <span class="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg bg-primary text-[10px] sm:text-xs font-black text-white">
-                            <?= $m['nama_kategori']; ?>
-                        </span>
-                    </div>
-                </div>
-                <div class="p-4 sm:p-5 flex-1 min-w-0 flex flex-col justify-between">
-                    <h3 class="font-black text-gray-900 text-base sm:text-lg line-clamp-2 leading-snug">
-                        <?= $m['nama']; ?>
-                    </h3>
-                    <div class="flex items-end justify-between gap-3 mt-4 sm:mt-6 pt-2">
-                        <div class="min-w-0">
-                            <span class="text-[10px] uppercase tracking-wider font-bold text-gray-400 block mb-0.5">
-                                Harga
-                            </span>
-                            <span class="text-base sm:text-lg font-black text-gray-900 whitespace-nowrap">
-                                Rp <?= number_format($m['harga'], 0, ',', '.'); ?>
+<?php if (mysqli_num_rows($menu) > 0): ?>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <?php foreach ($menu as $m): ?>
+                <div class="flex flex-row sm:flex-col group bg-white border border-gray-200 rounded-lg overflow-hidden transition-all duration-200">
+                    <div class="relative w-36 h-36 shrink-0 sm:w-full sm:h-48 overflow-hidden bg-gray-100">
+                        <?php if (!empty($m['foto'])): ?>
+                            <img
+                                src="public/images/<?= htmlspecialchars($m['foto']); ?>"
+                                loading="lazy"
+                                class="w-full h-full object-cover object-center group-hover:scale-105 transition duration-300"
+                                alt="<?= htmlspecialchars($m['nama']); ?>">
+                        <?php else: ?>
+                            <div class="w-full h-full flex items-center justify-center bg-gray-100">
+                                <i class="bx bxs-bowl-hot text-4xl text-gray-300"></i>
+                            </div>
+                        <?php endif; ?>
+                        <div class="absolute top-2.5 left-2.5 sm:top-3 sm:left-3">
+                            <span class="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg bg-primary text-[10px] sm:text-xs font-black text-white">
+                                <?= htmlspecialchars($m['nama_kategori'] ?? 'Tanpa Kategori'); ?>
                             </span>
                         </div>
-                        <div class="flex gap-x-2.5">
-                            <button
-                                 type="button" 
-                                                    onclick='showGlobalModal(<?= json_encode([
-                                                        "title" => "Edit Menu",
-                                                        "subtitle" => "Perbarui informasi menu cafe.",
-                                                        "icon" => "bxs-edit",
-                                                        "iconBg" => "bg-amber-500",
-                                                        "method" => "POST",
-                                                        "buttonText" => "Simpan Perubahan",
-                                                        "buttonIcon" => "bxs-save",
-                                                        "buttonColor" => "bg-amber-500 hover:bg-amber-600",
-                                                        
-                                                        "nameBtn" => "aksi",
-                                                        "value" => "edit"          
-                                                    ]) ?>)
-                                                    modalEdit(this) '
-                                                    class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Edit menu"
-                                                     data-id="<?= htmlspecialchars($m['id_menu']) ?>" data-foto="<?= htmlspecialchars($m['foto']) ?>" data-nama="<?= htmlspecialchars($m['nama']) ?>" data-harga="<?= number_format($m['harga'], 0, ',', '.') ?>" data-kategori="<?= htmlspecialchars($m['id_kategori']) ?>" data-deskripsi="<?= htmlspecialchars($m['deskripsi']) ?>" data-menu="<?= htmlspecialchars($m['menu_tersedia']) ?>" data-status="<?= htmlspecialchars($m['status_menu']) ?>">
-
-                                                    <i class="bx bxs-pencil"></i>
-                                                </button>
-                        
-                            <button
-                                type="button"
-                                class="w-10 h-10 rounded-xl bg-red-600 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all shrink-0"
-                                title="Hapus menu">
-                                <i class="bx bxs-trash text-lg"></i>
-                            </button>
+                    </div>
+                    <div class="p-4 sm:p-5 flex-1 min-w-0 flex flex-col justify-between">
+                        <h3 class="font-black text-gray-900 text-base sm:text-lg line-clamp-2 leading-snug">
+                            <?= htmlspecialchars($m['nama']); ?>
+                        </h3>
+                        <div class="flex items-end justify-between gap-3 mt-4 sm:mt-6 pt-2">
+                            <div class="min-w-0">
+                                <span class="text-[10px] uppercase tracking-wider font-bold text-gray-400 block mb-0.5">
+                                    Harga
+                                </span>
+                                <span class="text-base sm:text-lg font-black text-gray-900 whitespace-nowrap">
+                                    Rp <?= number_format($m['harga'], 0, ',', '.'); ?>
+                                </span>
+                            </div>
+                            <div class="flex gap-x-2.5">
+                                <button
+                                    type="button"
+                                    onclick='showGlobalModal(<?= json_encode([
+                                        "title" => "Edit Menu",
+                                        "subtitle" => "Perbarui informasi menu cafe.",
+                                        "icon" => "bxs-edit",
+                                        "iconBg" => "bg-amber-500",
+                                        "method" => "POST",
+                                        "buttonText" => "Simpan Perubahan",
+                                        "buttonIcon" => "bxs-save",
+                                        "buttonColor" => "bg-amber-500 hover:bg-amber-600",
+                                        "nameBtn" => "aksi",
+                                        "value" => "edit"
+                                    ]) ?>); modalEdit(this)'
+                                    class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all"
+                                    title="Edit menu"
+                                    data-id="<?= htmlspecialchars($m['id_menu']); ?>"
+                                    data-foto="<?= htmlspecialchars($m['foto']); ?>"
+                                    data-nama="<?= htmlspecialchars($m['nama']); ?>"
+                                    data-harga="<?= number_format($m['harga'], 0, ',', '.'); ?>"
+                                    data-kategori="<?= htmlspecialchars($m['id_kategori']); ?>"
+                                    data-deskripsi="<?= htmlspecialchars($m['deskripsi']); ?>"
+                                    data-menu="<?= htmlspecialchars($m['menu_tersedia']); ?>"
+                                    data-status="<?= htmlspecialchars($m['status_menu']); ?>">
+                                    <i class="bx bxs-pencil"></i>
+                                </button>
+                                <button
+                                    type="button"
+                                    onclick="showConfirmForm({
+                                        title: 'Hapus Menu',
+                                        message: 'Apakah Anda yakin ingin hapus menu <?= htmlspecialchars($m['nama']); ?>?',
+                                        actionText: 'Ya, hapus',
+                                        type: 'danger',
+                                        nameAksi: 'hapus',
+                                        inputs: [
+                                            {
+                                                name: 'aksi',
+                                                type: 'hidden',
+                                                value: 'hapus'
+                                            },
+                                            {
+                                                name: 'id',
+                                                type: 'hidden',
+                                                value: <?= (int) $m['id_menu']; ?>
+                                            }
+                                        ]
+                                    });"
+                                    class="w-10 h-10 rounded-xl bg-red-600 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all shrink-0"
+                                    title="Hapus menu">
+                                    <i class="bx bxs-trash text-lg"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        <?php endforeach; ?>
-    </div>
-
-    <!-- YANG DI BAWAH INI CONTOH JIKA VALUE NYA KOSONG. -->
-
-   
-    <div class="flex flex-col items-center justify-center py-12 px-4 text-center">
-        <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4 border border-gray-200/80">
-            <i class="bx bxs-dish text-4xl text-gray-300"></i>
+            <?php endforeach; ?>
         </div>
-
-        <h3 class="text-base font-black text-slate-800 mb-1">
-            Menu Belum Tersedia
-        </h3>
-
-        <p class="text-xs text-gray-400 max-w-sm mb-5">
-            Belum ada data menu yang ditambahkan atau hasil pencarian tidak cocok.
-        </p>
-
-        <button
-            type="button"
-            @click="TambahMenu = true"
-            class="px-4 py-3 bg-primary text-white text-sm font-bold rounded-lg hover:opacity-90 transition-all flex items-center gap-2"
-        >
-            <i class="bx bxs-plus text-base"></i>
-            <span>Tambah Menu</span>
-        </button>
+    <?php else: ?>
+        <div class="flex flex-col items-center justify-center py-12 px-4 text-center">
+            <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4 border border-gray-200/80">
+                <i class="bx bxs-dish text-4xl text-gray-300"></i>
     </div>
-   
+            <h3 class="text-base font-black text-slate-800 mb-1">
+                Menu Belum Tersedia
+            </h3>
+            <p class="text-xs text-gray-400 max-w-sm mb-5">
+                Belum ada data menu yang ditambahkan atau hasil pencarian tidak cocok.
+            </p>
+            <button
+                type="button"
+                onclick='showGlobalModal(<?= json_encode([
+                    "title" => "Tambah Menu",
+                    "subtitle" => "Kelola daftar menu, harga, kategori, dan informasi menu cafe.",
+                    "icon" => "bxs-bowl-hot",
+                    "iconBg" => "bg-primary",
+                    "method" => "POST",
+                    "buttonText" => "Simpan Menu",
+                    "buttonIcon" => "bxs-save",
+                    "buttonColor" => "bg-primary hover:bg-blue-700",
+                    "nameBtn" => "aksi",
+                    "value" => "tambah"
+                ]) ?>)'
+                class="px-4 py-3 bg-primary text-white text-sm font-bold rounded-lg hover:opacity-90 transition-all flex items-center gap-2">
+                <i class="bx bxs-plus text-base"></i>
+                <span>Tambah Menu</span>
+            </button>
+        </div>
+    <?php endif; ?>
 <?php endif; ?>
-
             </div>
         </div>
 
-        <div class="w-full flex justify-center mt-6">
-            <nav aria-label="Pagination">
-                <ul class="inline-flex items-center gap-1.5 p-1.5 rounded-lg border-2 border-gray-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm font-medium">
-                    <li>
-                        <a href="?page=1" class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-400 dark:text-slate-500 opacity-50 cursor-not-allowed pointer-events-none">
-                            Previous
-                        </a>
-                    </li>
+       
+                        
 
-                    <li>
-                        <a href="?page=1" class="flex items-center justify-center w-9 h-9 rounded-lg bg-primary text-white font-bold shadow-sm">
-                            1
-                        </a>
-                    </li>
+<?php if ($pagination['totalData'] > 0): ?>
 
-                    <li>
-                        <a href="?page=2" class="flex items-center justify-center w-9 h-9 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
-                            2
-                        </a>
-                    </li>
+<div class="w-full flex justify-center mt-6">
 
-                    <li>
-                        <a href="?page=2" class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
-                            Next
+    <nav aria-label="Pagination">
+
+        <ul class="inline-flex items-center gap-1.5 p-1.5 rounded-lg border-2 border-gray-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm font-medium">
+
+            <!-- PREVIOUS -->
+            <li>
+
+                <?php if ($halaman > 1): ?>
+
+                    <a
+                        href="?route=menu&page=<?= $halaman - 1; ?><?= $kategoripilih !== '' ? '&kategori=' . urlencode($kategoripilih) : ''; ?><?= $keyword !== '' ? '&keyword=' . urlencode($keyword) : ''; ?>&layoutMode=<?= urlencode($layoutMode); ?>"
+                        class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                    >
+                        <i class="bx bx-chevron-left"></i>
+                        Previous
+                    </a>
+
+                <?php else: ?>
+
+                    <span
+                        class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-400 opacity-50 cursor-not-allowed"
+                    >
+                        <i class="bx bx-chevron-left"></i>
+                        Previous
+                    </span>
+
+                <?php endif; ?>
+
+            </li>
+
+
+            <!-- NOMOR HALAMAN -->
+            <?php for ($i = 1; $i <= $totalHalaman; $i++): ?>
+
+                <li>
+
+                    <?php if ($i == $halaman): ?>
+
+                        <span
+                            class="flex items-center justify-center w-9 h-9 rounded-lg bg-primary text-white font-bold shadow-sm"
+                        >
+                            <?= $i; ?>
+                        </span>
+
+                    <?php else: ?>
+
+                        <a
+                            href="?route=menu&page=<?= $i; ?><?= $kategoripilih !== '' ? '&kategori=' . urlencode($kategoripilih) : ''; ?><?= $keyword !== '' ? '&keyword=' . urlencode($keyword) : ''; ?>&layoutMode=<?= urlencode($layoutMode); ?>"
+                            class="flex items-center justify-center w-9 h-9 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                        >
+                            <?= $i; ?>
                         </a>
+
+                    <?php endif; ?>
+
+                </li>
+
+            <?php endfor; ?>
+
+            <li>
+                <?php if ($halaman < $totalHalaman): ?>
+                    <a
+                        href="?route=menu&page=<?= $halaman + 1; ?><?= $kategoripilih !== '' ? '&kategori=' . urlencode($kategoripilih) : ''; ?><?= $keyword !== '' ? '&keyword=' . urlencode($keyword) : ''; ?>&layoutMode=<?= urlencode($layoutMode); ?>"
+                        class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors" >
+                        Next
+                        <i class="bx bx-chevron-right"></i>
+                    </a>
+                <?php else: ?>
+                    <span
+                        class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-400 opacity-50 cursor-not-allowed">
+                        Next
+                        <i class="bx bx-chevron-right"></i>
+                    </span>
+                <?php endif; ?>
+            </li>
+        </ul>
+    </nav>
+</div>
+<?php endif; ?>
                     </li>    
                 </ul>                    
             </nav>

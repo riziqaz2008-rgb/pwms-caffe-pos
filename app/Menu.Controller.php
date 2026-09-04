@@ -1,9 +1,4 @@
 <?php
-$menu = query("SELECT w.*, k.nama_kategori
-FROM menu w
-LEFT JOIN kategori k ON w.id_kategori = k.id_kategori
-WHERE 1=1");
-
 
 function totalkategori() {
     global $conn;
@@ -400,8 +395,15 @@ $hasil = $_SESSION['toast'] ?? null;
 unset($_SESSION['toast']);
 
 $kategoripilih = $_GET['kategori'] ?? '';
-$keyword = $_GET['keyword'] ?? '';
+$keyword = trim($_GET['keyword'] ?? '');
 
+$halaman = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+
+if ($halaman < 1) {
+    $halaman = 1;
+}
+$perHalaman = 5;
+$offset = ($halaman - 1) * $perHalaman;
 $sql = "
     SELECT menu.*, kategori.nama_kategori
     FROM menu
@@ -409,12 +411,12 @@ $sql = "
         ON menu.id_kategori = kategori.id_kategori
     WHERE 1=1
 ";
-
 if ($kategoripilih !== '') {
+
     $kategoripilih = (int) $kategoripilih;
+
     $sql .= " AND menu.id_kategori = $kategoripilih";
 }
-
 if ($keyword !== '') {
 
     $keywordEscaped = mysqli_real_escape_string($conn, $keyword);
@@ -424,12 +426,47 @@ if ($keyword !== '') {
         OR menu.harga LIKE '%$keywordEscaped%'
     )";
 }
-
 $sql .= " ORDER BY menu.id_menu DESC";
+$sqlTotal = "
+    SELECT COUNT(*) AS total
+    FROM menu
+    WHERE 1=1
+";
+if ($kategoripilih !== '') {
+    $sqlTotal .= " AND id_kategori = $kategoripilih";
+}
+if ($keyword !== '') {
+    $sqlTotal .= " AND (
+        nama LIKE '%$keywordEscaped%'
+        OR harga LIKE '%$keywordEscaped%'
+    )";
+}
+$resultTotal = query($sqlTotal);
+$dataTotal = mysqli_fetch_assoc($resultTotal);
+$totalData = (int) $dataTotal['total'];
+$totalHalaman = max(1, ceil($totalData / $perHalaman));
+if ($halaman > $totalHalaman) {
 
+    $halaman = $totalHalaman;
+
+    $offset = ($halaman - 1) * $perHalaman;
+}
+$sql .= " LIMIT $offset, $perHalaman";
 $menu = query($sql);
-
+$paginationMenu = [
+    'halaman' => $halaman,
+    'perHalaman' => $perHalaman,
+    'totalData' => $totalData,
+    'totalHalaman' => $totalHalaman
+];
 $layoutMode = $_GET['layoutMode'] ?? 'table';
 $kategori = getKategori();
+
+
+$pagination = $paginationMenu;
+
+$halaman = $pagination['halaman'];
+$totalHalaman = $pagination['totalHalaman'];
+
 
 ?>
