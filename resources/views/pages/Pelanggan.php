@@ -78,8 +78,8 @@
                 </tr>
             </thead>
             <tbody id="body-tabel-Pelanggan">
-            <?php if(mysqli_num_rows($dpelanggan)): ?>
-                <?php while($d = mysqli_fetch_assoc($dpelanggan)): ?>
+            <?php if(mysqli_num_rows($data)): ?>
+                <?php while($d = mysqli_fetch_assoc($data)): ?>
                     <tr>
                         <td class="px-5 py-4"><?= $no++ ?></td>
                         <td class="px-5 py-4"><?= $d['nama_pelanggan'] ?></td>
@@ -176,32 +176,40 @@
         <nav aria-label="Pagination">
             <ul class="flex items-center gap-1.5 bg-white border-e border-gray-200 rounded-full p-2">
                 <li>
-                    <button
-                        type="button"
-                        class="flex items-center justify-center w-9 h-9 rounded-full text-gray-400 hover:bg-gray-100 transition-all">
-                        <i class="bx bxs-chevron-left"></i>
-                    </button>
+                    <?php if($currentPage > 1): ?>
+                    <a href="?<?= http_build_query(array_merge($_GET, ['page' => $currentPage - 1])) ?>"
+                        class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                        Previous
+                    </a>
+                    <?php else: ?>
+                    <span
+                        class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-400 dark:text-slate-500 opacity-50 cursor-not-allowed pointer-events-none">
+                        Previous
+                    </span>
+                    <?php endif; ?>
                 </li>
+
+                <?php for($i = 1; $i <= $totalPage; $i++): ?>
                 <li>
-                    <button
-                        type="button"
-                        class="flex items-center justify-center w-9 h-9 rounded-full bg-primary text-white text-sm font-black">
-                        1
-                    </button>
+                    <a href="?<?= http_build_query(array_merge($_GET, ['page' => $i])) ?>"
+                        class="flex items-center justify-center w-9 h-9 rounded-lg <?= $i == $currentPage ? 'bg-primary text-white font-bold shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors' ?>">
+                        <?= $i  ?>
+                    </a>
                 </li>
+                <?php endfor; ?>
+
                 <li>
-                    <button
-                        type="button"
-                        class="flex items-center justify-center w-9 h-9 rounded-full text-gray-600 hover:bg-gray-100 text-sm font-medium transition-all">
-                        2
-                    </button>
-                </li>
-                <li>
-                    <button
-                        type="button"
-                        class="flex items-center justify-center w-9 h-9 rounded-full text-gray-600 hover:bg-gray-100 transition-all">
-                        <i class="bx bxs-chevron-right"></i>
-                    </button>
+                    <?php if($currentPage < $totalPage): ?>
+                    <a href="?<?= http_build_query(array_merge($_GET, ['page' => $currentPage + 1])) ?>"
+                        class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                        Next
+                    </a>
+                    <?php else: ?>
+                    <span
+                        class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-400 dark:text-slate-500 opacity-50 cursor-not-allowed pointer-events-none">
+                        Next
+                    </span>
+                    <?php endif; ?>
                 </li>
             </ul>
         </nav>

@@ -4,11 +4,15 @@ $role = fetchAllAssoc("SELECT * FROM roles");
 $cari = trim($_GET['cari'] ?? '');
 $rolef = (int)($_GET['rolef'] ?? 0);
 $statusf = $_GET['statusf'] ?? '';
-$sql = "SELECT u.*, a.nama, a.telepon, a.status, r.nama_role FROM users u LEFT JOIN anggota a ON u.id_anggota = a.id_anggota LEFT JOIN roles r ON u.id_role = r.id_role WHERE 1=1";
+$currentPage = max(1, (int) ($_GET['page'] ?? 1));
+$limit = 10;
+$offset = ($currentPage - 1) * $limit;
+$where = "";
 $params = [];
 $types = "";
-if(!empty($cari)){
-    $sql .= " AND ( a.nama LIKE ? OR a.telepon LIKE ? OR u.username LIKE ? )";
+
+if($cari !== ''){
+    $where .= " AND ( a.nama LIKE ? OR a.telepon LIKE ? OR u.username LIKE ? )";
     $keyword = "%$cari%";
     $params[] = $keyword;
     $params[] = $keyword;
@@ -16,21 +20,38 @@ if(!empty($cari)){
     $types .= "sss";
 }
 if($rolef > 0){
-    $sql .= " AND u.id_role = ?";
+    $where .= " AND u.id_role = ?";
     $params[] = (int)$rolef;
     $types .= "i";
 }
 if($statusf !== ''){
-    $sql .= " AND a.status = ?";
+    $where .= " AND a.status = ?";
     $params[] = (int)$statusf;
     $types .= "i";
 }
-$stmt = mysqli_prepare($conn, $sql);
+
+$sqlCount = "SELECT COUNT(*) AS total FROM users u LEFT JOIN anggota a ON u.id_anggota = a.id_anggota LEFT JOIN roles r ON u.id_role = r.id_role WHERE 1=1 $where";
+$stmtCount = mysqli_prepare($conn, $sqlCount);
+
 if(!empty($params)){
-    mysqli_stmt_bind_param($stmt, $types, ...$params);
+    mysqli_stmt_bind_param($stmtCount, $types, ...$params);
 }
+
+mysqli_stmt_execute($stmtCount);
+$resultCount = mysqli_stmt_get_result($stmtCount);
+$totalData = mysqli_fetch_assoc($resultCount)['total'];
+$totalPage = max(1, (int) ceil($totalData / $limit));
+mysqli_stmt_close($stmtCount);
+
+$sql = "SELECT * FROM users u LEFT JOIN anggota a ON u.id_anggota = a.id_anggota LEFT JOIN roles r ON u.id_role = r.id_role WHERE 1=1 $where LIMIT ? OFFSET ?";
+$paramsData = $params;
+$typesData = $types . "ii";
+$paramsData[] = $limit;
+$paramsData[] = $offset;
+$stmt = mysqli_prepare($conn, $sql);
+mysqli_stmt_bind_param($stmt, $typesData, ...$paramsData);
 mysqli_stmt_execute($stmt);
-$danggota = mysqli_stmt_get_result($stmt);
+$data = mysqli_stmt_get_result($stmt);
 
 function tambah($d){
     global $conn;

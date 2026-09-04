@@ -80,38 +80,38 @@
                             </button>
                         </div> 
                         <div class="flex flex-col md:flex-row gap-3 my-5"> 
-
-                            <div class="relative w-full md:w-64"> 
-                                <select  
-                                    name="Kategori" 
-                                    required 
-                                    class="w-full h-12 px-4 pr-10 bg-white border border-gray-200 rounded-lg text-sm font-semibold text-slate-900 focus:bg-white focus:ring-2 focus:ring-primary outline-none transition-all appearance-none cursor-pointer" 
-                                > 
-                                    <option value="" disabled selected>Pilih Kategori</option> 
-                                    <option value="Makanan">Makanan</option> 
-                                    <option value="Minuman">Minuman</option> 
-                                </select> 
-
-                                <div class="absolute inset-y-0 right-4 flex items-center pointer-events-none text-gray-400"> 
-                                    <i class="bx bx-chevron-down text-xl"></i> 
+                            <form method="GET" autocomplete="off">
+                                <div class="relative w-full md:w-64"> 
+                                    <select  
+                                        name="Kategori" 
+                                        required 
+                                        class="w-full h-12 px-4 pr-10 bg-white border border-gray-200 rounded-lg text-sm font-semibold text-slate-900 focus:bg-white focus:ring-2 focus:ring-primary outline-none transition-all appearance-none cursor-pointer" 
+                                    > 
+                                        <option value="" disabled selected>Pilih Kategori</option> 
+                                        <option value="Makanan">Makanan</option> 
+                                        <option value="Minuman">Minuman</option> 
+                                    </select> 
+    
+                                    <div class="absolute inset-y-0 right-4 flex items-center pointer-events-none text-gray-400"> 
+                                        <i class="bx bx-chevron-down text-xl"></i> 
+                                    </div> 
                                 </div> 
-                            </div> 
-
-                            <div class="relative w-full flex-1"> 
-                                <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-gray-400"> 
-                                    <i class="bx bx-search text-xl"></i> 
+    
+                                <div class="relative w-full flex-1"> 
+                                    <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-gray-400"> 
+                                        <i class="bx bx-search text-xl"></i> 
+                                    </div> 
+    
+                                    <input  
+                                        type="search" 
+                                        name="search" 
+                                        value="<?= htmlspecialchars($_GET['search'] ?? '') ?>" 
+                                        oninput="doLiveSearch(this.value)" 
+                                        class="w-full h-12 pl-11 pr-4 border border-gray-200 rounded-lg text-sm font-semibold text-slate-900 placeholder:text-gray-400 focus:bg-white focus:ring-2 focus:ring-primary outline-none transition-all" 
+                                        placeholder="Cari nama menu..." 
+                                    > 
                                 </div> 
-
-                                <input  
-                                    type="search" 
-                                    name="search" 
-                                    value="<?= htmlspecialchars($_GET['search'] ?? '') ?>" 
-                                    oninput="doLiveSearch(this.value)" 
-                                    class="w-full h-12 pl-11 pr-4 border border-gray-200 rounded-lg text-sm font-semibold text-slate-900 placeholder:text-gray-400 focus:bg-white focus:ring-2 focus:ring-primary outline-none transition-all" 
-                                    placeholder="Cari nama menu..." 
-                                > 
-                            </div> 
-
+                            </form>
                         </div> 
 
                     </div> 

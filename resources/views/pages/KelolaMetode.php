@@ -118,8 +118,8 @@
                     </tr>
                 </thead>
                 <tbody id="body-tabel-kategori">
-                <?php if(mysqli_num_rows($dmetode)): ?>
-                    <?php while($d = mysqli_fetch_assoc($dmetode)):
+                <?php if(mysqli_num_rows($data)): ?>
+                    <?php while($d = mysqli_fetch_assoc($data)):
                         if($d['status'] == 1){
                         $s = 'Aktif';
                         $ws = 'bg-emerald-600';
@@ -234,32 +234,40 @@
                 <ul class="inline-flex items-center gap-1.5 p-1.5 rounded-lg border-2 border-gray-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm font-medium">
 
                     <li>
-                        <?php if($page > 1): ?>
-                        <a href="?page=1"
-                            class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-400 dark:text-slate-500 opacity-50 cursor-not-allowed pointer-events-none">
+                        <?php if($currentPage > 1): ?>
+                        <a href="?<?= http_build_query(array_merge($_GET, ['page' => $currentPage - 1])) ?>"
+                            class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
                             Previous
                         </a>
+                        <?php else: ?>
+                        <span
+                            class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-400 dark:text-slate-500 opacity-50 cursor-not-allowed pointer-events-none">
+                            Previous
+                        </span>
+                        <?php endif; ?>
                     </li>
 
+                    <?php for($i = 1; $i <= $totalPage; $i++): ?>
                     <li>
-                        <a href="?page=1"
-                            class="flex items-center justify-center w-9 h-9 rounded-lg bg-primary text-white font-bold shadow-sm">
-                            1
+                        <a href="?<?= http_build_query(array_merge($_GET, ['page' => $i])) ?>"
+                            class="flex items-center justify-center w-9 h-9 rounded-lg <?= $i == $currentPage ? 'bg-primary text-white font-bold shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors' ?>">
+                            <?= $i  ?>
                         </a>
                     </li>
+                    <?php endfor; ?>
 
                     <li>
-                        <a href="?page=2"
-                            class="flex items-center justify-center w-9 h-9 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
-                            2
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="?page=2"
+                        <?php if($currentPage < $totalPage): ?>
+                        <a href="?<?= http_build_query(array_merge($_GET, ['page' => $currentPage + 1])) ?>"
                             class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
                             Next
                         </a>
+                        <?php else: ?>
+                        <span
+                            class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-400 dark:text-slate-500 opacity-50 cursor-not-allowed pointer-events-none">
+                            Next
+                        </span>
+                        <?php endif; ?>
                     </li>
 
                 </ul>
