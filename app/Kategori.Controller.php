@@ -1,7 +1,4 @@
 <?php
-
-
-
 function cariKategori() {
     global $conn;
     $keyword = isset($_GET['keyword'])
@@ -15,12 +12,10 @@ function cariKategori() {
         $halaman = 1;
     }
     $perHalaman = 5;
-
     $offset = ($halaman - 1) * $perHalaman;
     $sql = "SELECT * FROM kategori";
 
     if (!empty($keyword)) {
-
         $keywordEscaped = mysqli_real_escape_string($conn, $keyword);
 
         $sql .= " WHERE nama_kategori LIKE '%$keywordEscaped%'";
@@ -34,8 +29,6 @@ function cariKategori() {
     $resultTotal = query($sqlTotal);
     $dataTotal = mysqli_fetch_assoc($resultTotal);
     $totalData = (int) $dataTotal['total'];
-
-    // INI YANG DITAMBAHKAN
     $totalHalaman = max(1, ceil($totalData / $perHalaman));
     if ($halaman > $totalHalaman) {
         $halaman = $totalHalaman;

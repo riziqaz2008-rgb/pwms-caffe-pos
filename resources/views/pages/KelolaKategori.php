@@ -100,232 +100,174 @@
                             <th class="text-center font-bold px-5 py-4">Aksi</th>
                         </tr>
                     </thead>
-                    
-<tbody id="body-tabel-kategori">
-
-    <?php if (!empty($kategori)): ?>
-
-        <?php
-        
-        $no = (($paginationKategori['halaman'] - 1) * $paginationKategori['perHalaman']) + 1;
-        ?>
-
-        <?php foreach ($kategori as $k): ?>
-
-            <tr>
-
-                <td class="px-5 py-4">
-                    <span class="font-bold text-slate-800 dark:text-white">
-                        <?= $no++; ?>
-                    </span>
-                </td>
-
-                <td class="px-5 py-4">
-                    <span class="inline-flex items-center gap-2 px-6 py-2 rounded-lg bg-primary text-white text-sm font-bold">
-                        <?= htmlspecialchars($k['nama_kategori']); ?>
-                    </span>
-                </td>
-                                        <td class="px-5 py-4">
-                                            <div class="flex items-center justify-center gap-2">
-                                                <button type="button" 
-                                                    onclick='showGlobalModal(<?= json_encode([
-                                                        "title" => "Edit Kategori",
-                                                        "subtitle" => "Perbarui informasi kategori menu.",
-                                                        "icon" => "bxs-edit",
-                                                        "iconBg" => "bg-amber-500",
-                                                        "method" => "POST",
-                                                        "buttonText" => "Simpan Perubahan",
-                                                        "buttonIcon" => "bxs-save",
-                                                        "buttonColor" => "bg-amber-500 hover:bg-amber-600",
-                                                        
-                                                        "nameBtn" => "aksi",
-                                                        "value" => "edit"          
-                                                    ]) ?>)
-                                                    modalEdit(this) '
-                            class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Edit menu"
-                            data-id="<?= htmlspecialchars($k['id_kategori']); ?>"
-                            data-nama="<?= htmlspecialchars($k['nama_kategori']); ?>">
-                            <i class="bx bxs-pencil"></i>
-                        </button>
-                        <button
-                            type="button"
-                            onclick="showConfirmForm({
-                                title: 'Hapus Kategori',
-                                message: 'Apakah Anda yakin ingin hapus kategori <?= htmlspecialchars($k['nama_kategori'], ENT_QUOTES); ?>?',
-                                actionText: 'Ya, hapus',
-                                type: 'danger',
-
-                                inputs: [
-                                    {
-                                        name: 'aksi',
-                                        type: 'hidden',
-                                        value: 'hapus'
-                                    },
-                                    {
-                                        name: 'id',
-                                        type: 'hidden',
-                                        value: <?= (int) $k['id_kategori']; ?>
-                                    }
-                                ]
-                            });"
-
-                            class="w-10 h-10 rounded-lg bg-red-500 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all"
-
-                            title="Hapus kategori"
-                        >
-
-                            <i class="bx bxs-trash"></i>
-
-                        </button>
-
-                    </div>
-
-                </td>
-
-            </tr>
-
-        <?php endforeach; ?>
-
-
-    <?php else: ?>
-
-        
-
-        <tr>
-
-            <td colspan="3">
-
-                <div class="flex flex-col items-center justify-center py-12 px-4 text-center bg-gray-50 dark:bg-slate-900">
-
-                    <div class="w-20 h-20 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4 border border-gray-200/80">
-
-                        <i class="bx bx-book-bookmark text-4xl text-gray-300"></i>
-
-                    </div>
-
-                    <h3 class="text-base font-black text-slate-800 dark:text-white mb-1">
-                        Kategori Belum Tersedia
-                    </h3>
-
-                    <p class="text-xs text-gray-400 max-w-sm mb-5">
-
-                        <?php if (!empty($keyword)): ?>
-
-                            Belum ada kategori yang cocok dengan pencarian
-                            <strong>"<?= htmlspecialchars($keyword); ?>"</strong>.
-
+                    <tbody id="body-tabel-kategori">
+                        <?php if (!empty($kategori)): ?>
+                            <?php
+                            $no = (($paginationKategori['halaman'] - 1) * $paginationKategori['perHalaman']) + 1;
+                            ?>
+                            <?php foreach ($kategori as $k): ?>
+                                <tr>
+                                    <td class="px-5 py-4">
+                                        <span class="font-bold text-slate-800 dark:text-white">
+                                            <?= $no++; ?>
+                                        </span>
+                                    </td>
+                                    <td class="px-5 py-4">
+                                        <span class="inline-flex items-center gap-2 px-6 py-2 rounded-lg bg-primary text-white text-sm font-bold">
+                                            <?= htmlspecialchars($k['nama_kategori']); ?>
+                                        </span>
+                                    </td>
+                                                            <td class="px-5 py-4">
+                                                                <div class="flex items-center justify-center gap-2">
+                                                                    <button type="button" 
+                                                                        onclick='showGlobalModal(<?= json_encode([
+                                                                            "title" => "Edit Kategori",
+                                                                            "subtitle" => "Perbarui informasi kategori menu.",
+                                                                            "icon" => "bxs-edit",
+                                                                            "iconBg" => "bg-amber-500",
+                                                                            "method" => "POST",
+                                                                            "buttonText" => "Simpan Perubahan",
+                                                                            "buttonIcon" => "bxs-save",
+                                                                            "buttonColor" => "bg-amber-500 hover:bg-amber-600",
+                                                                            
+                                                                            "nameBtn" => "aksi",
+                                                                            "value" => "edit"          
+                                                                        ]) ?>)
+                                                                        modalEdit(this) '
+                                                class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Edit menu"
+                                                data-id="<?= htmlspecialchars($k['id_kategori']); ?>"
+                                                data-nama="<?= htmlspecialchars($k['nama_kategori']); ?>">
+                                                <i class="bx bxs-pencil"></i>
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onclick="showConfirmForm({
+                                                    title: 'Hapus Kategori',
+                                                    message: 'Apakah Anda yakin ingin hapus kategori <?= htmlspecialchars($k['nama_kategori'], ENT_QUOTES); ?>?',
+                                                    actionText: 'Ya, hapus',
+                                                    type: 'danger',
+                            
+                                                    inputs: [
+                                                        {
+                                                            name: 'aksi',
+                                                            type: 'hidden',
+                                                            value: 'hapus'
+                                                        },
+                                                        {
+                                                            name: 'id',
+                                                            type: 'hidden',
+                                                            value: <?= (int) $k['id_kategori']; ?>
+                                                        }
+                                                    ]
+                                                });"
+                                                class="w-10 h-10 rounded-lg bg-red-500 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all"
+                                                title="Hapus kategori">
+                                                <i class="bx bxs-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
                         <?php else: ?>
-
-                            Belum ada data kategori yang ditambahkan.
-
+                            <tr>
+                                <td colspan="3">
+                                    <div class="flex flex-col items-center justify-center py-12 px-4 text-center bg-gray-50 dark:bg-slate-900">
+                                        <div class="w-20 h-20 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4 border border-gray-200/80">
+                                            <i class="bx bx-book-bookmark text-4xl text-gray-300"></i>
+                                        </div>
+                                        <h3 class="text-base font-black text-slate-800 dark:text-white mb-1">
+                                            Kategori Belum Tersedia
+                                        </h3>
+                                        <p class="text-xs text-gray-400 max-w-sm mb-5">
+                                            <?php if (!empty($keyword)): ?>
+                                                Belum ada kategori yang cocok dengan pencarian
+                                                <strong>"<?= htmlspecialchars($keyword); ?>"</strong>.
+                                            <?php else: ?>
+                                                Belum ada data kategori yang ditambahkan.
+                                            <?php endif; ?>
+                                        </p>
+                                        <button
+                                            type="button"
+                                            onclick='showGlobalModal(<?= json_encode([
+                                                "title" => "Tambah Kategori",
+                                                "subtitle" => "Kelola daftar kategori menu cafe.",
+                                                "icon" => "bxs-book-bookmark",
+                                                "iconBg" => "bg-primary",
+                                                "method" => "POST",
+                                                "buttonText" => "Simpan Kategori",
+                                                "buttonIcon" => "bxs-save",
+                                                "buttonColor" => "bg-primary hover:bg-blue-700",
+                                                "nameBtn" => "aksi",
+                                                "value" => "tambah"
+                                            ]) ?>)'
+                                            class="px-4 py-3 bg-primary text-white text-sm font-bold rounded-lg hover:opacity-90 transition-all flex items-center gap-2">
+                                            <i class="bx bx-plus text-base"></i>
+                                            <span>Tambah Kategori</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
                         <?php endif; ?>
-
-                    </p>
-
-                    <button
-                        type="button"
-
-                        onclick='showGlobalModal(<?= json_encode([
-                            "title" => "Tambah Kategori",
-                            "subtitle" => "Kelola daftar kategori menu cafe.",
-                            "icon" => "bxs-book-bookmark",
-                            "iconBg" => "bg-primary",
-                            "method" => "POST",
-                            "buttonText" => "Simpan Kategori",
-                            "buttonIcon" => "bxs-save",
-                            "buttonColor" => "bg-primary hover:bg-blue-700",
-                            "nameBtn" => "aksi",
-                            "value" => "tambah"
-                        ]) ?>)'
-
-                        class="px-4 py-3 bg-primary text-white text-sm font-bold rounded-lg hover:opacity-90 transition-all flex items-center gap-2"
-                    >
-
-                        <i class="bx bx-plus text-base"></i>
-
-                        <span>Tambah Kategori</span>
-
-                    </button>
-
-                </div>
-
-            </td>
-
-        </tr>
-
-    <?php endif; ?>
-
-</tbody>
-
-
+                    </tbody>
                 </table>
             </div>  
-        </div>
-
-        
-                    
-<?php if ($pagination['totalData'] > 0): ?>
-    <div class="w-full flex justify-center mt-6">
-        <nav aria-label="Pagination">
-            <ul class="inline-flex items-center gap-1.5 p-1.5 rounded-lg border-2 border-gray-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm font-medium">
-                <li>
-                    <?php if ($halaman > 1): ?>
-                        <a
-                            href="?route=menu/kategori&page=<?= $halaman - 1; ?><?= !empty($keyword) ? '&keyword=' . urlencode($keyword) : ''; ?>"
-                            class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
-                        >
-                            <i class="bx bx-chevron-left"></i>
-                            Previous
-                        </a>
-                    <?php else: ?>
-                        <span
-                            class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-400 opacity-50 cursor-not-allowed"
-                        >
-                            <i class="bx bx-chevron-left"></i>
-                            Previous
-                        </span>
-                    <?php endif; ?>
-                </li>
-                <?php for ($i = 1; $i <= $totalHalaman; $i++): ?>
-                    <li>
-                        <?php if ($i == $halaman): ?>
-                            <span
-                                class="flex items-center justify-center w-9 h-9 rounded-lg bg-primary text-white font-bold shadow-sm"
-                            >
-                                <?= $i; ?>
-                            </span>
-                        <?php else: ?>
-                            <a
-                                href="?route=menu/kategori&page=<?= $i; ?><?= !empty($keyword) ? '&keyword=' . urlencode($keyword) : ''; ?>"
-                                class="flex items-center justify-center w-9 h-9 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
-                            >
-                                <?= $i; ?>
-                            </a>
+                     </div>     
+                        <?php if ($pagination['totalData'] > 0): ?>
+                            <div class="w-full flex justify-center mt-6">
+                                <nav aria-label="Pagination">
+                                    <ul class="inline-flex items-center gap-1.5 p-1.5 rounded-lg border-2 border-gray-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm font-medium">
+                                        <li>
+                                            <?php if ($halaman > 1): ?>
+                                                <a
+                                                    href="?route=menu/kategori&page=<?= $halaman - 1; ?><?= !empty($keyword) ? '&keyword=' . urlencode($keyword) : ''; ?>"
+                                                    class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                                                    <i class="bx bx-chevron-left"></i>
+                                                    Previous
+                                                </a>
+                                            <?php else: ?>
+                                                <span
+                                                    class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-400 opacity-50 cursor-not-allowed" >
+                                                    <i class="bx bx-chevron-left"></i>
+                                                    Previous
+                                                </span>
+                                            <?php endif; ?>
+                                        </li>
+                                        <?php for ($i = 1; $i <= $totalHalaman; $i++): ?>
+                                            <li>
+                                                <?php if ($i == $halaman): ?>
+                                                    <span
+                                                        class="flex items-center justify-center w-9 h-9 rounded-lg bg-primary text-white font-bold shadow-sm" >
+                                                        <?= $i; ?>
+                                                    </span>
+                                                <?php else: ?>
+                                                    <a
+                                                        href="?route=menu/kategori&page=<?= $i; ?><?= !empty($keyword) ? '&keyword=' . urlencode($keyword) : ''; ?>"
+                                                        class="flex items-center justify-center w-9 h-9 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                                                        <?= $i; ?>
+                                                    </a>
+                                                <?php endif; ?>
+                                            </li>
+                                        <?php endfor; ?>
+                                        <li> 
+                                            <?php if ($halaman < $totalHalaman): ?>
+                                                <a
+                                                    href="?route=menu/kategori&page=<?= $halaman + 1; ?><?= !empty($keyword) ? '&keyword=' . urlencode($keyword) : ''; ?>"
+                                                    class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                                                    Next
+                                                    <i class="bx bx-chevron-right"></i>
+                                                </a>
+                                            <?php else: ?>
+                                                <span
+                                                    class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-400 opacity-50 cursor-not-allowed" >
+                                                    Next
+                                                    <i class="bx bx-chevron-right"></i>
+                                                </span>
+                                            <?php endif; ?>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
                         <?php endif; ?>
-                    </li>
-                <?php endfor; ?>
-                <li> 
-                    <?php if ($halaman < $totalHalaman): ?>
-                        <a
-                            href="?route=menu/kategori&page=<?= $halaman + 1; ?><?= !empty($keyword) ? '&keyword=' . urlencode($keyword) : ''; ?>"
-                            class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
-                        >
-                            Next
-                            <i class="bx bx-chevron-right"></i>
-                        </a>
-                    <?php else: ?>
-                        <span
-                            class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-400 opacity-50 cursor-not-allowed"
-                        >
-                            Next
-                            <i class="bx bx-chevron-right"></i>
-                        </span>
-                    <?php endif; ?>
-                </li>
-            </ul>
-        </nav>
-    </div>
-<?php endif; ?>
                     </li>    
                 </ul>
             </nav>
@@ -343,10 +285,10 @@
                         </div>
                         <div class="min-w-0">
                             <h1 id="globalModalTitle" class="text-slate-900 font-black text-xl sm:text-2xl leading-tight">
-                                Tambah Menu
+                                Tambah Kategori
                             </h1>
                             <p id="globalModalSubtitle" class="text-xs sm:text-sm text-gray-500 font-medium mt-1">
-                                Kelola daftar menu, harga, kategori, dan informasi menu cafe.
+                                Kelola daftar kategori menu.
                             </p>
                         </div>
                     </div>
@@ -409,7 +351,7 @@
                             class="w-full sm:w-auto flex items-center justify-center bg-primary hover:bg-primary/90 text-white font-black px-6 py-3 gap-2 rounded-lg cursor-pointer transition-all active:scale-95">
 
                             <i id="globalModalSubmitIcon"  class="bx bxs-save text-lg"></i> 
-                            <span id="globalModalSubmitText">Simpan Menu</span> 
+                            <span id="globalModalSubmitText">Simpan Kategori</span> 
                         </button>
                     </div>
                 </form>
