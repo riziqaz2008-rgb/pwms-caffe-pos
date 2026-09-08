@@ -79,17 +79,20 @@
                                 </span>
                             </button>
                         </div> 
-                        <div class="flex flex-col md:flex-row gap-3 my-5"> 
-                            <form method="GET" autocomplete="off">
+                        <form method="GET" autocomplete="off">
+                            <input type="hidden" name="route" value="<?= htmlspecialchars($_GET['route'] ?? '')?>">
+                            <div class="flex flex-col md:flex-row gap-3 my-5"> 
                                 <div class="relative w-full md:w-64"> 
                                     <select  
-                                        name="Kategori" 
+                                        name="kategorif" 
                                         required 
                                         class="w-full h-12 px-4 pr-10 bg-white border border-gray-200 rounded-lg text-sm font-semibold text-slate-900 focus:bg-white focus:ring-2 focus:ring-primary outline-none transition-all appearance-none cursor-pointer" 
+                                        onchange="this.form.submit()"
                                     > 
                                         <option value="" disabled selected>Pilih Kategori</option> 
-                                        <option value="Makanan">Makanan</option> 
-                                        <option value="Minuman">Minuman</option> 
+                                        <?php foreach($kategori as $d): ?>
+                                            <option value="<?= $d['id_kategori'] ?>" <?= $kategorif == $d['id_kategori'] ? 'selected' :'' ?>><?= $d['nama_kategori'] ?></option>
+                                        <?php endforeach; ?>
                                     </select> 
     
                                     <div class="absolute inset-y-0 right-4 flex items-center pointer-events-none text-gray-400"> 
@@ -104,15 +107,15 @@
     
                                     <input  
                                         type="search" 
-                                        name="search" 
-                                        value="<?= htmlspecialchars($_GET['search'] ?? '') ?>" 
-                                        oninput="doLiveSearch(this.value)" 
+                                        name="cari" 
                                         class="w-full h-12 pl-11 pr-4 border border-gray-200 rounded-lg text-sm font-semibold text-slate-900 placeholder:text-gray-400 focus:bg-white focus:ring-2 focus:ring-primary outline-none transition-all" 
                                         placeholder="Cari nama menu..." 
+                                        oninput="this.form.submit()"
+                                        value="<?= htmlspecialchars($_GET['cari'] ?? '')?>"
                                     > 
                                 </div> 
-                            </form>
-                        </div> 
+                            </div> 
+                        </form>
 
                     </div> 
                 </div>
@@ -142,6 +145,7 @@
                     </div>
 
                     <?php if (($_GET['layoutMode'] ?? 'grid') == 'table'): ?>
+                    <?php if(mysqli_num_rows($data)): ?>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left">
                                 <thead>
@@ -156,31 +160,35 @@
                                 </thead>
 
                                 <tbody class="divide-y divide-gray-100">
+                                    <?php while($d = mysqli_fetch_assoc($data)): ?>
                                     <tr class="group hover:bg-gray-50 transition-all">
-                                        <td class="px-5 py-4 font-bold text-gray-500">1</td>
+                                        <td class="px-5 py-4 font-bold text-gray-500"><?= $no++ ?></td>
 
                                         <td class="px-5 py-4">
                                             <div class="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center shrink-0 overflow-hidden">
-                                                <img
-                                                    src="https://images.unsplash.com/photo-1603133872878-684f208fb84b?q=80&w=800&auto=format&fit=crop"
-                                                    class="w-full h-full object-cover"
-                                                    alt="Foto menu"
-                                                >
+                                                <?php if (!empty($d['foto'])): ?>
+                                                    <img
+                                                        src="public/images/<?= htmlspecialchars($d['foto']); ?>"
+                                                        class="w-full h-full object-cover"
+                                                        alt="<?= htmlspecialchars($d['nama']); ?>">
+                                                <?php else: ?>
+                                                    <i class="bx bxs-bowl-hot text-xl text-gray-400"></i>
+                                                <?php endif; ?>
                                             </div>
                                         </td>
 
                                         <td class="px-5 py-4">
-                                            <span class="font-bold text-slate-800">Nasi Goreng Spesial</span>
+                                            <span class="font-bold text-slate-800"><?= $d['nama'] ?></span>
                                         </td>
 
                                         <td>
                                             <span class="inline-flex items-center px-6 py-2 rounded-lg text-primary text-sm font-bold">
-                                                Makanan
+                                                <?= $d['nama_kategori'] ?>
                                             </span>
                                         </td>
 
                                         <td class="px-5 py-4">
-                                            <span class="font-bold text-slate-800">Rp 25.000</span>
+                                            <span class="font-bold text-slate-800">Rp <?= number_format($d['harga'], 0, ',', '.') ?></span>
                                         </td>
 
                                         <td class="px-5 py-4">
@@ -216,96 +224,105 @@
                                             </div>
                                         </td>
                                     </tr>
+                                    <?php endwhile; ?>
                                 </tbody>
                             </table>
                         </div>
+                            <?php endif; ?>
                     <?php else: ?>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                            <div class="flex flex-row sm:flex-col group bg-white border border-gray-200 rounded-lg overflow-hidden transition-all duration-200">
-                                <div class="relative w-36 h-36 shrink-0 sm:w-full sm:h-48 overflow-hidden bg-gray-100">
-                                    <img
-                                        src="https://images.unsplash.com/photo-1603133872878-684f208fb84b?q=80&w=800&auto=format&fit=crop"
-                                        loading="lazy"
-                                        class="w-full h-full object-cover object-center group-hover:scale-105 transition duration-300"
-                                        alt="Nasi Goreng Spesial"
-                                    >
-
-                                    <div class="absolute top-2.5 left-2.5 sm:top-3 sm:left-3">
-                                        <span class="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg bg-primary text-[10px] sm:text-xs font-black text-white">
-                                            Makanan
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div class="p-4 sm:p-5 flex-1 min-w-0 flex flex-col justify-between">
-                                    <h3 class="font-black text-gray-900 text-base sm:text-lg line-clamp-2 leading-snug">
-                                        Nasi Goreng Spesial
-                                    </h3>
-
-                                    <div class="flex items-end justify-between gap-3 mt-4 sm:mt-6 pt-2">
-                                        <div class="min-w-0">
-                                            <span class="text-[10px] uppercase tracking-wider font-bold text-gray-400 block mb-0.5">
-                                                Harga
-                                            </span>
-                                            <span class="text-base sm:text-lg font-black text-gray-900 whitespace-nowrap">
-                                                Rp 25.000
+                        <?php if(mysqli_num_rows($data)): ?>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <?php while($d = mysqli_fetch_assoc($data)): ?>
+                                <div class="flex flex-row sm:flex-col group bg-white border border-gray-200 rounded-lg overflow-hidden transition-all duration-200">
+                                    <div class="relative w-36 h-36 shrink-0 sm:w-full sm:h-48 overflow-hidden bg-gray-100">
+                                        <?php if (!empty($d['foto'])): ?>
+                                            <img
+                                                src="public/images/<?= htmlspecialchars($d['foto']); ?>"
+                                                loading="lazy"
+                                                class="w-full h-full object-cover object-center group-hover:scale-105 transition duration-300"
+                                                alt="<?= htmlspecialchars($d['nama']); ?>">
+                                        <?php else: ?>
+                                            <div class="w-full h-full flex items-center justify-center bg-gray-100">
+                                                <i class="bx bxs-bowl-hot text-4xl text-gray-300"></i>
+                                            </div>
+                                        <?php endif; ?>
+                                        <div class="absolute top-2.5 left-2.5 sm:top-3 sm:left-3">
+                                            <span class="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg bg-primary text-[10px] sm:text-xs font-black text-white">
+                                                <?= $d['nama_kategori'] ?>
                                             </span>
                                         </div>
+                                    </div>
+                                    <div class="p-4 sm:p-5 flex-1 min-w-0 flex flex-col justify-between">
+                                        <h3 class="font-black text-gray-900 text-base sm:text-lg line-clamp-2 leading-snug">
+                                            <?= $d['nama'] ?>
+                                        </h3>
 
-                                        <div class="flex gap-x-2.5">
-                                             <button
-                                                    type="button"
-                                                    onclick="showGlobalForm({
-                                                        title: 'Edit Nama Barang',
-                                                        message: 'Silakan ubah data barang berikut:',
-                                                        actionUrl: '/barang/update',
-                                                        method: 'POST',
-                                                        type: 'info',
-                                                        icon: 'pencil',
-                                                        inputs: [
-                                                            { 
-                                                                label: 'Nama Barang', 
-                                                                type: 'text', 
-                                                                name: 'NamaBarang', 
-                                                                value: 'Udin', 
-                                                                placeholder: 'Contoh: Nasi Goreng' 
-                                                            }
-                                                        ]
-                                                    })"
-                                                    class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all cursor-pointer"
-                                                    title="Edit menu"
+                                        <div class="flex items-end justify-between gap-3 mt-4 sm:mt-6 pt-2">
+                                            <div class="min-w-0">
+                                                <span class="text-[10px] uppercase tracking-wider font-bold text-gray-400 block mb-0.5">
+                                                    Harga
+                                                </span>
+                                                <span class="text-base sm:text-lg font-black text-gray-900 whitespace-nowrap">
+                                                    Rp <?= number_format($d['harga'], 0, '', '.') ?>
+                                                </span>
+                                            </div>
+
+                                            <div class="flex gap-x-2.5">
+                                                 <button
+                                                        type="button"
+                                                        onclick="showGlobalForm({
+                                                            title: 'Edit Nama Barang',
+                                                            message: 'Silakan ubah data barang berikut:',
+                                                            actionUrl: '/barang/update',
+                                                            method: 'POST',
+                                                            type: 'info',
+                                                            icon: 'pencil',
+                                                            inputs: [
+                                                                { 
+                                                                    label: 'Nama Barang', 
+                                                                    type: 'text', 
+                                                                    name: 'NamaBarang', 
+                                                                    value: 'Udin', 
+                                                                    placeholder: 'Contoh: Nasi Goreng' 
+                                                                }
+                                                            ]
+                                                        })"
+                                                        class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all cursor-pointer"
+                                                        title="Edit menu"
+                                                    >
+                                                        <i class="bx bxs-pencil"></i>
+                                                    </button>
+
+                                                <button
+                                                type="button"
+                                                onclick="showConfirmForm({
+                                                title: 'Tolak Pesanan?',
+                                                message: 'Masukkan informasi penolakan.',
+                                                actionText: 'Tolak',
+                                                type: 'danger',
+                                                inputs: [
+                                                    {
+                                                        name: 'alasan_penolakan',
+                                                        type: 'hidden'
+                                                    },
+                                                    {
+                                                        name: 'catatan',
+                                                        type: 'hidden'
+                                                    }
+                                                ]
+                                                });"
+                                                class="w-10 h-10 rounded-xl bg-red-600 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all shrink-0"
+                                                title="Tolak pesanan"
                                                 >
-                                                    <i class="bx bxs-pencil"></i>
+                                                    <i class="bx bxs-trash text-lg"></i>
                                                 </button>
-
-                                            <button
-                                            type="button"
-                                            onclick="showConfirmForm({
-                                            title: 'Tolak Pesanan?',
-                                            message: 'Masukkan informasi penolakan.',
-                                            actionText: 'Tolak',
-                                            type: 'danger',
-                                            inputs: [
-                                                {
-                                                    name: 'alasan_penolakan',
-                                                    type: 'hidden'
-                                                },
-                                                {
-                                                    name: 'catatan',
-                                                    type: 'hidden'
-                                                }
-                                            ]
-                                        });"
-                                            class="w-10 h-10 rounded-xl bg-red-600 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all shrink-0"
-                                            title="Tolak pesanan"
-                                        >
-                                            <i class="bx bxs-trash text-lg"></i>
-                                        </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                                <?php endwhile; ?>
                             </div>
-                        </div>
+                        <?php endif; ?>
                     <?php endif; ?>
 
                     <?php if (!empty($data_barang)): ?>
@@ -453,142 +470,258 @@
                     </div>
 
                     <div class="flex-1 min-h-0 overflow-y-auto py-4 border-b border-gray-100">
-                        <div class="flex items-center gap-3">
-                            <div class="w-14 h-14 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
-                                <i class="bx bxs-coffee text-2xl text-gray-400"></i>
-                            </div>
-
-                            <div class="flex-1 min-w-0">
-                                <h4 class="font-black text-gray-900 text-sm truncate">Es Kopi Susu</h4>
-                                <p class="text-xs font-bold text-gray-900">
-                                    Rp<span x-text="hargaSatuan.toLocaleString('id-ID')"></span>
-                                </p>
-                            </div>
-
-                            <div class="relative">
+                        
+                        <div class="item-order">
+                            <div class="flex items-center gap-3">
+                                <div class="w-14 h-14 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
+                                    <i class="bx bxs-coffee text-2xl text-gray-400"></i>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <h4 class="font-black text-gray-900 text-sm truncate">Es Kopi Susu</h4>
+                                    <p class="text-xs font-bold text-gray-900">
+                                        Rp<span x-text="hargaSatuan.toLocaleString('id-ID')"></span>
+                                    </p>
+                                </div>
+                                <div class="relative">
+                                    <button
+                                        @click="menuOpen = !menuOpen"
+                                        @click.outside="menuOpen = false"
+                                        type="button"
+                                        class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-all"
+                                    >
+                                        <i class="bx bx-dots-vertical-rounded text-xl"></i>
+                                    </button>
+                                    <div
+                                        x-show="menuOpen"
+                                        x-transition
+                                        class="absolute right-0 top-9 z-30 w-44 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden"
+                                    >
+                                        <button
+                                        onclick="tdisk(this)"
+                                            type="button"
+                                            class="w-full flex items-center gap-3 px-4 py-3 text-xs font-bold text-gray-700 hover:bg-gray-50 transition"
+                                        >
+                                            <i class="bx bxs-discount text-base text-primary"></i>
+                                            Tambahkan Diskon
+                                        </button>
+                                        <button
+                                        onclick="tcatatan(this)"
+                                            type="button"
+                                            class="w-full flex items-center gap-3 px-4 py-3 text-xs font-bold text-gray-700 hover:bg-gray-50 transition"
+                                        >
+                                            <i class="bx bxs-note text-base text-primary"></i>
+                                            Tambahkan Catatan
+                                        </button>
+                                    </div>
+                                </div>
                                 <button
                                     type="button"
-                                    @click="menuOpen = !menuOpen"
-                                    @click.outside="menuOpen = false"
-                                    class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-all"
+                                    title="Hapus Item"
+                                    class="w-7 h-7 flex items-center justify-center text-gray-300 hover:text-red-500 transition-all shrink-0"
                                 >
-                                    <i class="bx bx-dots-vertical-rounded text-xl"></i>
+                                    <i class="bx bxs-x-circle text-xl"></i>
                                 </button>
-
-                                <div
-                                    x-show="menuOpen"
-                                    x-transition
-                                    x-cloak
-                                    class="absolute right-0 top-9 z-30 w-44 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden"
-                                >
+                            </div>
+                            <div class="flex items-center justify-between mt-4">
+                                <span class="text-[11px] text-gray-500 font-medium">Jumlah</span>
+                                <div class="flex items-center gap-2">
                                     <button
                                         type="button"
-                                        @click="diskonOpen = true; menuOpen = false"
-                                        class="w-full flex items-center gap-3 px-4 py-3 text-xs font-bold text-gray-700 hover:bg-gray-50 transition"
+                                        @click="qty = Math.max(1, qty - 1)"
+                                        class="w-7 h-7 rounded-lg bg-gray-100 text-gray-600 flex items-center justify-center hover:bg-gray-200 transition active:scale-95"
                                     >
-                                        <i class="bx bxs-discount text-base text-primary"></i>
-                                        Tambah Diskon
+                                        <i class="bx bxs-minus text-xs"></i>
                                     </button>
-
+                                    <input
+                                        type="number"
+                                        x-model.number="qty"
+                                        @input="if (qty > 99) qty = 99; if (qty < 1 || isNaN(qty)) qty = 1;"
+                                        min="1"
+                                        max="9999"
+                                        class="w-14 text-center text-sm font-black text-gray-800 bg-transparent border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary py-0.5 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                    >
                                     <button
                                         type="button"
-                                        @click="catatanOpen = true; menuOpen = false"
-                                        class="w-full flex items-center gap-3 px-4 py-3 text-xs font-bold text-gray-700 hover:bg-gray-50 transition"
+                                        @click="qty = Math.min(99, qty + 1)"
+                                        class="w-7 h-7 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 transition active:scale-95"
                                     >
-                                        <i class="bx bxs-note text-base text-primary"></i>
-                                        Tambah Catatan
+                                        <i class="bx bxs-plus text-xs"></i>
                                     </button>
                                 </div>
                             </div>
-
-                            <button
-                                type="button"
-                                title="Hapus Item"
-                                class="w-7 h-7 flex items-center justify-center text-gray-300 hover:text-red-500 transition-all shrink-0"
-                            >
-                                <i class="bx bxs-x-circle text-xl"></i>
-                            </button>
-                        </div>
-
-                        <div class="flex items-center justify-between mt-4">
-                            <span class="text-[11px] text-gray-500 font-medium">Jumlah</span>
-
-                            <div class="flex items-center gap-2">
-                                <button
-                                    type="button"
-                                    @click="qty = Math.max(1, qty - 1)"
-                                    class="w-7 h-7 rounded-lg bg-gray-100 text-gray-600 flex items-center justify-center hover:bg-gray-200 transition active:scale-95"
-                                >
-                                    <i class="bx bxs-minus text-xs"></i>
-                                </button>
-
-                                <input
-                                    type="number"
-                                    x-model.number="qty"
-                                    @input="if (qty > 99) qty = 99; if (qty < 1 || isNaN(qty)) qty = 1;"
-                                    min="1"
-                                    max="9999"
-                                    class="w-14 text-center text-sm font-black text-gray-800 bg-transparent border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary py-0.5 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                                >
-
-                                <button
-                                    type="button"
-                                    @click="qty = Math.min(99, qty + 1)"
-                                    class="w-7 h-7 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 transition active:scale-95"
-                                >
-                                    <i class="bx bxs-plus text-xs"></i>
-                                </button>
+    
+                            <div class="ig-diskon hidden mt-3 pt-3 border-t border-dashed border-gray-100">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-[11px] font-bold text-gray-500">Diskon</span>
+                                        <button
+                                            type="button"
+                                            @click="diskonOpen = false; diskonNilai = 0"
+                                            class="text-gray-300 hover:text-red-500"
+                                        >
+                                            <i class="bx bx-x text-sm"></i>
+                                        </button>
+                                    </div>
+                                    <div class="relative">
+                                        <span class="absolute left-2 top-1.5 text-[10px] font-bold text-gray-400">Rp</span>
+                                        <input
+                                            type="number"
+                                            x-model.number="diskonNilai"
+                                            @input="if (diskonNilai < 0 || isNaN(diskonNilai)) diskonNilai = 0; if (diskonNilai > subtotalSebelumDiskon) diskonNilai = subtotalSebelumDiskon;"
+                                            min="0"
+                                            :max="subtotalSebelumDiskon"
+                                            placeholder="0"
+                                            class="idiskon w-24 pl-6 pr-2 py-1 text-right text-xs font-bold text-gray-800 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                        >
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-
-                        <div x-show="diskonOpen" x-transition x-cloak class="mt-3 pt-3 border-t border-dashed border-gray-100">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-2">
-                                    <span class="text-[11px] font-bold text-gray-500">Diskon</span>
+    
+                            <div class="ig-catatan hidden mt-3 pt-3 border-t border-dashed border-gray-100">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-[11px] font-bold text-gray-500">Catatan</span>
                                     <button
                                         type="button"
-                                        @click="diskonOpen = false; diskonNilai = 0"
+                                        @click="catatanOpen = false; catatan = ''"
                                         class="text-gray-300 hover:text-red-500"
                                     >
                                         <i class="bx bx-x text-sm"></i>
                                     </button>
                                 </div>
-
-                                <div class="relative">
-                                    <span class="absolute left-2 top-1.5 text-[10px] font-bold text-gray-400">Rp</span>
-                                    <input
-                                        type="number"
-                                        x-model.number="diskonNilai"
-                                        @input="if (diskonNilai < 0 || isNaN(diskonNilai)) diskonNilai = 0; if (diskonNilai > subtotalSebelumDiskon) diskonNilai = subtotalSebelumDiskon;"
-                                        min="0"
-                                        :max="subtotalSebelumDiskon"
-                                        placeholder="0"
-                                        class="w-24 pl-6 pr-2 py-1 text-right text-xs font-bold text-gray-800 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                                    >
-                                </div>
+                                <textarea
+                                    x-model="catatan"
+                                    rows="2"
+                                    placeholder="Contoh: Es sedikit gula..."
+                                    class="icatatan w-full px-3 py-2 text-xs font-semibold text-gray-800 bg-white border border-gray-200 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-gray-300"
+                                ></textarea>
                             </div>
                         </div>
-
-                        <div x-show="catatanOpen" x-transition x-cloak class="mt-3 pt-3 border-t border-dashed border-gray-100">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="text-[11px] font-bold text-gray-500">Catatan</span>
-
+                        <div class="item-order">
+                            <div class="flex items-center gap-3">
+                                <div class="w-14 h-14 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
+                                    <i class="bx bxs-coffee text-2xl text-gray-400"></i>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <h4 class="font-black text-gray-900 text-sm truncate">Es Kopi Susu</h4>
+                                    <p class="text-xs font-bold text-gray-900">
+                                        Rp<span x-text="hargaSatuan.toLocaleString('id-ID')"></span>
+                                    </p>
+                                </div>
+                                <div class="relative">
+                                    <button
+                                        @click="menuOpen = !menuOpen"
+                                        @click.outside="menuOpen = false"
+                                        type="button"
+                                        class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-all"
+                                    >
+                                        <i class="bx bx-dots-vertical-rounded text-xl"></i>
+                                    </button>
+                                    <div
+                                        x-show="menuOpen"
+                                        x-transition
+                                        class="absolute right-0 top-9 z-30 w-44 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden"
+                                    >
+                                        <button
+                                        onclick="tdisk(this)"
+                                            type="button"
+                                            class="w-full flex items-center gap-3 px-4 py-3 text-xs font-bold text-gray-700 hover:bg-gray-50 transition"
+                                        >
+                                            <i class="bx bxs-discount text-base text-primary"></i>
+                                            Tambahkan Diskon
+                                        </button>
+                                        <button
+                                        onclick="tcatatan(this)"
+                                            type="button"
+                                            class="w-full flex items-center gap-3 px-4 py-3 text-xs font-bold text-gray-700 hover:bg-gray-50 transition"
+                                        >
+                                            <i class="bx bxs-note text-base text-primary"></i>
+                                            Tambahkan Catatan
+                                        </button>
+                                    </div>
+                                </div>
                                 <button
                                     type="button"
-                                    @click="catatanOpen = false; catatan = ''"
-                                    class="text-gray-300 hover:text-red-500"
+                                    title="Hapus Item"
+                                    class="w-7 h-7 flex items-center justify-center text-gray-300 hover:text-red-500 transition-all shrink-0"
                                 >
-                                    <i class="bx bx-x text-sm"></i>
+                                    <i class="bx bxs-x-circle text-xl"></i>
                                 </button>
                             </div>
-
-                            <textarea
-                                x-model="catatan"
-                                rows="2"
-                                placeholder="Contoh: Es sedikit gula..."
-                                class="w-full px-3 py-2 text-xs font-semibold text-gray-800 bg-white border border-gray-200 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-gray-300"
-                            ></textarea>
+                            <div class="flex items-center justify-between mt-4">
+                                <span class="text-[11px] text-gray-500 font-medium">Jumlah</span>
+                                <div class="flex items-center gap-2">
+                                    <button
+                                        type="button"
+                                        @click="qty = Math.max(1, qty - 1)"
+                                        class="w-7 h-7 rounded-lg bg-gray-100 text-gray-600 flex items-center justify-center hover:bg-gray-200 transition active:scale-95"
+                                    >
+                                        <i class="bx bxs-minus text-xs"></i>
+                                    </button>
+                                    <input
+                                        type="number"
+                                        x-model.number="qty"
+                                        @input="if (qty > 99) qty = 99; if (qty < 1 || isNaN(qty)) qty = 1;"
+                                        min="1"
+                                        max="9999"
+                                        class="w-14 text-center text-sm font-black text-gray-800 bg-transparent border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary py-0.5 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                    >
+                                    <button
+                                        type="button"
+                                        @click="qty = Math.min(99, qty + 1)"
+                                        class="w-7 h-7 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 transition active:scale-95"
+                                    >
+                                        <i class="bx bxs-plus text-xs"></i>
+                                    </button>
+                                </div>
+                            </div>
+    
+                            <div class="ig-diskon hidden mt-3 pt-3 border-t border-dashed border-gray-100">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-[11px] font-bold text-gray-500">Diskon</span>
+                                        <button
+                                            type="button"
+                                            @click="diskonOpen = false; diskonNilai = 0"
+                                            class="text-gray-300 hover:text-red-500"
+                                        >
+                                            <i class="bx bx-x text-sm"></i>
+                                        </button>
+                                    </div>
+                                    <div class="relative">
+                                        <span class="absolute left-2 top-1.5 text-[10px] font-bold text-gray-400">Rp</span>
+                                        <input
+                                            type="number"
+                                            x-model.number="diskonNilai"
+                                            @input="if (diskonNilai < 0 || isNaN(diskonNilai)) diskonNilai = 0; if (diskonNilai > subtotalSebelumDiskon) diskonNilai = subtotalSebelumDiskon;"
+                                            min="0"
+                                            :max="subtotalSebelumDiskon"
+                                            placeholder="0"
+                                            class="idiskon w-24 pl-6 pr-2 py-1 text-right text-xs font-bold text-gray-800 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <div class="ig-catatan hidden mt-3 pt-3 border-t border-dashed border-gray-100">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-[11px] font-bold text-gray-500">Catatan</span>
+                                    <button
+                                        type="button"
+                                        @click="catatanOpen = false; catatan = ''"
+                                        class="text-gray-300 hover:text-red-500"
+                                    >
+                                        <i class="bx bx-x text-sm"></i>
+                                    </button>
+                                </div>
+                                <textarea
+                                    x-model="catatan"
+                                    rows="2"
+                                    placeholder="Contoh: Es sedikit gula..."
+                                    class="icatatan w-full px-3 py-2 text-xs font-semibold text-gray-800 bg-white border border-gray-200 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-gray-300"
+                                ></textarea>
+                            </div>
                         </div>
+
                     </div>
 
                     <div class="border-t border-gray-100 py-5 shrink-0">
@@ -625,9 +758,14 @@
                                         required
                                         class="w-full pl-12 pr-10 py-3 bg-white text-gray-900 text-sm font-bold rounded-lg border-2 border-gray-200 focus:outline-none focus:ring focus:border-primary focus:ring-primary appearance-none cursor-pointer transition-colors"
                                     >
+                                    <?php if(!$pelanggan): ?>
+                                        <option value="" disabled>Tidak ada pelanggan terdaftar</option>
+                                    <?php else: ?>
                                         <option value="" disabled>Pilih Pelanggan</option>
-                                        <option value="Jamal">Jamal</option>
-                                        <option value="Udin">Udin</option>
+                                        <?php foreach($pelanggan as $d): ?>
+                                            <option value="<?= $d['id_pelanggan'] ?>"><?= $d['nama_pelanggan'] ?></option>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
                                     </select>
 
                                     <div class="absolute right-4 flex items-center pointer-events-none text-gray-900">
@@ -643,7 +781,7 @@
 
                                         <input
                                             type="text"
-                                            placeholder="Saiful Anwar"
+                                            placeholder="Masukkan nama pelanggan"
                                             class="w-full pl-12 pr-4 py-3 bg-white text-gray-900 text-sm font-bold rounded-lg border-2 border-gray-200 focus:outline-none focus:ring focus:border-primary focus:ring-primary transition-colors placeholder:text-gray-300"
                                         >
                                     </div>
@@ -1245,3 +1383,30 @@
 
     </div>
 </section>
+
+<script>
+    function tdisk(b){
+      const item = b.closest('.item-order');
+      const igdisk = item.querySelector('.ig-diskon');
+      const idisk = item.querySelector('.idiskon');
+      igdisk.classList.toggle('hidden');
+      if(igdisk.classList.contains('hidden')){
+        b.innerHTML = '<i class="bx bxs-discount text-base text-primary"></i> Tambahkan Diskon';
+      } else{
+        b.innerHTML = '<i class="bx bxs-discount text-base text-primary"></i> Hapus Diskon';
+        idisk.value = '';
+      }
+    }
+    function tcatatan(b){
+      const item = b.closest('.item-order');
+      const igc = item.querySelector('.ig-catatan');
+      const ic = item.querySelector('.icatatan');
+      igc.classList.toggle('hidden');
+      if(igc.classList.contains('hidden')){
+        b.innerHTML = '<i class="bx bxs-note text-base text-primary"></i> Tambahkan Catatan';
+      } else{
+        b.innerHTML = '<i class="bx bxs-note text-base text-primary"></i> Hapus Catatan';
+        ic.value = '';
+      }
+    }
+</script>

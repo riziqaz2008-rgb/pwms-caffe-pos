@@ -1,0 +1,201 @@
+<?php
+$kategori = fetchAllAssoc("SELECT * FROM kategori");
+$pelanggan = fetchAllAssoc("SELECT * FROM pelanggan");
+
+$cari = trim($_GET['cari'] ?? '');
+$kategorif = (int)($_GET['kategorif'] ?? 0);
+$currentPage = max(1, (int) ($_GET['page'] ?? 1));
+$limit = 10;
+$offset = ($currentPage - 1) * $limit;
+$where = "";
+$params = [];
+$types = "";
+
+if($cari !== ''){
+    $where .= " AND ( m.nama LIKE ? )";
+    $keyword = "%$cari%";
+    $params[] = $keyword;
+    $types .= "s";
+}
+if($kategorif > 0){
+    $where .= " AND m.id_kategori = ?";
+    $params[] = (int)$kategorif;
+    $types .= "i";
+}
+
+$sqlCount = "SELECT COUNT(*) AS total FROM menu m LEFT JOIN kategori k ON m.id_kategori = k.id_kategori WHERE 1=1 $where";
+$stmtCount = mysqli_prepare($conn, $sqlCount);
+
+if(!empty($params)){
+    mysqli_stmt_bind_param($stmtCount, $types, ...$params);
+}
+
+mysqli_stmt_execute($stmtCount);
+$resultCount = mysqli_stmt_get_result($stmtCount);
+$totalData = mysqli_fetch_assoc($resultCount)['total'];
+$totalPage = max(1, (int) ceil($totalData / $limit));
+mysqli_stmt_close($stmtCount);
+
+$sql = "SELECT * FROM menu m LEFT JOIN kategori k ON m.id_kategori = k.id_kategori WHERE 1=1 $where LIMIT ? OFFSET ?";
+$paramsData = $params;
+$typesData = $types . "ii";
+$paramsData[] = $limit;
+$paramsData[] = $offset;
+$stmt = mysqli_prepare($conn, $sql);
+mysqli_stmt_bind_param($stmt, $typesData, ...$paramsData);
+mysqli_stmt_execute($stmt);
+$data = mysqli_stmt_get_result($stmt);
+
+function tambah($d){
+    global $conn;
+    $nama = $d['nama'];
+    $telp = trim($d['telepon'] ?? '');
+    $role = (int)($d['role'] ?? 0);
+    $user = $d['username'];
+    $pw = $d['password'];
+
+    if(empty($nama) || $nama == ''){
+        return [
+            'bg' => 'warning',
+            'pesan' => 'Nama kosong, harap diisi.'
+        ];
+    }
+
+    if($telp === ''){
+        return [
+            'bg' => 'warning',
+            'pesan' => 'Nomor telepon kosong, harap diisi.'
+        ];
+    } elseif(!preg_match('/^08[0-9]{9,14}$/', $telp)){
+        return [
+            'bg' => 'warning',
+            'pesan' => 'Nomor telepon harus diawali 08 dan terdiri dari 10 sampai 15 digit angka.'
+        ];
+    }
+
+    $qcu = query("SELECT username FROM users WHERE username='$user'");
+    $cu = mysqli_fetch_assoc($qcu);
+    if($cu){
+        return [
+            'bg' => 'info',
+            'pesan' => 'Username '.$cu['username'].' sudah digunakan. Harap ganti username yang lain.',
+        ];
+    }
+
+    // ERROR
+    $qct = query("SELECT * FROM anggota WHERE telepon='$telp'");
+    $ct = mysqli_fetch_assoc($qct);
+    if(mysqli_num_rows($qct) > 0){
+        return [
+            'bg' => 'info',
+            'pesan' => 'Nomor telepon '.$ct['telepon'].' sudah ada. Harap ganti telepon yang lain.'
+        ];
+    }
+
+    mysqli_begin_transaction($conn);
+    try{
+        query("INSERT INTO anggota (nama, telepon, status) VALUES ('$nama', '$telp', 1)");
+        $ida = mysqli_insert_id($conn);
+        query("INSERT INTO users (username, password, id_role, id_anggota) VALUES ('$user', '$pw', '$role', '$ida')");
+        mysqli_commit($conn);
+        return [
+            'bg' => 'success',
+            'pesan' => 'Anggota berhasil ditambahkan.'        
+        ];
+    } catch(Exception $e){
+        mysqli_rollback($conn);
+        return [
+            'bg' => 'danger',
+            'pesan' => 'Anggota gagal ditambahkan. Harap coba lagi.'
+        ];
+    }
+}
+
+function edit($d){
+    global $conn;
+    $id = $d['id'];
+    $nama = $d['nama'];
+    $telp = $d['telepon'];
+    $role = (int)($d['role'] ?? 0);
+    $user = $d['username'];
+    $pw = $d['password'];
+    $s = isset($d['status']) ? 1 : 0;
+
+    $qca = query("SELECT username FROM users WHERE username='$user' AND id_user != '$id'");
+    $ca = mysqli_fetch_assoc($qca);
+    if(mysqli_num_rows($qca) > 0){
+        return [
+            'bg' => 'info',
+            'pesan' => 'Username '.$ca['username'].' sudah digunakan. Harap ganti username yang lain.'
+        ];
+    }
+
+    mysqli_begin_transaction($conn);
+    try{
+        query("UPDATE anggota SET nama='$nama', telepon='$telp', status='$s' WHERE id_anggota='$id'");
+        query("UPDATE users SET username='$user', password='$pw', id_role='$role' WHERE id_anggota='$id'");
+        mysqli_commit($conn);
+        return [
+            'bg' => 'success',
+            'pesan' => 'Anggota berhasil diperbarui.'        
+        ];
+    } catch(Exception $e){
+        mysqli_rollback($conn);
+        return [
+            'bg' => 'danger',
+            'pesan' => 'Anggota gagal diperbarui. Harap coba lagi.'
+        ];
+    }
+}
+
+function hapus($d){
+    $id = (int)$d['id'];
+
+    $c = query("SELECT * FROM users WHERE id_users='$id'");
+    if(mysqli_num_rows($c) == 0){
+        return [
+            'bg' => 'info',
+            'pesan' => 'ID pelanggan tidak ditemukan.',
+        ];
+    }
+
+    mysqli_begin_transaction($conn);
+    try{
+        query("DELETE FROM users WHERE id_anggota='$id'");
+        query("DELETE FROM anggota WHERE id_anggota='$id'");
+        mysqli_commit($conn);
+        return [
+            'bg' => 'success',
+            'pesan' => 'Anggota berhasil dihapus.'        
+        ];
+    } catch(Exception $e){
+        mysqli_rollback($conn);
+        return [
+            'bg' => 'danger',
+            'pesan' => 'Anggota gagal dihapus. Harap coba lagi.'
+        ];
+    }
+}
+
+if(isset($_POST['aksi'])){
+  if($_POST['aksi'] == 'tambah'){
+    $hasil = tambah($_POST);
+    $_SESSION['toast'] = $hasil;
+    header("Location: ?route=anggota");
+    exit;
+  } elseif($_POST['aksi'] == 'edit'){
+    $hasil = edit($_POST);
+    $_SESSION['toast'] = $hasil;
+    header("Location: ?route=anggota");
+    exit;
+  } elseif($_POST['aksi'] == 'hapus'){
+    $hasil = hapus($_POST);
+    $_SESSION['toast'] = $hasil;
+    header("Location: ?route=anggota");
+    exit;
+  }
+}
+
+$hasil = $_SESSION['toast'] ?? null;
+unset($_SESSION['toast']);
+?>

@@ -292,7 +292,6 @@
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
-                            //ini contoh JIKA VALUE KOSONG HAPUS KU SUNAT
                             <tr>
                                 <td colspan="8">
                                     <div class="flex flex-col items-center justify-center py-12 px-4 text-center bg-gray-50">

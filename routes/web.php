@@ -37,6 +37,7 @@ switch ($route) {
 
     case 'kasir':
         
+        include  __DIR__ . '../../app/Kasir.Controller.php';
         $page = __DIR__ . '/../resources/views/pages/Kasir.php';
 
         break;
