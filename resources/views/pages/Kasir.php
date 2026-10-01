@@ -1512,10 +1512,6 @@ function updatePayment(totalOverride = null) {
     const sisaTagihan = Math.max(0, total - nominal);
     const kembalian = Math.max(0, nominal - total);
 
-    // =========================
-    // STATUS NOMINAL
-    // =========================
-
     const statusEl = document.getElementById('nominalStatus');
 
     if (statusEl) {
@@ -1789,10 +1785,6 @@ function buildTransaksi(dataPesanan, dataPembayaran) {
     const isHutang = metode === 'Hutang';
 
 
-    // =========================
-    // PEMBAYARAN
-    // =========================
-
     let nominalDibayar = 0;
     let kembalian = 0;
     let statusPembayaran = 'belum_lunas';
@@ -1828,10 +1820,6 @@ function buildTransaksi(dataPesanan, dataPembayaran) {
     }
 
 
-    // =========================
-    // DATA TRANSAKSI
-    // =========================
-
     return {
 
         transaksi: {
@@ -1846,11 +1834,6 @@ function buildTransaksi(dataPesanan, dataPembayaran) {
                 dataPesanan.namaPelanggan || ''
 
         },
-
-
-        // =========================
-        // DETAIL MENU
-        // =========================
 
         items: order.map(item => ({
 
@@ -1871,11 +1854,6 @@ function buildTransaksi(dataPesanan, dataPembayaran) {
 
         })),
 
-
-        // =========================
-        // TOTAL
-        // =========================
-
         subtotal:
             summary.subtotal,
 
@@ -1884,11 +1862,6 @@ function buildTransaksi(dataPesanan, dataPembayaran) {
 
         total:
             summary.total,
-
-
-        // =========================
-        // PEMBAYARAN
-        // =========================
 
         pembayaran: {
 

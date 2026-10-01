@@ -26,9 +26,6 @@ function simpanPesananMenunggu($data)
         $transaksi['nama_pelanggan'] ?? ''
     );
 
-    /*
-     * Validasi tipe pesanan
-     */
     if (trim($tipePesanan) == '') {
         return [
             'status' => false,
@@ -54,9 +51,6 @@ function simpanPesananMenunggu($data)
         'Takeaway' => 2
     };
 
-    /*
-     * Siapkan detail
-     */
     $detail = [];
 
     $subtotalTransaksi = 0;
@@ -85,9 +79,6 @@ function simpanPesananMenunggu($data)
             ];
         }
 
-        /*
-         * Ambil harga dari database.
-         */
         $stmt = mysqli_prepare(
             $conn,
             "SELECT harga
@@ -120,10 +111,6 @@ function simpanPesananMenunggu($data)
 
         $subtotal = $harga * $qty;
 
-        /*
-         * Pastikan diskon tidak negatif
-         * dan tidak melebihi subtotal.
-         */
         $diskon = max(0, $diskon);
         $diskon = min($diskon, $subtotal);
 
@@ -146,9 +133,6 @@ function simpanPesananMenunggu($data)
     $totalTransaksi =
         $subtotalTransaksi - $totalDiskon;
 
-    /*
-     * Pesanan menunggu belum dibayar.
-     */
     $statusTransaksi = 2;
     $statusPembayaran = 1;
 
@@ -159,10 +143,6 @@ function simpanPesananMenunggu($data)
     $kodeTransaksi =
         'TRX-' . date('YmdHis');
 
-    /*
-     * Simpan transaksi + detail
-     * dalam satu transaction database.
-     */
     mysqli_begin_transaction($conn);
 
     try {
@@ -224,12 +204,6 @@ function simpanPesananMenunggu($data)
 
         mysqli_stmt_close($stmt);
 
-        /*
-         * Simpan detail.
-         *
-         * PERHATIKAN:
-         * sesuaikan nama tabel dengan database kamu.
-         */
         $sqlDetail = "
             INSERT INTO detail_transaksi (
                 id_transaksi,
@@ -347,7 +321,6 @@ function simpanTransaksi($data)
             ];
         }
 
-        // Ambil harga asli dari database
         $stmt = mysqli_prepare(
             $conn,
             "SELECT harga FROM menu WHERE id_menu = ?"
@@ -504,10 +477,6 @@ function simpanTransaksi($data)
 
         mysqli_stmt_close($stmt);
     }
-
-    // ========================================
-    // DATA PEMBAYARAN
-    // ========================================
     
     $uangDiterima = 0;
     $kembalian = 0;
@@ -515,7 +484,6 @@ function simpanTransaksi($data)
     
     if ($metode === 'Hutang') {
     
-        // Hutang belum dibayar
         $uangDiterima = 0;
         $kembalian = 0;
         $statusPembayaran = 1;
@@ -536,8 +504,6 @@ function simpanTransaksi($data)
         $statusPembayaran = 2; // lunas
     
     } else {
-    
-        // Transfer, E-Wallet, Card
         $uangDiterima = $totalTransaksi;
         $kembalian = 0;
         $statusPembayaran = 2; // lunas
@@ -631,10 +597,6 @@ function simpanTransaksi($data)
         $idTransaksi = mysqli_insert_id($conn);
         
         mysqli_stmt_close($stmt);
-    
-        // ========================================
-        // INSERT TRANSAKSI DETAIL
-        // ========================================
         
         $sqlDetail = "
             INSERT INTO detail_transaksi(
@@ -712,10 +674,6 @@ function bayarPesananMenunggu($data)
     $nominal = (int)($data['nominal'] ?? 0);
 
 
-    // ========================================
-    // VALIDASI ID TRANSAKSI
-    // ========================================
-
     if ($idTransaksi <= 0) {
         return [
             'status' => false,
@@ -724,10 +682,6 @@ function bayarPesananMenunggu($data)
         ];
     }
 
-
-    // ========================================
-    // AMBIL TRANSAKSI MENUNGGU
-    // ========================================
 
     $stmt = mysqli_prepare(
         $conn,
@@ -763,11 +717,6 @@ function bayarPesananMenunggu($data)
         ];
     }
 
-
-    // ========================================
-    // PASTIKAN MASIH MENUNGGU
-    // ========================================
-
     if ((int)$transaksi['status_transaksi'] !== 2) {
         return [
             'status' => false,
@@ -778,11 +727,6 @@ function bayarPesananMenunggu($data)
 
 
     $totalTransaksi = (int)$transaksi['total'];
-
-
-    // ========================================
-    // VALIDASI METODE
-    // ========================================
 
     $idMetode = null;
 
@@ -842,10 +786,6 @@ function bayarPesananMenunggu($data)
     }
 
 
-    // ========================================
-    // VALIDASI SUB METODE
-    // ========================================
-
     if (in_array($metode, [
         'Transfer',
         'E-Wallet',
@@ -903,11 +843,6 @@ function bayarPesananMenunggu($data)
         }
     }
 
-
-    // ========================================
-    // HITUNG PEMBAYARAN
-    // ========================================
-
     $uangDiterima = 0;
     $kembalian = 0;
 
@@ -934,10 +869,6 @@ function bayarPesananMenunggu($data)
         $kembalian = 0;
     }
 
-
-    // ========================================
-    // UPDATE TRANSAKSI
-    // ========================================
 
     mysqli_begin_transaction($conn);
 
@@ -1038,10 +969,6 @@ function jadikanPiutang($idTransaksi, $idPelanggan)
     }
 
     try {
-
-        /*
-         * 1. Pastikan transaksi ada dan masih menunggu
-         */
         $stmt = mysqli_prepare($conn, "
             SELECT
                 id_transaksi,
@@ -1077,10 +1004,6 @@ function jadikanPiutang($idTransaksi, $idPelanggan)
             ];
         }
 
-
-        /*
-         * 2. Pastikan pelanggan benar-benar ada
-         */
         $stmt = mysqli_prepare($conn, "
             SELECT id_pelanggan
             FROM pelanggan
@@ -1105,9 +1028,6 @@ function jadikanPiutang($idTransaksi, $idPelanggan)
         }
 
 
-        /*
-         * 3. Jadikan piutang
-         */
         mysqli_begin_transaction($conn);
 
         $stmt = mysqli_prepare($conn, "

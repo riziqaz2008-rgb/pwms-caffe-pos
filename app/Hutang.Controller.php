@@ -20,11 +20,6 @@ $totalPiutang = mysqli_fetch_assoc(
     ")
 )['total'];
 
-
-// ======================================================
-// FILTER & PAGINATION
-// ======================================================
-
 $cari = trim($_GET['cari'] ?? '');
 
 $currentPage = max(1, (int) ($_GET['page'] ?? 1));
@@ -34,20 +29,11 @@ $limit = 10;
 $offset = ($currentPage - 1) * $limit;
 
 
-// ======================================================
-// WHERE DINAMIS
-// ======================================================
-
 $where = "";
 
 $params = [];
 
 $types = "";
-
-
-// ------------------------------------------------------
-// PENCARIAN
-// ------------------------------------------------------
 
 if ($cari !== '') {
 
@@ -67,14 +53,9 @@ if ($cari !== '') {
     $params[] = $keyword;
     $params[] = $keyword;
 
-    // 4 placeholder = 4 string
     $types .= "ssss";
 }
 
-
-// ======================================================
-// HITUNG TOTAL DATA
-// ======================================================
 
 $sqlCount = "
     SELECT COUNT(*) AS total_data
@@ -100,7 +81,6 @@ if (!$stmtCount) {
 }
 
 
-// Bind parameter pencarian jika ada
 if (!empty($params)) {
 
     mysqli_stmt_bind_param(
@@ -111,7 +91,6 @@ if (!empty($params)) {
 }
 
 
-// Eksekusi
 if (!mysqli_stmt_execute($stmtCount)) {
 
     die(
@@ -131,17 +110,12 @@ $totalData = (int) (
 mysqli_stmt_close($stmtCount);
 
 
-// ======================================================
-// TOTAL HALAMAN
-// ======================================================
-
 $totalPage = max(
     1,
     (int) ceil($totalData / $limit)
 );
 
 
-// Jika halaman yang diminta melebihi halaman terakhir
 if ($currentPage > $totalPage) {
 
     $currentPage = $totalPage;
@@ -150,9 +124,6 @@ if ($currentPage > $totalPage) {
 }
 
 
-// ======================================================
-// AMBIL DATA PIUTANG
-// ======================================================
 
 $sql = "
     SELECT
@@ -178,23 +149,18 @@ $sql = "
 ";
 
 
-// Parameter untuk query data
 $paramsData = $params;
 
 
-// Tipe parameter pencarian + LIMIT + OFFSET
 $typesData = $types . "ii";
 
 
-// Tambahkan LIMIT
 $paramsData[] = $limit;
 
 
-// Tambahkan OFFSET
 $paramsData[] = $offset;
 
 
-// Prepare
 $stmt = mysqli_prepare($conn, $sql);
 
 if (!$stmt) {
@@ -206,7 +172,6 @@ if (!$stmt) {
 }
 
 
-// Bind semua parameter
 mysqli_stmt_bind_param(
     $stmt,
     $typesData,
@@ -214,7 +179,6 @@ mysqli_stmt_bind_param(
 );
 
 
-// Execute
 if (!mysqli_stmt_execute($stmt)) {
 
     die(
@@ -224,5 +188,4 @@ if (!mysqli_stmt_execute($stmt)) {
 }
 
 
-// Hasil data
 $data = mysqli_stmt_get_result($stmt);
