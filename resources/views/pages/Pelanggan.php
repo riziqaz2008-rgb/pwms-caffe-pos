@@ -57,9 +57,8 @@
                     <input
                         type="search"
                         placeholder="Cari nama, atau nomor Telepon..."
-                        class="w-full h-12 pl-11 pr-11 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                        class="input-delay w-full h-12 pl-11 pr-11 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
                         name="cari"
-                        oninput="this.form.submit()"
                         value="<?= htmlspecialchars($_GET['cari'] ?? '')?>"
                     >
                 </div>

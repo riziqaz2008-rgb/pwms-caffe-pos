@@ -62,17 +62,18 @@
                 </div>
                 <div class="flex items-center gap-3 w-full sm:w-auto">
                     <form action="" method="GET" class="flex-1 sm:w-[280px]" autocomplete="off">
+                        <input type="hidden" name="route" value="<?= htmlspecialchars($_GET['route'] ?? '')?>">
                         <div class="relative flex items-center gap-2 p-1.5 rounded-lg border-2 border-gray-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 focus-within:ring-2 focus-within:ring-primary transition-all min-h-[48px]">
                             <div class="flex items-center text-gray-400 pl-2 shrink-0">
                                 <i class="bx bx-search text-lg"></i>
                             </div>
 
                             <input
-                                name="search"
+                                name="cari"
                                 type="search"
-                                id="search-dropdown"
                                 oninput=""
-                                class="flex-1 px-1 py-1 bg-transparent text-slate-900 dark:text-slate-100 text-sm placeholder:text-gray-400 focus:outline-none font-medium min-w-0"
+                                class="input-delay flex-1 px-1 py-1 bg-transparent text-slate-900 dark:text-slate-100 text-sm placeholder:text-gray-400 focus:outline-none font-medium min-w-0"
+                                value="<?= $cari ?>"
                                 placeholder="Cari hutang...">
                         </div>
                     </form>
