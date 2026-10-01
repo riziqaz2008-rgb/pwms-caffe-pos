@@ -147,3 +147,48 @@
 .select2-selection__choice:hover {
   background-color: var(--secondary-clr) !important;
 }
+
+/* @page {
+    size: 58mm auto;
+}
+
+#strukPrint {
+    width: 58mm;
+}
+
+.struk {
+    width: 50mm;
+} */
+
+@media print {
+    @page {
+        size: 80mm auto;
+        margin: 0;
+    }
+
+    body * {
+        visibility: hidden !important;
+    }
+
+    #strukPrint,
+    #strukPrint * {
+        visibility: visible !important;
+    }
+
+    #strukPrint {
+        display: block !important;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 80mm;
+    }
+
+    .struk {
+        width: 72mm;
+        margin: 0 auto;
+        padding: 3mm 0;
+        font-family: Arial, sans-serif;
+        font-size: 11px;
+        color: #000;
+    }
+}

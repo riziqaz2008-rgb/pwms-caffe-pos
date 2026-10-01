@@ -1,23 +1,64 @@
 <section id="Kasir">
     <div 
+       x-init="
+            $watch('open', value => {
+                document.body.classList.toggle('overflow-hidden', value)
+            });
+
+            $watch('metode', value => {
+                nominal = 0;
+                bank = '';
+                ewallet = '';
+                card = '';
+
+                const input = document.getElementById('nominal');
+
+                if (input) {
+                    input.value = '';
+                }
+
+                updatePayment(
+                idTransaksiMenunggu !== null ? total : null
+                );
+            });
+        "
+        @buka-pembayaran.window = "idTransaksiMenunggu = null; total = Number($event.detail.total) || 0; open = true; updatePayment(total);"
+        @tutup-pembayaran.window = "open = false"
+        @buka-pembayaran-menunggu.window="
+            idTransaksiMenunggu = $event.detail.idTransaksi;
+            total = Number($event.detail.total) || 0;
+            nominal = 0;
+            pesananMenunggu = false;
+            open = true;
+            updatePayment(total);
+        "
         x-data="{ 
+            idTransaksiMenunggu: null,
             layoutModeToggle: $persist(true), 
             filterToggle: $persist(true), 
             open: false,
             tambahUser: false,
-            total: 68000,
+
+            modalPiutang: false,
+            idTransaksiPiutang: null,
+            pelangganPiutang: '',
+
+            total: 0,
             nominal: 0,
-            pelanggan: '',
+
+            idPelanggan: null,
+            namaPelanggan: '',
+
             metode: '',
+            bank: '',
+            ewallet: '',
+            card: '',
             
             pesananMenunggu: false,        
 
             StepJenisPesanan: '',
             StepDataDiri: false,
             StepPembayaran: false,
-
-            qty: 1,
-            hargaSatuan: 20000,
 
             menuOpen: false,
             diskonOpen: false,
@@ -41,8 +82,7 @@
                 return Math.max(0, total);
             }
 
-        }"
-        x-init="$watch('open', value => document.body.classList.toggle('overflow-hidden', value))">
+        }">
         
         <?php $LayoutMode = $_GET['layoutMode'] ?? 'table' ?>
   
@@ -75,7 +115,7 @@
                                 </span>
 
                                 <span class="min-w-5 h-5 px-1.5 flex items-center justify-center rounded-full bg-primary text-white text-[10px] font-black">
-                                    7
+                                    <?= $jumlahPesananMenunggu ?>
                                 </span>
                             </button>
                         </div> 
@@ -108,9 +148,8 @@
                                     <input  
                                         type="search" 
                                         name="cari" 
-                                        class="w-full h-12 pl-11 pr-4 border border-gray-200 rounded-lg text-sm font-semibold text-slate-900 placeholder:text-gray-400 focus:bg-white focus:ring-2 focus:ring-primary outline-none transition-all" 
+                                        class="input-delay w-full h-12 pl-11 pr-4 border border-gray-200 rounded-lg text-sm font-semibold text-slate-900 placeholder:text-gray-400 focus:bg-white focus:ring-2 focus:ring-primary outline-none transition-all" 
                                         placeholder="Cari nama menu..." 
-                                        oninput="this.form.submit()"
                                         value="<?= htmlspecialchars($_GET['cari'] ?? '')?>"
                                     > 
                                 </div> 
@@ -195,31 +234,10 @@
                                             <div class="flex items-center justify-center gap-2">
                                                <button
                                                     type="button"
-                                                    onclick="showConfirm(
-                                                        'Edit Data?',
-                                                        'Yakin ingin menghapus data ini?',
-                                                        'Ya, Hapus',
-                                                        'info'
-                                                    )"
+                                                    onclick='addMenu(<?= json_encode($d, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>)'
                                                     class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all cursor-pointer"
-                                                    title="Edit menu"
                                                 >
-                                                    <i class="bx bxs-pencil"></i>
-                                                </button>
-
-                                                <button
-                                                    type="button"
-                                                    onclick="showConfirm({
-                                                        title: 'Hapus Data',
-                                                        message: 'Yakin ingin menghapus data ini?',
-                                                        actionText: 'Ya',
-                                                        type: 'danger',
-                                                        onConfirm: null
-                                                    })"                                                 
-                                                    class="w-10 h-10 rounded-lg bg-red-500 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all"
-                                                    title="Hapus menu"
-                                                >
-                                                    <i class="bx bxs-trash"></i>
+                                                    <i class="bx bxs-plus"></i>
                                                 </button>
                                             </div>
                                         </td>
@@ -254,7 +272,7 @@
                                     </div>
                                     <div class="p-4 sm:p-5 flex-1 min-w-0 flex flex-col justify-between">
                                         <h3 class="font-black text-gray-900 text-base sm:text-lg line-clamp-2 leading-snug">
-                                            <?= $d['nama'] ?>
+                                            <?= htmlspecialchars($d['nama']) ?>
                                         </h3>
 
                                         <div class="flex items-end justify-between gap-3 mt-4 sm:mt-6 pt-2">
@@ -270,52 +288,11 @@
                                             <div class="flex gap-x-2.5">
                                                  <button
                                                         type="button"
-                                                        onclick="showGlobalForm({
-                                                            title: 'Edit Nama Barang',
-                                                            message: 'Silakan ubah data barang berikut:',
-                                                            actionUrl: '/barang/update',
-                                                            method: 'POST',
-                                                            type: 'info',
-                                                            icon: 'pencil',
-                                                            inputs: [
-                                                                { 
-                                                                    label: 'Nama Barang', 
-                                                                    type: 'text', 
-                                                                    name: 'NamaBarang', 
-                                                                    value: 'Udin', 
-                                                                    placeholder: 'Contoh: Nasi Goreng' 
-                                                                }
-                                                            ]
-                                                        })"
+                                                        onclick='addMenu(<?= json_encode($d) ?>);'
                                                         class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all cursor-pointer"
-                                                        title="Edit menu"
                                                     >
-                                                        <i class="bx bxs-pencil"></i>
+                                                        <i class="bx bxs-plus"></i>
                                                     </button>
-
-                                                <button
-                                                type="button"
-                                                onclick="showConfirmForm({
-                                                title: 'Tolak Pesanan?',
-                                                message: 'Masukkan informasi penolakan.',
-                                                actionText: 'Tolak',
-                                                type: 'danger',
-                                                inputs: [
-                                                    {
-                                                        name: 'alasan_penolakan',
-                                                        type: 'hidden'
-                                                    },
-                                                    {
-                                                        name: 'catatan',
-                                                        type: 'hidden'
-                                                    }
-                                                ]
-                                                });"
-                                                class="w-10 h-10 rounded-xl bg-red-600 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all shrink-0"
-                                                title="Tolak pesanan"
-                                                >
-                                                    <i class="bx bxs-trash text-lg"></i>
-                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -325,75 +302,50 @@
                         <?php endif; ?>
                     <?php endif; ?>
 
-                    <?php if (!empty($data_barang)): ?>
-                        <div class="w-full flex justify-center mt-6">
-                            <nav aria-label="Pagination">
-                                <ul class="flex items-center gap-1.5 bg-white rounded-full p-2">
-                                    <li>
-                                        <a
-                                            href="?route=kasir&page=<?= max(1, $current - 1) ?>"
-                                            class="flex items-center justify-center w-9 h-9 rounded-full text-gray-500 transition-all <?= $current <= 1 ? 'pointer-events-none opacity-40' : 'hover:bg-gray-100' ?>"
-                                        >
-                                            <i class="bx bxs-chevron-left"></i>
-                                        </a>
-                                    </li>
-
-                                    <li>
-                                        <a
-                                            href="?route=kasir&page=1"
-                                            class="flex items-center justify-center w-9 h-9 rounded-full text-sm <?= $current == 1 ? 'bg-primary text-white font-black' : 'text-gray-600 hover:bg-gray-100' ?>"
-                                        >
-                                            1
-                                        </a>
-                                    </li>
-
-                                    <?php if ($last > 1): ?>
-                                        <?php
-                                        $start = max(2, $current - 1);
-                                        $end = min($last - 1, $current + 1);
-                                        ?>
-
-                                        <?php if ($current > 3): ?>
-                                            <li class="px-1 text-gray-400 text-sm">...</li>
-                                        <?php endif; ?>
-
-                                        <?php for ($i = $start; $i <= $end; $i++): ?>
-                                            <li>
-                                                <a
-                                                    href="?route=kasir&page=<?= $i ?>"
-                                                    class="flex items-center justify-center w-9 h-9 rounded-full text-sm transition-all <?= $current == $i ? 'bg-primary text-white font-black' : 'text-gray-600 hover:bg-gray-100' ?>"
-                                                >
-                                                    <?= $i ?>
-                                                </a>
-                                            </li>
-                                        <?php endfor; ?>
-
-                                        <?php if ($current < $last - 2): ?>
-                                            <li class="px-1 text-gray-400 text-sm">...</li>
-                                        <?php endif; ?>
-
-                                        <li>
-                                            <a
-                                                href="?route=kasir&page=<?= $last ?>"
-                                                class="flex items-center justify-center w-9 h-9 rounded-full text-sm transition-all <?= $current == $last ? 'bg-primary text-white font-black' : 'text-gray-600 hover:bg-gray-100' ?>"
-                                            >
-                                                <?= $last ?>
-                                            </a>
-                                        </li>
+                    <div class="w-full flex justify-center mt-6">
+                        <nav aria-label="Pagination">
+                            <ul class="inline-flex items-center gap-1.5 p-1.5 rounded-lg border-2 border-gray-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm font-medium">
+                                
+                               <li>
+                                   <?php if($currentPage > 1): ?>
+                                   <a href="?<?= http_build_query(array_merge($_GET, ['page' => $currentPage - 1])) ?>"
+                                       class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                                       Previous
+                                   </a>
+                                   <?php else: ?>
+                                   <span
+                                       class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-400 dark:text-slate-500 opacity-50 cursor-not-allowed pointer-events-none">
+                                       Previous
+                                   </span>
+                                   <?php endif; ?>
+                               </li>
+                                
+                                <?php for($i = 1; $i <= $totalPage; $i++): ?>
+                                <li>
+                                    <a href="?<?= http_build_query(array_merge($_GET, ['page' => $i])) ?>"
+                                        class="flex items-center justify-center w-9 h-9 rounded-lg <?= $i == $currentPage ? 'bg-primary text-white font-bold shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors' ?>">
+                                        <?= $i  ?>
+                                    </a>
+                                </li>
+                                <?php endfor; ?>
+                                
+                                <li>
+                                    <?php if($currentPage < $totalPage): ?>
+                                    <a href="?<?= http_build_query(array_merge($_GET, ['page' => $currentPage + 1])) ?>"
+                                        class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                                        Next
+                                    </a>
+                                    <?php else: ?>
+                                    <span
+                                        class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-400 dark:text-slate-500 opacity-50 cursor-not-allowed pointer-events-none">
+                                        Next
+                                    </span>
                                     <?php endif; ?>
-
-                                    <li>
-                                        <a
-                                            href="?route=kasir&page=<?= min($last, $current + 1) ?>"
-                                            class="flex items-center justify-center w-9 h-9 rounded-full text-gray-500 transition-all <?= $current >= $last ? 'pointer-events-none opacity-40' : 'hover:bg-gray-100' ?>"
-                                        >
-                                            <i class="bx bxs-chevron-right"></i>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
-                    <?php endif; ?>
+                                </li>
+                                    
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
             </div>
 
@@ -409,7 +361,7 @@
                                 <div>
                                     <h2 class="text-lg font-black text-gray-900">
                                         Pesanan
-                                        <span class="px-2 py-1 rounded-full bg-primary text-white text-[10px] font-black">3</span>
+                                        <span class="px-2 py-1 rounded-full bg-primary text-white text-[10px] font-black hidden" id="tjenismenu"></span>
                                     </h2>
                                     <p class="text-xs text-gray-400 mt-1">Daftar menu yang dipilih</p>
                                 </div>
@@ -418,13 +370,13 @@
                             <button 
                             type="button"
                             onclick="showConfirm(
-                                'Hapus Data?',
-                                'Yakin ingin menghapus data ini?',
-                                'Ya, Hapus',
-                                'danger'
+                                'Kosongkan Pesanan',
+                                'Apakah Anda yakin ingin kososngkan pesanan?. Semua item dalam pesanan saat ini akan dihapus.',
+                                'Ya, kosongkan',
+                                'danger',
+                                onConfirm => removePesanan()
                             )"
                             class="w-10 h-10 rounded-lg bg-rose-600 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all cursor-pointer"
-                            title="Edit menu"
                                                 >
                                 <i class="bx bxs-trash text-lg text-white"></i>
                             </button>
@@ -434,7 +386,7 @@
                             <div class="flex items-center gap-1 bg-gray-100 rounded-lg">
                                 <label
                                     class="flex-1 relative flex items-center justify-center gap-2 px-4 py-3 rounded-md cursor-pointer select-none transition-all duration-150"
-                                    :class="StepJenisPesanan === '' || StepJenisPesanan === 'DineIn'
+                                    :class="StepJenisPesanan === 'DineIn'
                                         ? 'bg-primary text-white shadow-sm'
                                         : 'text-gray-500 hover:text-gray-700'"
                                 >
@@ -460,7 +412,7 @@
                                         name="jenis_pemesanan"
                                         value="Takeaway"
                                         x-model="StepJenisPesanan"
-                                        class="sr-only"
+                                        class="sr-only"                                        
                                     >
                                     <i class="bx bxs-shopping-bag text-lg"></i>
                                     <span class="text-sm font-bold">Takeaway</span>
@@ -469,280 +421,27 @@
                         </div>
                     </div>
 
-                    <div class="flex-1 min-h-0 overflow-y-auto py-4 border-b border-gray-100">
-                        
-                        <div class="item-order">
-                            <div class="flex items-center gap-3">
-                                <div class="w-14 h-14 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
-                                    <i class="bx bxs-coffee text-2xl text-gray-400"></i>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <h4 class="font-black text-gray-900 text-sm truncate">Es Kopi Susu</h4>
-                                    <p class="text-xs font-bold text-gray-900">
-                                        Rp<span x-text="hargaSatuan.toLocaleString('id-ID')"></span>
-                                    </p>
-                                </div>
-                                <div class="relative">
-                                    <button
-                                        @click="menuOpen = !menuOpen"
-                                        @click.outside="menuOpen = false"
-                                        type="button"
-                                        class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-all"
-                                    >
-                                        <i class="bx bx-dots-vertical-rounded text-xl"></i>
-                                    </button>
-                                    <div
-                                        x-show="menuOpen"
-                                        x-transition
-                                        class="absolute right-0 top-9 z-30 w-44 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden"
-                                    >
-                                        <button
-                                        onclick="tdisk(this)"
-                                            type="button"
-                                            class="w-full flex items-center gap-3 px-4 py-3 text-xs font-bold text-gray-700 hover:bg-gray-50 transition"
-                                        >
-                                            <i class="bx bxs-discount text-base text-primary"></i>
-                                            Tambahkan Diskon
-                                        </button>
-                                        <button
-                                        onclick="tcatatan(this)"
-                                            type="button"
-                                            class="w-full flex items-center gap-3 px-4 py-3 text-xs font-bold text-gray-700 hover:bg-gray-50 transition"
-                                        >
-                                            <i class="bx bxs-note text-base text-primary"></i>
-                                            Tambahkan Catatan
-                                        </button>
-                                    </div>
-                                </div>
-                                <button
-                                    type="button"
-                                    title="Hapus Item"
-                                    class="w-7 h-7 flex items-center justify-center text-gray-300 hover:text-red-500 transition-all shrink-0"
-                                >
-                                    <i class="bx bxs-x-circle text-xl"></i>
-                                </button>
-                            </div>
-                            <div class="flex items-center justify-between mt-4">
-                                <span class="text-[11px] text-gray-500 font-medium">Jumlah</span>
-                                <div class="flex items-center gap-2">
-                                    <button
-                                        type="button"
-                                        @click="qty = Math.max(1, qty - 1)"
-                                        class="w-7 h-7 rounded-lg bg-gray-100 text-gray-600 flex items-center justify-center hover:bg-gray-200 transition active:scale-95"
-                                    >
-                                        <i class="bx bxs-minus text-xs"></i>
-                                    </button>
-                                    <input
-                                        type="number"
-                                        x-model.number="qty"
-                                        @input="if (qty > 99) qty = 99; if (qty < 1 || isNaN(qty)) qty = 1;"
-                                        min="1"
-                                        max="9999"
-                                        class="w-14 text-center text-sm font-black text-gray-800 bg-transparent border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary py-0.5 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                                    >
-                                    <button
-                                        type="button"
-                                        @click="qty = Math.min(99, qty + 1)"
-                                        class="w-7 h-7 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 transition active:scale-95"
-                                    >
-                                        <i class="bx bxs-plus text-xs"></i>
-                                    </button>
-                                </div>
-                            </div>
-    
-                            <div class="ig-diskon hidden mt-3 pt-3 border-t border-dashed border-gray-100">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center gap-2">
-                                        <span class="text-[11px] font-bold text-gray-500">Diskon</span>
-                                        <button
-                                            type="button"
-                                            @click="diskonOpen = false; diskonNilai = 0"
-                                            class="text-gray-300 hover:text-red-500"
-                                        >
-                                            <i class="bx bx-x text-sm"></i>
-                                        </button>
-                                    </div>
-                                    <div class="relative">
-                                        <span class="absolute left-2 top-1.5 text-[10px] font-bold text-gray-400">Rp</span>
-                                        <input
-                                            type="number"
-                                            x-model.number="diskonNilai"
-                                            @input="if (diskonNilai < 0 || isNaN(diskonNilai)) diskonNilai = 0; if (diskonNilai > subtotalSebelumDiskon) diskonNilai = subtotalSebelumDiskon;"
-                                            min="0"
-                                            :max="subtotalSebelumDiskon"
-                                            placeholder="0"
-                                            class="idiskon w-24 pl-6 pr-2 py-1 text-right text-xs font-bold text-gray-800 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                                        >
-                                    </div>
-                                </div>
-                            </div>
-    
-                            <div class="ig-catatan hidden mt-3 pt-3 border-t border-dashed border-gray-100">
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="text-[11px] font-bold text-gray-500">Catatan</span>
-                                    <button
-                                        type="button"
-                                        @click="catatanOpen = false; catatan = ''"
-                                        class="text-gray-300 hover:text-red-500"
-                                    >
-                                        <i class="bx bx-x text-sm"></i>
-                                    </button>
-                                </div>
-                                <textarea
-                                    x-model="catatan"
-                                    rows="2"
-                                    placeholder="Contoh: Es sedikit gula..."
-                                    class="icatatan w-full px-3 py-2 text-xs font-semibold text-gray-800 bg-white border border-gray-200 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-gray-300"
-                                ></textarea>
-                            </div>
-                        </div>
-                        <div class="item-order">
-                            <div class="flex items-center gap-3">
-                                <div class="w-14 h-14 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
-                                    <i class="bx bxs-coffee text-2xl text-gray-400"></i>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <h4 class="font-black text-gray-900 text-sm truncate">Es Kopi Susu</h4>
-                                    <p class="text-xs font-bold text-gray-900">
-                                        Rp<span x-text="hargaSatuan.toLocaleString('id-ID')"></span>
-                                    </p>
-                                </div>
-                                <div class="relative">
-                                    <button
-                                        @click="menuOpen = !menuOpen"
-                                        @click.outside="menuOpen = false"
-                                        type="button"
-                                        class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-all"
-                                    >
-                                        <i class="bx bx-dots-vertical-rounded text-xl"></i>
-                                    </button>
-                                    <div
-                                        x-show="menuOpen"
-                                        x-transition
-                                        class="absolute right-0 top-9 z-30 w-44 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden"
-                                    >
-                                        <button
-                                        onclick="tdisk(this)"
-                                            type="button"
-                                            class="w-full flex items-center gap-3 px-4 py-3 text-xs font-bold text-gray-700 hover:bg-gray-50 transition"
-                                        >
-                                            <i class="bx bxs-discount text-base text-primary"></i>
-                                            Tambahkan Diskon
-                                        </button>
-                                        <button
-                                        onclick="tcatatan(this)"
-                                            type="button"
-                                            class="w-full flex items-center gap-3 px-4 py-3 text-xs font-bold text-gray-700 hover:bg-gray-50 transition"
-                                        >
-                                            <i class="bx bxs-note text-base text-primary"></i>
-                                            Tambahkan Catatan
-                                        </button>
-                                    </div>
-                                </div>
-                                <button
-                                    type="button"
-                                    title="Hapus Item"
-                                    class="w-7 h-7 flex items-center justify-center text-gray-300 hover:text-red-500 transition-all shrink-0"
-                                >
-                                    <i class="bx bxs-x-circle text-xl"></i>
-                                </button>
-                            </div>
-                            <div class="flex items-center justify-between mt-4">
-                                <span class="text-[11px] text-gray-500 font-medium">Jumlah</span>
-                                <div class="flex items-center gap-2">
-                                    <button
-                                        type="button"
-                                        @click="qty = Math.max(1, qty - 1)"
-                                        class="w-7 h-7 rounded-lg bg-gray-100 text-gray-600 flex items-center justify-center hover:bg-gray-200 transition active:scale-95"
-                                    >
-                                        <i class="bx bxs-minus text-xs"></i>
-                                    </button>
-                                    <input
-                                        type="number"
-                                        x-model.number="qty"
-                                        @input="if (qty > 99) qty = 99; if (qty < 1 || isNaN(qty)) qty = 1;"
-                                        min="1"
-                                        max="9999"
-                                        class="w-14 text-center text-sm font-black text-gray-800 bg-transparent border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary py-0.5 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                                    >
-                                    <button
-                                        type="button"
-                                        @click="qty = Math.min(99, qty + 1)"
-                                        class="w-7 h-7 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 transition active:scale-95"
-                                    >
-                                        <i class="bx bxs-plus text-xs"></i>
-                                    </button>
-                                </div>
-                            </div>
-    
-                            <div class="ig-diskon hidden mt-3 pt-3 border-t border-dashed border-gray-100">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center gap-2">
-                                        <span class="text-[11px] font-bold text-gray-500">Diskon</span>
-                                        <button
-                                            type="button"
-                                            @click="diskonOpen = false; diskonNilai = 0"
-                                            class="text-gray-300 hover:text-red-500"
-                                        >
-                                            <i class="bx bx-x text-sm"></i>
-                                        </button>
-                                    </div>
-                                    <div class="relative">
-                                        <span class="absolute left-2 top-1.5 text-[10px] font-bold text-gray-400">Rp</span>
-                                        <input
-                                            type="number"
-                                            x-model.number="diskonNilai"
-                                            @input="if (diskonNilai < 0 || isNaN(diskonNilai)) diskonNilai = 0; if (diskonNilai > subtotalSebelumDiskon) diskonNilai = subtotalSebelumDiskon;"
-                                            min="0"
-                                            :max="subtotalSebelumDiskon"
-                                            placeholder="0"
-                                            class="idiskon w-24 pl-6 pr-2 py-1 text-right text-xs font-bold text-gray-800 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                                        >
-                                    </div>
-                                </div>
-                            </div>
-    
-                            <div class="ig-catatan hidden mt-3 pt-3 border-t border-dashed border-gray-100">
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="text-[11px] font-bold text-gray-500">Catatan</span>
-                                    <button
-                                        type="button"
-                                        @click="catatanOpen = false; catatan = ''"
-                                        class="text-gray-300 hover:text-red-500"
-                                    >
-                                        <i class="bx bx-x text-sm"></i>
-                                    </button>
-                                </div>
-                                <textarea
-                                    x-model="catatan"
-                                    rows="2"
-                                    placeholder="Contoh: Es sedikit gula..."
-                                    class="icatatan w-full px-3 py-2 text-xs font-semibold text-gray-800 bg-white border border-gray-200 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-gray-300"
-                                ></textarea>
-                            </div>
-                        </div>
-
-                    </div>
+                    <div class="flex-1 min-h-0 overflow-y-auto py-4 border-b border-gray-100" id="detailPesanan"></div>
 
                     <div class="border-t border-gray-100 py-5 shrink-0">
                         <div class="space-y-2.5">
                             <div class="flex items-center justify-between text-sm">
                                 <span class="text-gray-400">Subtotal</span>
-                                <span class="font-black text-gray-700">
-                                    Rp<span x-text="subtotal.toLocaleString('id-ID')"></span>
+                                <span class="font-black text-gray-700" id="subtotal">
+                                    Rp
                                 </span>
                             </div>
 
                             <div class="flex items-center justify-between text-sm">
-                                <span class="text-gray-400">Diskon</span>
-                                <span class="font-bold text-gray-700">Rp0</span>
+                                <span class="text-gray-400">Total Diskon</span>
+                                <span class="font-bold text-gray-700" id="diskon">Rp0</span>
                             </div>
                         </div>
 
                         <div class="flex items-end justify-between mt-5 pt-4 border-t border-dashed border-gray-200">
                             <div>
                                 <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block">Total</span>
-                                <span class="text-2xl font-black text-gray-900">Rp68.000</span>
+                                <span class="paymentTotal text-2xl font-black text-gray-900">Rp 0</span>
                             </div>
                         </div>
 
@@ -754,14 +453,14 @@
                                     </div>
 
                                     <select
-                                        x-model="pelanggan"
+                                        x-model="idPelanggan"
                                         required
                                         class="w-full pl-12 pr-10 py-3 bg-white text-gray-900 text-sm font-bold rounded-lg border-2 border-gray-200 focus:outline-none focus:ring focus:border-primary focus:ring-primary appearance-none cursor-pointer transition-colors"
                                     >
                                     <?php if(!$pelanggan): ?>
-                                        <option value="" disabled>Tidak ada pelanggan terdaftar</option>
+                                        <option value="">Tidak ada pelanggan terdaftar</option>
                                     <?php else: ?>
-                                        <option value="" disabled>Pilih Pelanggan</option>
+                                        <option value="">Pilih pelanggan terdaftar</option>
                                         <?php foreach($pelanggan as $d): ?>
                                             <option value="<?= $d['id_pelanggan'] ?>"><?= $d['nama_pelanggan'] ?></option>
                                         <?php endforeach; ?>
@@ -780,6 +479,7 @@
                                         </div>
 
                                         <input
+                                            x-model="namaPelanggan"
                                             type="text"
                                             placeholder="Masukkan nama pelanggan"
                                             class="w-full pl-12 pr-4 py-3 bg-white text-gray-900 text-sm font-bold rounded-lg border-2 border-gray-200 focus:outline-none focus:ring focus:border-primary focus:ring-primary transition-colors placeholder:text-gray-300"
@@ -790,7 +490,7 @@
                                 <button
                                     type="button"
                                     x-show="tambahUser === false"
-                                    @click="tambahUser = true"
+                                    @click="tambahUser = true; idPelanggan = null;"
                                     class="w-full sm:w-auto flex items-center justify-center bg-primary text-white font-black p-3.5 gap-2 rounded-lg cursor-pointer transition-all shadow-md"
                                 >
                                     <i class="bx bx-user-plus text-xl"></i>
@@ -799,7 +499,7 @@
                                 <button
                                     type="button"
                                     x-show="tambahUser === true"
-                                    @click="tambahUser = false"
+                                    @click="tambahUser = false; namaPelanggan = '';"
                                     class="w-full sm:w-auto flex items-center justify-center bg-primary text-white font-black p-3.5 gap-2 rounded-lg cursor-pointer transition-all shadow-md"
                                 >
                                     <i class="bx bx-x text-xl"></i>
@@ -810,7 +510,7 @@
                         <div class="flex flex-col sm:flex-row gap-4">
                             <button
                                 type="button"
-                                @click="open = true"
+                                onclick="bukaPembayaran()"
                                 class="w-full flex-1 flex items-center justify-center bg-gray-100 text-gray-500 font-black px-8 py-3.5 gap-2 rounded-lg cursor-pointer transition-all shadow-sm mt-4"
                             >
                                 <i class="bx bxs-wallet-alt text-xl"></i>
@@ -818,7 +518,7 @@
 
                             <button
                                 type="button"
-                                onclick="showToast('Data berhasil disimpan!', 'success')"
+                                @click="simpanPesananMenunggu(StepJenisPesanan, idPelanggan, namaPelanggan)"
                                 class="w-full flex items-center justify-center bg-primary text-white font-black px-8 py-3.5 gap-2 rounded-lg cursor-pointer transition-all shadow-md mt-4"
                             >
                                 <i class="bx bxs-basket text-xl"></i>
@@ -880,12 +580,46 @@
                         </button>
                     </div>
                     <div class="w-full my-8 pb-8 border-b-2 border-dashed border-gray-300 text-center">
-                        <span class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 mb-2">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-6">
+
+                            <div class="p-4 rounded-lg border border-gray-200 bg-gray-50">
+                                <span class="block text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                                    Total Tagihan
+                                </span>
+
+                                <span class="paymentTotal block mt-1 text-lg font-black text-primary">
+                                    Rp0
+                                </span>
+                            </div>
+
+                            <div class="p-4 rounded-lg border border-gray-200 bg-gray-50">
+                                <span class="block text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                                    Total Dibayar
+                                </span>
+
+                                <span class="paymentDibayar block mt-1 text-lg font-black text-gray-900">
+                                    Rp0
+                                </span>
+                            </div>
+
+                            <div class="p-4 rounded-lg border border-gray-200 bg-gray-50">
+                                <span class="block text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                                    Sisa Tagihan
+                                </span>
+
+                                <span class="paymentSisa block mt-1 text-lg font-black text-gray-900">
+                                    Rp0
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <!-- <span class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 mb-2">
                             Total Tagihan
                         </span>
-                        <h2 class="text-4xl sm:text-5xl font-black text-primary tracking-tighter" x-text="'Rp' + (total || 0).toLocaleString('id-ID')">
+                        <h2 class="paymentTotal text-4xl sm:text-5xl font-black text-primary tracking-tighter" id="">
                             Rp0
-                        </h2> 
+                        </h2>  -->
 
                         <!-- <div class="flex items-center w-full mt-6">
                             <div class="flex items-center flex-1">
@@ -1036,12 +770,17 @@
                                                     <i class="bx bx-building-house text-lg"></i>
                                                 </div>
                                                 <select 
-                                                    x-model="bank"
+                                                    x-model="ewallet"
                                                     class="w-full pl-12 pr-10 py-3.5 bg-white text-gray-900 text-sm font-bold rounded-lg border-2 border-gray-200 focus:outline-none focus:border-primary focus:ring focus:ring-primary appearance-none cursor-pointer transition-colors"
                                                 >
-                                                    <option value="" selected disabled>Pilih Bank</option>
-                                                    <option value="Dana">Dana</option>
-                                                    <option value="OVO">OVO</option>
+                                                    <?php if(!$ewallet): ?>
+                                                        <option value="">Tidak ada metode e-wallet terdaftar</option>
+                                                    <?php else: ?>
+                                                        <option value="">Pilih E-Wallet</option>
+                                                        <?php foreach($ewallet as $d): ?>
+                                                            <option value="<?= $d['id_metode'] ?>"><?= $d['nama_metode'] ?></option>
+                                                        <?php endforeach; ?>
+                                                    <?php endif; ?>
                                                 </select>
                                                 <div class="absolute right-4 flex items-center pointer-events-none text-gray-900">
                                                     <i class="bx bx-chevron-down text-xl"></i>
@@ -1065,9 +804,14 @@
                                                     x-model="bank"
                                                     class="w-full pl-12 pr-10 py-3.5 bg-white text-gray-900 text-sm font-bold rounded-lg border-2 border-gray-200 focus:outline-none focus:border-primary focus:ring focus:ring-primary appearance-none cursor-pointer transition-colors"
                                                 >
-                                                    <option value="" selected disabled>Pilih Bank</option>
-                                                    <option value="BNI">Bank BNI</option>
-                                                    <option value="BCA">Bank BCA</option>
+                                                    <?php if(!$transfer): ?>
+                                                        <option value="">Tidak ada metode transfer terdaftar</option>
+                                                    <?php else: ?>
+                                                        <option value="">Pilih Bank</option>
+                                                        <?php foreach($transfer as $d): ?>
+                                                            <option value="<?= $d['id_metode'] ?>"><?= $d['nama_metode'] ?></option>
+                                                        <?php endforeach; ?>
+                                                    <?php endif; ?>
                                                 </select>
                                                 <div class="absolute right-4 flex items-center pointer-events-none text-gray-900">
                                                     <i class="bx bx-chevron-down text-xl"></i>
@@ -1091,9 +835,14 @@
                                                     x-model="card"
                                                     class="w-full pl-12 pr-10 py-3.5 bg-white text-gray-900 text-sm font-bold rounded-lg border-2 border-gray-200 focus:outline-none focus:border-primary focus:ring focus:ring-primary appearance-none cursor-pointer transition-colors"
                                                 >
-                                                    <option value="" selected disabled>Pilih Kartu</option>
-                                                    <option value="Debit">Debit</option>
-                                                    <option value="Kredit">Kredit</option>
+                                                    <?php if(!$card): ?>
+                                                        <option value="">Tidak ada metode kartu terdaftar</option>
+                                                    <?php else: ?>
+                                                        <option value="">Pilih Kartu</option>
+                                                        <?php foreach($card as $d): ?>
+                                                            <option value="<?= $d['id_metode'] ?>"><?= $d['nama_metode'] ?></option>
+                                                        <?php endforeach; ?>
+                                                    <?php endif; ?>
                                                 </select>
                                                 <div class="absolute right-4 flex items-center pointer-events-none text-gray-900">
                                                     <i class="bx bx-chevron-down text-xl"></i>
@@ -1114,12 +863,26 @@
                                                     Rp
                                                 </div>
                                                 <input 
-                                                    type="number"
-                                                    x-model.number="nominal"
+                                                    type="text"
+                                                    id="nominal"
+                                                    inputmode="numeric"
+                                                    @input="
+                                                        formatNominal($event.target);
+                                                        nominal = Number($event.target.value.replace(/\D/g, '')) || 0;
+                                                        updatePayment(
+                                                            idTransaksiMenunggu !== null
+                                                                ? total
+                                                                : null
+                                                        );
+                                                    "
                                                     min="0"
                                                     placeholder="0"
+                                                    autocomplete="off"
                                                     class="w-full pl-12 pr-4 py-3 bg-white text-gray-900 text-lg font-black rounded-lg border-2 border-gray-200 focus:outline-none focus:ring focus:border-primary focus:ring-primary transition-colors placeholder:text-gray-300"
                                                 >
+                                            </div>
+                                            <div class="mt-2">
+                                                <p class="hidden text-sm font-bold" id="nominalStatus"></p>
                                             </div>
                                         </div>
                         
@@ -1131,19 +894,6 @@
 
                     </div>
 
-                    <!-- <div x-show="['Tunai', 'QRIS', 'Transfer', 'E-Wallet', 'Card'].includes(metode)" class="p-4 rounded-lg border border-gray-200 flex items-center justify-between">
-                        <div>
-                            <span class="text-xs font-bold uppercase tracking-wide text-primary">
-                                Total Akhir
-                            </span>
-                            <p class="text-[10px] text-gray-500 font-semibold">
-                                Hemat Rp10.000
-                            </p>
-                        </div>
-                        <span class="text-xl font-black text-primary tracking-tight">
-                            Rp140.000
-                        </span>
-                    </div> -->
                     <div x-show="metode === 'Tunai'" class="mt-4 relative overflow-hidden p-4 rounded-lg flex items-center justify-between border-2 border-dashed border-primary bg-white">
                         <div class="space-y-1 z-10">
                             <div class="flex items-center gap-1.5 text-primary font-black text-sm uppercase tracking-widest">
@@ -1156,8 +906,8 @@
                         </div>
 
                         <div class="z-10 text-right">
-                            <span class="text-2xl sm:text-xl font-black text-primary tracking-tighter">
-                                Rp10.000
+                            <span class="text-2xl sm:text-xl font-black text-primary tracking-tighter" id="paymentKembalian">
+                                Rp0
                             </span>
                         </div>
                     </div>
@@ -1173,19 +923,40 @@
 
                         <button             
                             type="button"
-                            @click="open = false"
+                            @click="
+                                idTransaksiMenunggu !== null
+                                    ? konfirmasiPembayaranMenunggu(
+                                        idTransaksiMenunggu,
+                                        total,
+                                        metode,
+                                        bank,
+                                        ewallet,
+                                        card,
+                                        nominal
+                                    )
+                                    : konfirmasiPembayaran(
+                                        StepJenisPesanan,
+                                        idPelanggan,
+                                        namaPelanggan,
+                                        metode,
+                                        bank,
+                                        ewallet,
+                                        card,
+                                        nominal
+                                    )
+                            "
                             :disabled="metode === '' ||
-                            (metode === 'Tunai' && nominal < total) ||
-                            (['Transfer', 'E-Wallet'].includes(metode) && bank === '') ||
+                            (metode === 'Tunai' && Number(nominal) < Number(total)) ||
+                            (['Transfer'].includes(metode) && bank === '') || (metode === 'E-Wallet' && ewallet === '') ||
                             (metode === 'Card' && card === '')"
                             :class="metode === '' ||
-                            (metode === 'Tunai' && nominal < total) ||
-                            (['Transfer', 'E-Wallet'].includes(metode) && bank === '') ||
+                            (metode === 'Tunai' && Number(nominal) < Number(total)) ||
+                            (['Transfer'].includes(metode) && bank === '') || (metode === 'E-Wallet' && ewallet === '') ||
                             (metode === 'Card' && card === '')
                                     ? 'opacity-30 cursor-not-allowed'
-                                    : 'hover:bg-hover-primary active:scale-95'"
-                            class="w-full sm:w-auto flex items-center justify-center bg-primary text-white font-black px-8 py-4 gap-2 rounded-lg cursor-pointer transition-all shadow-md"
-                        >
+                                    : 'hover:bg-hover-primary active:scale-95 cursor-pointer'"
+                            class="w-full sm:w-auto flex items-center justify-center bg-primary text-white font-black px-8 py-4 gap-2 rounded-lg transition-all shadow-md"
+                            >
                             <i class="bx bxs-basket text-xl"></i>
                             <span>KONFIRMASI</span>
                         </button>
@@ -1231,22 +1002,48 @@
                 </div>
 
                 <div class="max-h-[60vh] overflow-y-auto">
-                    <div class="px-10 py-5 border-b border-gray-100">
+                <?php if(empty($pesananMenunggu)): ?>
+                    <div class="text-center py-8 text-gray-400">
+                        <i class="bx bx-receipt text-4xl"></i>
+                        <p class="mt-2">Belum ada pesanan menunggu.</p>
+                    </div>
+                <?php else: ?>
+                    <?php foreach($pesananMenunggu as $p):
+                    $tipePesanan = match ((int) $p['tipe_pesanan']){
+                        1 => 'Dine In',
+                        2 => 'Takeaway',
+                        default => 'Tidak diketahui'
+                    }
+                    ?>
+                    <div class="px-10 py-5 border-b border-gray-200">
                         <div class="flex items-center justify-between gap-4">
                             <div class="min-w-0">
-                                <span class="text-[10px] font-black uppercase tracking-wider text-gray-400">
-                                    No. Transaksi
-                                </span>
-                                <h3 class="text-sm font-black text-gray-900 mt-1">
-                                    TRX-20260828-001
-                                </h3>
+                                <div class="flex items-center justify-between gap-4">
+                                    <div class="">
+                                        <span class="text-[10px] font-black uppercase tracking-wider text-gray-400">
+                                            No. Transaksi
+                                        </span>
+                                        <h3 class="text-sm font-black text-gray-900 mt-1">
+                                            <?= htmlspecialchars($p['kode_transaksi']) ?>
+                                        </h3>
+                                    </div>
+                                    <span class="min-w-5 h-5 px-2 flex items-center justify-center rounded-full bg-primary text-white text-[10px] font-black">
+                                        <?= $tipePesanan ?>
+                                    </span>
+                                </div>
                                 <div class="flex flex-wrap items-center gap-x-5 gap-y-2 mt-3">
                                     <div>
                                         <span class="text-[10px] text-gray-400 font-medium block">
                                             Pelanggan
                                         </span>
                                         <span class="text-sm font-bold text-gray-700">
-                                            Jamal
+                                            <?php if(!empty($p['nama_pelanggan'])){
+                                                echo htmlspecialchars($p['nama_pelanggan']);
+                                            } elseif($p['id_pelanggan'] !== null){
+                                                echo htmlspecialchars($p['namapelanggan']);
+                                            } else{
+                                                echo "-";
+                                            }?>
                                         </span>
                                     </div>
                                     <div>
@@ -1254,7 +1051,7 @@
                                             Total
                                         </span>
                                         <span class="text-sm font-black text-gray-900">
-                                            Rp68.000
+                                            Rp<?= number_format($p['total'], 0, ",", ".") ?>
                                         </span>
                                     </div>
                                 </div>
@@ -1263,121 +1060,130 @@
                             <div class="flex items-center gap-2 shrink-0">
                                 <button
                                     type="button"
-                                    @click="open = true; pesananMenunggu = false"
-                                    class="h-10 px-4 rounded-lg bg-primary text-white text-xs font-black flex items-center gap-2 hover:opacity-90 active:scale-95 transition-all"
+                                    @click="bukaPembayaranMenunggu(<?= (int)$p['id_transaksi'] ?>, <?= (int)$p['total'] ?>)"
+                                    class="h-10 px-6 rounded-lg bg-primary text-white text-sm font-black flex items-center gap-2 hover:opacity-90 active:scale-95 transition-all"
                                 >
                                     <i class="bx bxs-wallet-alt text-base"></i>
                                     Bayar
                                 </button>
+                                <?php if (!empty($p['id_pelanggan'])): ?>
+
                                 <button
                                     type="button"
-                                    class="h-10 px-4 rounded-lg bg-gray-100 text-gray-600 text-xs font-black flex items-center gap-2 hover:bg-gray-200 active:scale-95 transition-all"
-                                >
-                                    <i class="bx bx-time-five text-base"></i>
+                                    @click="
+                                        konfirmasiJadikanPiutang(
+                                            <?= (int)$p['id_transaksi'] ?>,
+                                            <?= (int)$p['id_pelanggan'] ?>
+                                        )
+                                    "
+                                    class="w-full sm:w-auto h-11 px-4 flex items-center justify-center gap-2 rounded-lg bg-gray-100 font-black text-sm text-gray-600 hover:bg-gray-200 transition-all"
+                                    >
                                     Jadikan Piutang
                                 </button>
+                                <?php else: ?>
+                                    
+                                    <button
+                                    type="button"
+                                    @click="
+                                    idTransaksiPiutang = <?= (int)$p['id_transaksi'] ?>;
+                                    pelangganPiutang = '';
+                                    modalPiutang = true;
+                                    "
+                                    class="w-full sm:w-auto h-11 px-4 flex items-center justify-center gap-2 rounded-lg bg-gray-100 font-black text-sm text-gray-600 hover:bg-gray-200 transition-all"
+                                >
+                                    Jadikan Piutang
+                                </button>
+                                
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
 
-                    <div class="px-10 py-5 border-b border-gray-100">
-                        <div class="flex items-center justify-between gap-4">
-                            <div class="min-w-0">
-                                <span class="text-[10px] font-black uppercase tracking-wider text-gray-400">
-                                    No. Transaksi
-                                </span>
-                                <h3 class="text-sm font-black text-gray-900 mt-1">
-                                    TRX-20260828-002
-                                </h3>
-                                <div class="flex flex-wrap items-center gap-x-5 gap-y-2 mt-3">
-                                    <div>
-                                        <span class="text-[10px] text-gray-400 font-medium block">
-                                            Pelanggan
-                                        </span>
-                                        <span class="text-sm font-bold text-gray-700">
-                                            Udin
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <span class="text-[10px] text-gray-400 font-medium block">
-                                            Total
-                                        </span>
-                                        <span class="text-sm font-black text-gray-900">
-                                            Rp45.000
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
+                </div>
+            </div>
+        </div>
 
-                            <div class="flex items-center gap-2 shrink-0">
-                                <button
-                                    type="button"
-                                    @click="open = true; pesananMenunggu = false"
-                                    class="h-10 px-4 rounded-lg bg-primary text-white text-xs font-black flex items-center gap-2 hover:opacity-90 active:scale-95 transition-all"
-                                >
-                                    <i class="bx bxs-wallet-alt text-base"></i>
-                                    Bayar
-                                </button>
-                                <button
-                                    type="button"
-                                    class="h-10 px-4 rounded-lg bg-gray-100 text-gray-600 text-xs font-black flex items-center gap-2 hover:bg-gray-200 active:scale-95 transition-all"
-                                >
-                                    <i class="bx bx-time-five text-base"></i>
-                                    Jadikan Piutang
-                                </button>
+        <div
+            x-show="modalPiutang"
+            x-cloak
+            class="fixed inset-0 z-[9991] flex items-center justify-center bg-black/50"
+        >
+            <div class="w-full max-w-2xl bg-white rounded-xl">
+
+                <div class="mb-6 sm:mb-8 flex justify-between items-start sm:items-center gap-4 p-8 pb-0">
+                        <div class="flex items-center gap-3 sm:gap-4 min-w-0">
+                            <div class="flex w-12 h-12 rounded-lg bg-primary items-center justify-center shrink-0 shadow-sm">
+                                <i class="bx bxs-receipt text-2xl text-white"></i>
                             </div>
-                        </div>
+                            <div class="min-w-0">    
+                                <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
+                                    <h1 class="text-slate-900 font-black text-xl sm:text-2xl leading-tight">
+                                        Jadikan Piutang
+                                    </h1>
+                                </div>    
+                                <p class="text-xs sm:text-sm text-gray-500 font-medium mt-1">
+                                    Pilih pelanggan yang memiliki tagihan ini.
+                                </p>    
+                            </div>    
+                        </div>    
+                        <button type="button" @click="modalPiutang = false" title="Tutup"
+                            class="flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-100 text-slate-500 hover:text-white hover:bg-primary font-black cursor-pointer transition-colors shrink-0"                    >
+                            <i class="bx bx-x text-2xl"></i>
+                        </button>
                     </div>
 
-                    <div class="px-10 py-5">
-                        <div class="flex items-center justify-between gap-4">
-                            <div class="min-w-0">
-                                <span class="text-[10px] font-black uppercase tracking-wider text-gray-400">
-                                    No. Transaksi
-                                </span>
-                                <h3 class="text-sm font-black text-gray-900 mt-1">
-                                    TRX-20260828-003
-                                </h3>
-                                <div class="flex flex-wrap items-center gap-x-5 gap-y-2 mt-3">
-                                    <div>
-                                        <span class="text-[10px] text-gray-400 font-medium block">
-                                            Pelanggan
-                                        </span>
-                                        <span class="text-sm font-bold text-gray-700">
-                                            Saiful Anwar
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <span class="text-[10px] text-gray-400 font-medium block">
-                                            Total
-                                        </span>
-                                        <span class="text-sm font-black text-gray-900">
-                                            Rp92.000
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="flex items-center gap-2 shrink-0">
-                                <button
-                                    type="button"
-                                    @click="open = true; pesananMenunggu = false"
-                                    class="h-10 px-4 rounded-lg bg-primary text-white text-xs font-black flex items-center gap-2 hover:opacity-90 active:scale-95 transition-all"
-                                >
-                                    <i class="bx bxs-wallet-alt text-base"></i>
-                                    Bayar
-                                </button>
-                                <button
-                                    type="button"
-                                    class="h-10 px-4 rounded-lg bg-gray-100 text-gray-600 text-xs font-black flex items-center gap-2 hover:bg-gray-200 active:scale-95 transition-all"
-                                >
-                                    <i class="bx bx-time-five text-base"></i>
-                                    Jadikan Piutang
-                                </button>
-                            </div>
+                <div class="px-8 pb-8">
+                    <div class="relative flex items-center w-full">
+                        <div class="absolute left-4 flex items-center pointer-events-none text-gray-400 z-10">
+                            <i class="bx bx-user text-lg"></i>
                         </div>
+
+                        <select
+                            x-model="pelangganPiutang"
+                            required
+                            class="w-full pl-12 pr-10 py-3 bg-white text-gray-900 text-sm font-bold rounded-lg border-2 border-gray-200 focus:outline-none focus:ring focus:border-primary focus:ring-primary appearance-none cursor-pointer transition-colors"
+                        >                       
+                            <option value="">Pilih Pelanggan</option>
+                            <?php foreach ($pelanggan as $p): ?>
+                            
+                                <option
+                                    value="<?= (int)$p['id_pelanggan'] ?>"
+                                >
+                                    <?= htmlspecialchars($p['nama_pelanggan']) ?>
+                                </option>
+                            
+                            <?php endforeach; ?>                    
+                        </select>
+
+                        <div class="absolute right-4 flex items-center pointer-events-none text-gray-900">
+                            <i class="bx bx-chevron-down text-xl"></i>
+                        </div>
+                    </div>                                                    
+
+                    <div class="flex justify-end gap-2 mt-6">
+                            
+                        <button
+                            type="button"
+                            @click="modalPiutang = false"
+                            class="h-10 px-6 rounded-lg bg-gray-100 text-gray-600 text-sm font-black flex items-center gap-2 hover:bg-gray-200 active:scale-95 transition-all"
+                        >
+                            Batal
+                        </button>
+                            
+                        <button
+                            type="button"
+                            @click="konfirmasiJadikanPiutang(idTransaksiPiutang, pelangganPiutang)"
+                            :disabled="pelangganPiutang === ''"
+                            class="h-10 px-6 rounded-lg bg-primary text-white text-sm font-black flex items-center gap-2 hover:opacity-90 active:scale-95 transition-all"
+                        >
+                            Lanjutkan
+                        </button>
+                            
                     </div>
                 </div>
+                        
             </div>
         </div>
 
@@ -1385,6 +1191,8 @@
 </section>
 
 <script>
+    const value = document.querySelector('input[name="jenis_pemesanan"]').value;
+    // console.log(value);
     function tdisk(b){
       const item = b.closest('.item-order');
       const igdisk = item.querySelector('.ig-diskon');
@@ -1392,21 +1200,1072 @@
       igdisk.classList.toggle('hidden');
       if(igdisk.classList.contains('hidden')){
         b.innerHTML = '<i class="bx bxs-discount text-base text-primary"></i> Tambahkan Diskon';
+        idisk.value = '';
+        const i =  [...document.querySelectorAll('.item-order')].indexOf(item);
+        order[i].diskon = 0;
+        updateTDiskon();
       } else{
         b.innerHTML = '<i class="bx bxs-discount text-base text-primary"></i> Hapus Diskon';
-        idisk.value = '';
       }
     }
-    function tcatatan(b){
+    function tpdisk(b){
       const item = b.closest('.item-order');
-      const igc = item.querySelector('.ig-catatan');
-      const ic = item.querySelector('.icatatan');
-      igc.classList.toggle('hidden');
-      if(igc.classList.contains('hidden')){
-        b.innerHTML = '<i class="bx bxs-note text-base text-primary"></i> Tambahkan Catatan';
+      const bdisk = item.querySelector('.b-diskon');
+      const igdisk = item.querySelector('.ig-diskon');
+      const idisk = item.querySelector('.idiskon');
+      igdisk.classList.toggle('hidden');
+      if(igdisk.classList.contains('hidden')){
+        bdisk.innerHTML = '<i class="bx bxs-discount text-base text-primary"></i> Tambahkan Diskon';
+        idisk.value = '';
+        const i =  [...document.querySelectorAll('.item-order')].indexOf(item);
+        order[i].diskon = 0;
+        updateTDiskon();
       } else{
-        b.innerHTML = '<i class="bx bxs-note text-base text-primary"></i> Hapus Catatan';
-        ic.value = '';
+        bdisk.innerHTML = '<i class="bx bxs-discount text-base text-primary"></i> Hapus Diskon';
       }
     }
+    
+    function tcatatan(b){
+        const item = b.closest('.item-order');
+        const igc = item.querySelector('.ig-catatan');
+        const ic = item.querySelector('.icatatan');
+        igc.classList.toggle('hidden');
+        if(igc.classList.contains('hidden')){
+            b.innerHTML = '<i class="bx bxs-note text-base text-primary"></i> Tambahkan Catatan';
+            const i =  [...document.querySelectorAll('.item-order')].indexOf(item);
+            order[i].catatan = '';
+        } else{
+            b.innerHTML = '<i class="bx bxs-note text-base text-primary"></i> Hapus Catatan';
+            ic.value = '';
+        }
+    }
+    function tpcatatan(b){
+        const item = b.closest('.item-order');
+        const bc = item.querySelector('.b-catatan');
+        const igc = item.querySelector('.ig-catatan');
+        const ic = item.querySelector('.icatatan');
+        igc.classList.toggle('hidden');
+        if(igc.classList.contains('hidden')){
+            bc.innerHTML = '<i class="bx bxs-note text-base text-primary"></i> Tambahkan Catatan';
+        } else{
+            bc.innerHTML = '<i class="bx bxs-note text-base text-primary"></i> Hapus Catatan';
+            ic.value = '';
+        }
+    }
+
+    function updateTDiskon(){
+        const td = order.reduce((total, item) => {
+            return total + Number(item.diskon || 0);
+        }, 0);
+        document.getElementById('diskon').textContent = 'Rp' + td.toLocaleString('id-ID');
+    }
+
+    function dotsMenu(b){
+      const item = b.closest('.item-order');
+      const idm = item.querySelector('.item-dots-menu');
+      idm.classList.toggle('hidden');
+    }
+
+    let order = [];
+    function addMenu(m){
+        const ex = order.find(item => item.id_menu == m.id_menu);
+        if(ex){
+            ex.qty++;
+        } else{
+            order.push({
+                id_menu: m.id_menu,
+                foto: m.foto,
+                nama_menu: m.nama,
+                harga: Number(m.harga),
+                qty: 1,
+                diskon: 0,
+                catatan: ''
+            });
+        }
+        renderOrder();
+
+        // console.log('ORDER', order);
+        // console.log('SUM', getOrderSummary());
+    }
+
+    function increaseQty(index){
+        if(order[index].qty < 99){
+            order[index].qty++;
+        }
+        renderOrder();
+    }
+    function decreaseQty(index){
+        if(order[index].qty > 1){
+            order[index].qty--;
+        } else{
+            order.splice(index, 1);
+        }
+        renderOrder();
+    }
+
+    function changeQty(index, value){
+        let qty = parseInt(value);
+        if(isNaN(qty) || qty < 1){
+            qty = 1;
+        }
+        if(qty > 99){
+            qty = 99;
+        }
+        order[index].qty = qty;
+        renderOrder();
+    }
+
+    function removePesanan(){
+        order = [];
+        renderOrder();
+    }
+
+    function removeMenu(index){
+        order.splice(index, 1);
+        renderOrder();
+    }
+
+    function renderOrder(){
+        const container = document.getElementById('detailPesanan');
+        container.innerHTML = '';
+        let subtotal = 0;
+        let tdiskon = 0;
+        order.forEach((item, index) => {
+            const t = item.harga * item.qty;
+            subtotal += t;
+            tdiskon += Number(item.diskon || 0);
+            container.innerHTML += `
+            <div class="item-order">
+                <div class="flex items-center gap-3">
+                    <div class="w-14 h-14 rounded-lg bg-gray-100 flex items-center justify-center shrink-0 overflow-hidden">
+                        ${item.foto ? `<img src="public/images/${item.foto}" class="w-full h-full object-cover" alt="${item.nama}">` : `<i class="bx bxs-bowl-hot text-xl text-gray-400"></i>`}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h4 class="font-black text-gray-900 text-sm truncate">${item.nama_menu}</h4>
+                        <p class="text-xs font-bold text-gray-900">
+                            Rp<span>${item.harga.toLocaleString('id-ID')}</span>
+                        </p>
+                    </div>
+                    <div class="relative">
+                        <button
+                        onclick="dotsMenu(this)"
+                            type="button"
+                            class="btn-dots-permenu w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-all"
+                        >
+                            <i class="bx bx-dots-vertical-rounded text-xl"></i>
+                        </button>
+                        <div
+                            class="item-dots-menu absolute right-0 top-9 z-30 w-44 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden hidden"
+                        >
+                            <button
+                            onclick="tdisk(this)"
+                                type="button"
+                                class="b-diskon w-full flex items-center gap-3 px-4 py-3 text-xs font-bold text-gray-700 hover:bg-gray-50 transition"
+                            >
+                                <i class="bx bxs-discount text-base text-primary"></i>
+                                Tambahkan Diskon
+                            </button>
+                            <button
+                            onclick="tcatatan(this)"
+                                type="button"
+                                class="b-catatan w-full flex items-center gap-3 px-4 py-3 text-xs font-bold text-gray-700 hover:bg-gray-50 transition"
+                            >
+                                <i class="bx bxs-note text-base text-primary"></i>
+                                Tambahkan Catatan
+                            </button>
+                        </div>
+                    </div>
+                    <button
+                        onclick="removeMenu(${index})"
+                        type="button"
+                        class="w-7 h-7 flex items-center justify-center text-gray-300 hover:text-red-500 transition-all shrink-0"
+                    >
+                        <i class="bx bxs-x-circle text-xl"></i>
+                    </button>
+                </div>
+                <div class="flex items-center justify-between mt-4">
+                    <span class="text-[11px] text-gray-500 font-medium">Jumlah</span>
+                    <div class="flex items-center gap-2">
+                        <button
+                            onclick="decreaseQty(${index})"
+                            type="button"
+                            class="w-7 h-7 rounded-lg bg-gray-100 text-gray-600 flex items-center justify-center hover:bg-gray-200 transition active:scale-95"
+                        >
+                            <i class="bx bxs-minus text-xs"></i>
+                        </button>
+                        <input
+                            oninput="changeQty(${index}, this.value)"
+                            type="number"
+                            min="1"
+                            max="9999"
+                            class="w-14 text-center text-sm font-black text-gray-800 bg-transparent border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary py-0.5 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            value="${item.qty}"
+                        >
+                        <button
+                            onclick="increaseQty(${index})"
+                            type="button"
+                            class="w-7 h-7 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 transition active:scale-95"
+                        >
+                            <i class="bx bxs-plus text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+    
+                <div class="ig-diskon ${Number(item.diskon || 0) > 0 ? '' : 'hidden'} mt-3 pt-3 border-t border-dashed border-gray-100">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="text-[11px] font-bold text-gray-500">Diskon</span>
+                            <button
+                                onclick="tpdisk(this)"
+                                type="button"
+                                class="text-gray-300 hover:text-red-500"
+                            >
+                                <i class="bx bx-x text-sm"></i>
+                            </button>
+                        </div>
+                        <div class="relative">
+                            <span class="absolute left-2 top-1.5 text-[10px] font-bold text-gray-400">Rp</span>
+                            <input
+                                type="number"
+                                placeholder="0"
+                                class="idiskon w-24 pl-6 pr-2 py-1 text-right text-xs font-bold text-gray-800 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                value="${item.diskon || 0}"
+                                min="0"
+                                oninput="order[${index}].diskon = Number(this.value || 0); updateTDiskon();"
+                            >
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="ig-catatan ${item.catatan ? '' : 'hidden'} mt-3 pt-3 border-t border-dashed border-gray-100">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[11px] font-bold text-gray-500">Catatan</span>
+                        <button
+                            onclick="tpcatatan(this)"
+                            type="button"
+                            class="text-gray-300 hover:text-red-500"
+                        >
+                            <i class="bx bx-x text-sm"></i>
+                        </button>
+                    </div>
+                    <textarea
+                        oninput="order[${index}].catatan = this.value"
+                        rows="2"
+                        placeholder="Contoh: Es sedikit gula..."
+                        class="icatatan w-full px-3 py-2 text-xs font-semibold text-gray-800 bg-white border border-gray-200 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-gray-300"
+                    >${item.catatan || ''}</textarea>
+                </div>
+            </div>
+            `;
+        });
+        document.getElementById('subtotal').textContent = 'Rp' + subtotal.toLocaleString('id-ID');
+        document.getElementById('diskon').textContent = 'Rp' + tdiskon.toLocaleString('id-ID');
+
+        const tjenismenu = order.length;
+        const vtjenismenu = document.getElementById('tjenismenu');
+        if(tjenismenu > 0){
+            vtjenismenu.classList.remove('hidden');
+            vtjenismenu.textContent = tjenismenu;
+        } else{
+            vtjenismenu.classList.add('hidden');
+            vtjenismenu.textContent = 0;
+        }
+        updatePayment();
+    }
+
+    function getOrderSummary(){
+        let subtotal = 0;
+        let totalDiskon = 0;
+        order.forEach((item, index) => {
+            const harga = Number(item.harga) || 0;
+            const qty = Number(item.qty) || 0;
+            const diskon = Number(item.diskon) || 0;
+            subtotal += harga * qty;
+            totalDiskon += diskon;
+        });
+        const total = Math.max(0, subtotal - totalDiskon)
+        return {
+            subtotal,
+            totalDiskon,
+            total
+        };
+    }
+
+    function formatRupiah(nominal) {
+    return 'Rp' + Number(nominal || 0).toLocaleString('id-ID');
+}
+
+function updatePayment(totalOverride = null) {
+
+    const summary = getOrderSummary();
+
+    const nominalInput = document.getElementById('nominal');
+
+    const nominal = Number(
+        nominalInput?.value.replace(/\D/g, '')
+    ) || 0;
+
+    const total = totalOverride !== null
+        ? Number(totalOverride)
+        : summary.total;
+
+    const sisaTagihan = Math.max(0, total - nominal);
+    const kembalian = Math.max(0, nominal - total);
+
+    // =========================
+    // STATUS NOMINAL
+    // =========================
+
+    const statusEl = document.getElementById('nominalStatus');
+
+    if (statusEl) {
+
+        statusEl.classList.remove(
+            'hidden',
+            'text-red-500',
+            'text-green-500'
+        );
+
+        if (nominal === 0) {
+
+            statusEl.classList.add('hidden');
+            statusEl.innerHTML = '';
+
+        } else if (nominal < total) {
+
+            statusEl.classList.add('text-red-500');
+
+            statusEl.innerHTML =
+                `<i class="bx bxs-alert-triangle"></i>
+                 Nominal pembayaran belum mencukupi.
+                 Sisa ${formatRupiah(sisaTagihan)}`;
+
+        } else {
+
+            statusEl.classList.add('text-green-500');
+
+            statusEl.innerHTML =
+                `<i class="bx bx-check-circle"></i>
+                 Nominal pembayaran mencukupi.`;
+
+        }
+    }
+
+    // TOTAL TAGIHAN
+    document.querySelectorAll('.paymentTotal').forEach(el => {
+        el.textContent = formatRupiah(total);
+    });
+
+    // TOTAL DIBAYAR
+    document.querySelectorAll('.paymentDibayar').forEach(el => {
+        el.textContent = formatRupiah(nominal);
+    });
+
+    // SISA TAGIHAN
+    document.querySelectorAll('.paymentSisa').forEach(el => {
+        el.textContent = formatRupiah(sisaTagihan);
+    });
+
+    // KEMBALIAN
+    const elKembalian =
+        document.getElementById('paymentKembalian');
+
+    if (elKembalian) {
+        elKembalian.textContent =
+            formatRupiah(kembalian);
+    }
+
+    return {
+        total,
+        nominal,
+        sisaTagihan,
+        kembalian
+    };
+}
+    
+    function formatNominal(i) {
+
+    let angka = i.value.replace(/\D/g, '');
+
+    angka = angka.replace(/^0+(?=\d)/, '');
+
+    if (angka === '') {
+        i.value = '';
+        return;
+    }
+
+    i.value = Number(angka).toLocaleString('id-ID');
+}
+
+    function bukaPembayaran(){
+        if(order.length === 0){
+            showToast({
+                pesan: 'Belum ada pesanan.', 
+                bg: 'warning'
+            });
+            return;
+        }
+
+        const summary = getOrderSummary();
+        // console.log('Order:', order);
+        // console.log('Sum Pemba:', summary);
+
+        const nominalInput = document.getElementById('nominal');
+        if(nominalInput){
+            nominalInput.value = '';
+        }
+        window.dispatchEvent(new CustomEvent('buka-pembayaran', {
+                detail: {
+                    total: summary.total
+                }
+            })
+        );
+
+        updatePayment();
+    }
+
+    function resetTransaksi() {
+        order = [];
+        renderOrder();
+
+        idPelanggan = null;
+        namaPelanggan = '';
+        tambahUser = false;
+
+        modalPiutang = false;
+        idTransaksiPiutang = null;
+        pelangganPiutang = '';
+
+        metode = '';
+        bank = '';
+        ewallet = '';
+        card = '';
+        nominal = 0;
+        total = 0;
+
+        StepJenisPesanan = '';
+        StepDataDiri = false;
+        StepPembayaran = false;
+        open = false;
+
+        
+        const ni = document.getElementById('nominal');
+        if(ni){
+            ni.value = '';
+        }
+        
+        document.querySelectorAll('.paymentDibayar').forEach(el => {
+            el.textContent = formatRupiah(0);
+        });
+        updatePayment();
+
+        window.dispatchEvent(new CustomEvent('tutup-pembayaran'));
+    }
+
+    async function konfirmasiPembayaran(
+    tipePesanan,
+    idPelanggan,
+    namaPelanggan,
+    metode,
+    bank,
+    ewallet,
+    card,
+    nominal
+) {
+    if (!metode) {
+        showToast({
+            pesan: 'Silakan pilih metode pembayaran.',
+            bg: 'warning'
+        });
+        return;
+    }
+
+    const summary = getOrderSummary();
+
+    if (summary.total <= 0) {
+        showToast({
+            pesan: 'Total transaksi tidak valid.',
+            bg: 'warning'
+        });
+        return;
+    }
+
+    if (metode === 'Tunai' && Number(nominal) < summary.total) {
+        showToast({
+            pesan: 'Nominal pembayaran belum mencukupi.',
+            bg: 'warning'
+        });
+        return;
+    }
+
+    if (metode === 'Hutang' && !idPelanggan) {
+        showToast({
+            pesan: 'Pelanggan terdaftar wajib dipilih untuk transaksi hutang.',
+            bg: 'warning'
+        });
+        return;
+    }
+
+    if (metode === 'Transfer' && !bank) {
+        showToast({
+            pesan: 'Silakan pilih bank.',
+            bg: 'warning'
+        });
+        return;
+    }
+
+    if (metode === 'E-Wallet' && !ewallet) {
+        showToast({
+            pesan: 'Silakan pilih E-Wallet.',
+            bg: 'warning'
+        });
+        return;
+    }
+
+    if (metode === 'Card' && !card) {
+        showToast({
+            pesan: 'Silakan pilih kartu.',
+            bg: 'warning'
+        });
+        return;
+    }
+
+    const dataPesanan = {
+        tipePesanan,
+        idPelanggan: idPelanggan ? Number(idPelanggan) : null,
+        namaPelanggan: namaPelanggan?.trim() || ''
+    };
+
+    const dataPembayaran = {
+        metode,
+        bank: bank || '',
+        ewallet: ewallet || '',
+        card: card || '',
+        nominal: Number(nominal) || 0
+    };
+
+    const transaksi = buildTransaksi(
+        dataPesanan,
+        dataPembayaran
+    );
+
+    // console.log('DATA TRANSAKSI:', transaksi);
+
+    // SELANJUTNYA FETCH KE PHP
+    const formData = new FormData();
+
+    formData.append('aksi', 'simpanTransaksi');
+    formData.append('transaksi', JSON.stringify(transaksi));
+
+    const response = await fetch('?route=kasir', {
+        method: 'POST',
+        body: formData
+    });
+
+    const result = await response.json();
+    if (!result.status) {
+        showToast({
+            pesan: result.pesan,
+            bg: result.bg
+        });
+        return;
+    }
+    showToast({
+        pesan: result.pesan,
+        bg: result.bg
+    });
+
+    resetTransaksi();
+    console.log('TRANSAKSI BERHASIL', result);
+}
+
+function buildTransaksi(dataPesanan, dataPembayaran) {
+
+    const summary = getOrderSummary();
+
+    const metode = dataPembayaran.metode;
+
+    const isTunai = metode === 'Tunai';
+    const isHutang = metode === 'Hutang';
+
+
+    // =========================
+    // PEMBAYARAN
+    // =========================
+
+    let nominalDibayar = 0;
+    let kembalian = 0;
+    let statusPembayaran = 'belum_lunas';
+
+
+    if (isHutang) {
+
+        nominalDibayar = 0;
+        kembalian = 0;
+        statusPembayaran = 'belum_lunas';
+
+    } else if (isTunai) {
+
+        nominalDibayar =
+            Number(dataPembayaran.nominal) || 0;
+
+        kembalian = Math.max(
+            0,
+            nominalDibayar - summary.total
+        );
+
+        statusPembayaran = 'lunas';
+
+    } else {
+
+        // Transfer
+        // E-Wallet
+        // Card
+
+        nominalDibayar = summary.total;
+        kembalian = 0;
+        statusPembayaran = 'lunas';
+    }
+
+
+    // =========================
+    // DATA TRANSAKSI
+    // =========================
+
+    return {
+
+        transaksi: {
+
+            tipe_pesanan:
+                dataPesanan.tipePesanan,
+
+            id_pelanggan:
+                dataPesanan.idPelanggan || null,
+
+            nama_pelanggan:
+                dataPesanan.namaPelanggan || ''
+
+        },
+
+
+        // =========================
+        // DETAIL MENU
+        // =========================
+
+        items: order.map(item => ({
+
+            id_menu:
+                item.id_menu,
+
+            qty:
+                Number(item.qty),
+
+            harga:
+                Number(item.harga),
+
+            diskon:
+                Number(item.diskon) || 0,
+
+            catatan:
+                item.catatan || ''
+
+        })),
+
+
+        // =========================
+        // TOTAL
+        // =========================
+
+        subtotal:
+            summary.subtotal,
+
+        total_diskon:
+            summary.totalDiskon,
+
+        total:
+            summary.total,
+
+
+        // =========================
+        // PEMBAYARAN
+        // =========================
+
+        pembayaran: {
+
+            metode:
+                metode,
+
+            bank:
+                metode === 'Transfer'
+                    ? dataPembayaran.bank || ''
+                    : '',
+
+            ewallet:
+                metode === 'E-Wallet'
+                    ? dataPembayaran.ewallet || ''
+                    : '',
+
+            card:
+                metode === 'Card'
+                    ? dataPembayaran.card || ''
+                    : '',
+
+            nominal:
+                nominalDibayar,
+
+            kembalian:
+                kembalian,
+
+            status:
+                statusPembayaran
+
+        }
+    };
+}
+
+function buildPesananMenunggu(tipePesanan, idPelanggan, namaPelanggan) {
+
+    const summary = getOrderSummary();
+
+    return {
+        transaksi: {
+            tipe_pesanan: tipePesanan,
+            id_pelanggan: idPelanggan
+                ? Number(idPelanggan)
+                : null,
+            nama_pelanggan: namaPelanggan?.trim() || ''
+        },
+
+        items: order.map(item => ({
+            id_menu: item.id_menu,
+            qty: Number(item.qty),
+            diskon: Number(item.diskon) || 0,
+            catatan: item.catatan || ''
+        })),
+
+        subtotal: summary.subtotal,
+        total_diskon: summary.totalDiskon,
+        total: summary.total
+    };
+
+}
+async function simpanPesananMenunggu(tipePesanan, idPelanggan, namaPelanggan) {
+
+    if (order.length === 0) {
+        showToast({
+            pesan: 'Pesanan belum memiliki menu.',
+            bg: 'warning'
+        });
+        return;
+    }
+
+    if (!tipePesanan) {
+        showToast({
+            pesan: 'Silakan pilih jenis pesanan.',
+            bg: 'warning'
+        });
+        return;
+    }
+
+    const summary = getOrderSummary();
+
+    if (summary.total <= 0) {
+        showToast({
+            pesan: 'Total pesanan tidak valid.',
+            bg: 'warning'
+        });
+        return;
+    }
+
+    const pesanan = buildPesananMenunggu(tipePesanan, idPelanggan, namaPelanggan);
+
+    const formData = new FormData();
+
+    formData.append('aksi', 'simpanPesananMenunggu');
+    formData.append('pesanan', JSON.stringify(pesanan));
+
+    try {
+
+        const response = await fetch('?route=kasir', {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (!result.status) {
+            showToast({
+                pesan: result.pesan,
+                bg: result.bg
+            });
+            return;
+        }
+
+        showToast({
+            pesan: result.pesan,
+            bg: result.bg
+        });
+
+        resetTransaksi();
+        setTimeout(() => {
+            window.location.reload();
+        }, 3200);
+
+    } catch (error) {
+
+        console.error(error);
+
+        showToast({
+            pesan: 'Terjadi kesalahan saat menyimpan pesanan.',
+            bg: 'danger'
+        });
+    }
+}
+
+function bukaPembayaranMenunggu(idTransaksi, total) {
+    total = Number(total) || 0;
+
+    window.dispatchEvent(
+        new CustomEvent('buka-pembayaran-menunggu', {
+            detail: {
+                idTransaksi: Number(idTransaksi),
+                total: total
+            }
+        })
+    );
+}
+
+async function konfirmasiPembayaranMenunggu(
+    idTransaksi,
+    total,
+    metode,
+    bank,
+    ewallet,
+    card,
+    nominal
+) {
+    if (!idTransaksi) {
+        showToast({
+            pesan: 'Transaksi menunggu tidak valid.',
+            bg: 'warning'
+        });
+        return;
+    }
+
+    if (!metode) {
+        showToast({
+            pesan: 'Silakan pilih metode pembayaran.',
+            bg: 'warning'
+        });
+        return;
+    }
+
+    // Pesanan menunggu dibayar melalui Bayar,
+    // jadi Hutang ditangani oleh tombol "Jadikan Piutang".
+    if (metode === 'Hutang') {
+        showToast({
+            pesan: 'Untuk menjadikan pesanan sebagai piutang, gunakan tombol "Jadikan Piutang".',
+            bg: 'warning'
+        });
+        return;
+    }
+
+    if (metode === 'Tunai') {
+
+        nominal = Number(nominal) || 0;
+
+        if (nominal <= 0) {
+            showToast({
+                pesan: 'Nominal pembayaran belum diisi.',
+                bg: 'warning'
+            });
+            return;
+        }
+
+        if (nominal < Number(total)) {
+            showToast({
+                pesan: 'Nominal pembayaran belum mencukupi.',
+                bg: 'warning'
+            });
+            return;
+        }
+    }
+
+    if (metode === 'Transfer' && !bank) {
+        showToast({
+            pesan: 'Silakan pilih bank.',
+            bg: 'warning'
+        });
+        return;
+    }
+
+    if (metode === 'E-Wallet' && !ewallet) {
+        showToast({
+            pesan: 'Silakan pilih E-Wallet.',
+            bg: 'warning'
+        });
+        return;
+    }
+
+    if (metode === 'Card' && !card) {
+        showToast({
+            pesan: 'Silakan pilih kartu.',
+            bg: 'warning'
+        });
+        return;
+    }
+
+    const formData = new FormData();
+
+    formData.append(
+        'aksi',
+        'bayarPesananMenunggu'
+    );
+
+    formData.append(
+        'id_transaksi',
+        idTransaksi
+    );
+
+    formData.append(
+        'metode',
+        metode
+    );
+
+    formData.append(
+        'bank',
+        bank || ''
+    );
+
+    formData.append(
+        'ewallet',
+        ewallet || ''
+    );
+
+    formData.append(
+        'card',
+        card || ''
+    );
+
+    formData.append(
+        'nominal',
+        nominal
+    );
+
+    try {
+
+        const response = await fetch('?route=kasir', {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (!result.status) {
+            showToast({
+                pesan: result.pesan,
+                bg: result.bg
+            });
+            return;
+        }
+
+        showToast({
+            pesan: result.pesan,
+            bg: result.bg
+        });
+
+        resetTransaksi();
+        setTimeout(() => {
+            window.location.reload();
+        }, 3200);
+
+    } catch (error) {
+
+        console.error(error);
+
+        showToast({
+            pesan: 'Terjadi kesalahan saat membayar pesanan.',
+            bg: 'danger'
+        });
+    }
+}
+
+async function konfirmasiJadikanPiutang(idTransaksiPiutang, pelangganPiutang) {
+
+    if (!idTransaksiPiutang) {
+        showToast({
+            pesan: 'Transaksi tidak valid.',
+            bg: 'danger'
+        });
+        return;
+    }
+
+    if (!pelangganPiutang) {
+        showToast({
+            pesan: 'Silakan pilih pelanggan.',
+            bg: 'warning'
+        });
+        return;
+    }
+
+    const formData = new FormData();
+
+    formData.append(
+        'aksi',
+        'jadikanPiutang'
+    );
+
+    formData.append(
+        'id_transaksi',
+        idTransaksiPiutang
+    );
+
+    formData.append(
+        'id_pelanggan',
+        pelangganPiutang
+    );
+
+    try {
+
+        const response = await fetch(
+            window.location.href,
+            {
+                method: 'POST',
+                body: formData
+            }
+        );
+
+        const hasil = await response.json();
+
+        if (!hasil.status) {
+
+            showToast({
+                pesan: hasil.pesan || 'Gagal menjadikan piutang.',
+                bg: hasil.bg || 'danger'
+            });
+
+            return;
+        }
+
+        modalPiutang = false;
+
+        showToast({
+            pesan: hasil.pesan || 'Pesanan berhasil dijadikan piutang.',
+            bg: 'success'
+        });
+
+        setTimeout(() => {
+            window.location.reload();
+        }, 3200);
+
+    } catch (error) {
+
+        console.error(error);
+
+        showToast({
+            pesan: 'Terjadi kesalahan saat memproses piutang.',
+            bg: 'danger'
+        });
+    }
+}
 </script>

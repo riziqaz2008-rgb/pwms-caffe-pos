@@ -42,7 +42,7 @@ function tambah($d){
     $nama = $d['nama'];
     $telp = trim($d['telepon'] ?? '');
 
-    if(empty($nama) || $nama == ''){
+    if(trim($nama) == ''){
         return [
             'bg' => 'warning',
             'pesan' => 'Nama kosong, harap diisi.'
@@ -63,7 +63,7 @@ function tambah($d){
 
     $qcn = query("SELECT * FROM pelanggan WHERE nama_pelanggan='$nama'");
     $cn = mysqli_fetch_assoc($qcn);
-    if(mysqli_num_rows($cn) > 0){
+    if(mysqli_num_rows($qcn) > 0){
         return [
             'bg' => 'info',
             'pesan' => 'Nama pelanggan '.$cn['nama_pelanggan'].' sudah ada. Harap ganti nama yang lain'
@@ -72,7 +72,7 @@ function tambah($d){
 
     $qct = query("SELECT * FROM pelanggan WHERE telepon='$telp'");
     $ct = mysqli_fetch_assoc($qct);
-    if(mysqli_num_rows($ct) > 0){
+    if(mysqli_num_rows($qct) > 0){
         return [
             'bg' => 'info',
             'pesan' => 'Nomor telepon '.$ct['telepon'].' sudah ada. Harap ganti telepon yang lain'

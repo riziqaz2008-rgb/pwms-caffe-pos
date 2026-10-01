@@ -79,4 +79,9 @@ function kalenderInd($tgl, $f='j F Y'){
 
 $no = 1;
 $hariini = date('Y-m-d');
+
+$pengaturan = query("SELECT * FROM pengaturan");
+$p = mysqli_fetch_assoc($pengaturan);
+
+$nama_usaha = $p['nama_usaha'];
 ?>

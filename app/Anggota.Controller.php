@@ -61,7 +61,7 @@ function tambah($d){
     $user = $d['username'];
     $pw = $d['password'];
 
-    if(empty($nama) || $nama == ''){
+    if(trim($nama) == ''){
         return [
             'bg' => 'warning',
             'pesan' => 'Nama kosong, harap diisi.'

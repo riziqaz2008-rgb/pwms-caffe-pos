@@ -115,11 +115,11 @@
                     }
                     ?>
                     <tr>
-                        <td class="px-5 py-4"><?= $no++ ?></td>
-                        <td class="px-5 py-4"><?= $d['nama'] ?></td>
-                        <td class="px-5 py-4"><?= $d['telepon'] ?></td>
-                        <td class="px-5 py-4"><?= $d['nama_role'] ?></td>
-                        <td class="px-5 py-4">
+                        <td class="px-5 py-4 font-bold"><?= $no++ ?></td>
+                        <td class="px-5 py-4 font-bold"><?= $d['nama'] ?></td>
+                        <td class="px-5 py-4 font-bold"><?= $d['telepon'] ?></td>
+                        <td class="px-5 py-4 font-bold"><?= $d['nama_role'] ?></td>
+                        <td class="px-5 py-4 font-bold">
                             <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg <?= $ws ?> text-xs font-bold text-white">
                                 <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
                                 <?= $s ?>
@@ -166,7 +166,7 @@
                                             value: <?= htmlspecialchars($d['id_anggota']) ?>
                                         }
                                     ]
-                                });"    
+                                });" 
                                 class="w-10 h-10 rounded-lg bg-red-500 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Hapus menu">
                                     <i class="bx bxs-trash"></i>
                                 </button>

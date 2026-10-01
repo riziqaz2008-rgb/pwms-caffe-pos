@@ -1,7 +1,22 @@
 <?php
     session_start();
+    if(!isset($_SESSION['id_user'])){
+      header("location: ../Login.php");
+      exit;
+    }
+
     require_once __DIR__ . '/../../../app/Global.Controller.php';
     require_once __DIR__ . '/../../../routes/web.php';
+
+    $idAnggota = $_SESSION['id_anggota'];
+    $idUser = (int)$_SESSION['id_user'];
+    $aid = query("SELECT * FROM anggota WHERE id_anggota= '$idAnggota'");
+    $uid = query("SELECT * FROM users u LEFT JOIN roles r ON u.id_role = r.id_role WHERE id_anggota = '$idAnggota'");
+    $dataAnggota = mysqli_fetch_assoc($aid);
+    $dataUser = mysqli_fetch_assoc($uid);
+
+    $hprofil = strtoupper(substr($dataAnggota['nama'], 0, 1));
+
     ob_start();
     include $page;
     $content = ob_get_clean();
@@ -60,7 +75,7 @@
                 </div>
 
                 <!-- INI TOAST JIR -->
-                <div id="liveToast" class="fixed top-28 right-5 z-50 flex items-center w-full max-w-xs p-4 rounded-lg shadow-lg text-white hidden opacity-0 transition-all duration-300 transform translate-y-2 bg-emerald-600" role="alert">
+                <div id="liveToast" class="fixed top-28 right-5 z-[9991] flex items-center w-full max-w-xs p-4 rounded-lg shadow-lg text-white hidden opacity-0 transition-all duration-300 transform translate-y-2 bg-emerald-600" role="alert">
                     <i id="toastIcon" class="bx bxs-check-circle text-xl text-white"></i>
                     <div id="pesanToast" class="ms-2.5 text-white text-sm font-bold border-s border-white/30 ps-3.5"></div>
                     <button type="button" id="toastCloseBtn" class="ms-auto flex items-center justify-center text-white hover:bg-white/20 font-medium rounded text-sm h-8 w-8 focus:outline-none transition" aria-label="Close">
@@ -125,6 +140,17 @@
         <?php endif; ?>
 
         <script>
+            document.querySelectorAll('.input-delay').forEach(input => {
+                let timer;
+                    
+                input.addEventListener('input', function () {
+                    clearTimeout(timer);
+                    
+                    timer = setTimeout(() => {
+                        console.log(this.form.submit());
+                    }, 500);
+                });
+            });
 
             // INI GLOBAL TOAST JS YE..
 
@@ -142,6 +168,13 @@
                     'bg-amber-500',
                     'bg-blue-600'
                 );
+
+                // icon.classList.remove(
+                //     'bx bxs-check-circle text-xl text-white',
+                //     'bx bxs-x-circle text-xl text-white',
+                //     'bx bxs-alert-triangle text-xl text-white',
+                //     'bx bxs-info-circle text-xl text-white'
+                // );
 
                 if (d.bg === 'success') {
                     toast.classList.add('bg-emerald-600');

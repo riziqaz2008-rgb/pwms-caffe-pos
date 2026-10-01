@@ -1,3 +1,36 @@
+<?php
+session_start();
+require_once __DIR__ . '/../../app/Global.Controller.php';
+
+if(!$conn){
+    $_SESSION['error'] = 'Terjadi gangguan sistem. Silahkan coba lagi.';
+}
+
+if(isset($_POST['login'])){
+    $u= trim($_POST['username'] ?? '');
+    $p = trim($_POST['password'] ?? '');
+    
+    if ($u === '' || $p === '') {
+        $_SESSION['error'] = 'Username atau password kosong.';
+        exit;
+    }
+
+    $stmt = $conn->prepare("SELECT u.id_user, a.id_anggota FROM users u LEFT JOIN anggota a ON a.id_anggota = u.id_anggota WHERE username=? AND password=?");
+    $stmt->bind_param("ss", $u, $p);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $data = $result->fetch_assoc();
+
+    if ($data) {
+        $_SESSION['id_user'] = $data['id_user'];
+        $_SESSION['id_anggota'] = $data['id_anggota'];
+        header("Location: layouts/app.php");
+        exit;
+    } else {
+        $_SESSION['error'] = 'Username atau password salah.';
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,7 +38,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Kedaiku | PW</title>
+    <title><?= $nama_usaha ?> | POS</title>
 
     <link rel="icon" type="image/png" href="/assets/svg/cursor.svg">
     <link rel="stylesheet" href="http://localhost:5174/resources/css/app.css">
@@ -47,13 +80,13 @@
 
                         <h1 class="text-2xl font-black text-slate-900 dark:text-white">
 
-                            Kedai<span class="text-primary">Ku</span>
+                            <?= $nama_usaha ?>
 
                         </h1>
 
                         <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mt-1">
 
-                            Sistem Manajemen Cafe
+                            Sistem Manajemen POS
 
                         </p>
 
@@ -74,6 +107,14 @@
                         </p>
 
                     </div>
+
+                    <?php if(isset($_SESSION['error'])): ?>
+                        <div class="flex items-start sm:items-center p-4 mb-4 text-sm text-rose-600 rounded-lg bg-rose-100 border border-danger-subtle" role="alert">
+                            <svg class="w-4 h-4 me-2 shrink-0 mt-0.5 sm:mt-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+                            <p><span><?= $_SESSION['error']; ?></p>
+                        </div>
+                        <?php unset($_SESSION['error']); ?>
+                    <?php endif; ?>
 
                     <form action="" method="POST">
 
@@ -101,6 +142,7 @@
                                         placeholder="Masukkan username"
                                         autocomplete="username"
                                         class="w-full pl-12 pr-4 py-3.5 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-xl border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                                        required
                                     >
 
                                 </div>
@@ -109,7 +151,7 @@
 
                             <div>
 
-                                <div class="flex items-center justify-between">
+                                <div class="flex items-center">
 
                                     <label
                                         for="password"
@@ -119,15 +161,6 @@
                                         Password
 
                                     </label>
-
-                                    <a
-                                        href="#"
-                                        class="text-xs font-bold text-primary hover:text-blue-700 transition"
-                                    >
-
-                                        Lupa password?
-
-                                    </a>
 
                                 </div>
 
@@ -142,6 +175,7 @@
                                         placeholder="Masukkan password"
                                         autocomplete="current-password"
                                         class="w-full pl-12 pr-12 py-3.5 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-xl border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                                        required
                                     >
 
                                     <button
@@ -161,28 +195,9 @@
 
                             </div>
 
-                            <div class="flex items-center justify-between">
-
-                                <label class="flex items-center gap-3 cursor-pointer">
-
-                                    <input
-                                        type="checkbox"
-                                        name="remember"
-                                        class="w-4 h-4 accent-primary cursor-pointer"
-                                    >
-
-                                    <span class="text-sm font-bold text-slate-600 dark:text-slate-300">
-
-                                        Ingat saya
-
-                                    </span>
-
-                                </label>
-
-                            </div>
-
                             <button
                                 type="submit"
+                                name="login"
                                 class="w-full flex items-center justify-center gap-2 bg-primary text-white font-black px-5 py-3.5 rounded-xl cursor-pointer hover:bg-blue-700 active:scale-[0.98] transition-all duration-200"
                             >
 
@@ -204,7 +219,7 @@
 
                         <p class="text-xs text-gray-400 dark:text-gray-500 font-medium">
 
-                            © 2026 KedaiKu · Sistem Manajemen Cafe
+                            © 2026 POS · Sistem Manajemen POS
 
                         </p>
 

@@ -9,11 +9,11 @@
                     <div class="min-w-0">
                         <div class="flex items-center gap-3 flex-wrap">
                             <h1 class="text-black dark:text-white font-black text-2xl">
-                                Kelola Hutang
+                                Data Hutang
                             </h1>
                         </div>
                         <p class="text-sm text-gray-500 font-medium mt-1">
-                            Kelola hutang yang tersedia pada pembayaran cafe.
+                            Melihat hutang yang tersedia pada pembayaran.
                         </p>
                     </div>
                 </div>
@@ -26,7 +26,7 @@
                 <div>
                     <p class="text-[10px] uppercase tracking-wider font-black text-gray-400">Total Piutang</p>
                     <div class="flex items-end gap-2 mt-1">
-                        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white leading-none">Rp.0</h2>
+                        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white leading-none">Rp <?= number_format($totalNominalPiutang, 0, ",", ".") ?></h2>
                         <span class="text-xs font-bold text-gray-400">piutang</span>
                     </div>
                 </div>
@@ -39,7 +39,7 @@
                 <div>
                     <p class="text-[10px] uppercase tracking-wider font-black text-gray-400">Belum Lunas</p>
                     <div class="flex items-end gap-2 mt-1">
-                        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white leading-none">0</h2>
+                        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white leading-none"><?= $totalPiutang ?></h2>
                         <span class="text-xs font-bold text-gray-400">Belum</span>
                     </div>
                 </div>
@@ -59,13 +59,9 @@
                             Daftar Hutang
                         </h2>
                     </div>
-
-                    <p class="text-xs font-medium text-slate-400 mt-1 ml-3.5">
-                        Kelola hutang yang tersedia di KedaiKu.
-                    </p>
                 </div>
                 <div class="flex items-center gap-3 w-full sm:w-auto">
-                    <form action="" method="GET" class="flex-1 sm:w-[280px]">
+                    <form action="" method="GET" class="flex-1 sm:w-[280px]" autocomplete="off">
                         <div class="relative flex items-center gap-2 p-1.5 rounded-lg border-2 border-gray-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 focus-within:ring-2 focus-within:ring-primary transition-all min-h-[48px]">
                             <div class="flex items-center text-gray-400 pl-2 shrink-0">
                                 <i class="bx bx-search text-lg"></i>
@@ -75,9 +71,9 @@
                                 name="search"
                                 type="search"
                                 id="search-dropdown"
-                                oninput="doLiveSearch(this.value)"
+                                oninput=""
                                 class="flex-1 px-1 py-1 bg-transparent text-slate-900 dark:text-slate-100 text-sm placeholder:text-gray-400 focus:outline-none font-medium min-w-0"
-                                placeholder="Cari metode...">
+                                placeholder="Cari hutang...">
                         </div>
                     </form>
                 </div>
@@ -92,68 +88,44 @@
                             <th class="text-left font-bold px-5 py-4">Tanggal</th>
                             <th class="text-left font-bold px-5 py-4">Pelanggan</th>
                             <th class="text-left font-bold px-5 py-4">Total</th>
-                            <th class="text-left font-bold px-5 py-4">Sisa</th>
-                            <th class="text-left font-bold px-5 py-4">Status</th>
-                            <th class="text-left font-bold px-5 py-4">Kasir</th>
-                            <th class="text-center font-bold px-5 py-4">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody id="body-tabel-kategori">
+                    <tbody id="">
+                    <?php if(mysqli_num_rows($data)): ?>
+                        <?php while($d = mysqli_fetch_assoc($data)): ?>
                         <tr>
-                            <td class="px-5 py-4 font-bold text-gray-500 w-12">1</td>
+                            <td class="px-5 py-4 font-bold text-gray-500 w-12"><?= $no++ ?></td>
                             <td class="px-5 py-4">
                                 <span class="inline-flex items-center gap-2 px-6 py-2 rounded-lg bg-primary text-xs font-bold text-white">
                                     TRX-0001
                                 </span>
                             </td>
                             <td class="px-5 py-4">
-                                <span class="font-bold text-slate-800">12/06/2026</span>
+                                <span class="font-bold text-slate-800"><?= kalenderInd($d['tanggal'], 'd F Y') ?></span>
                             </td>
                             <td class="px-5 py-4">
-                                <span class="font-bold text-slate-800">Sule Prikitiw</span>
+                                <span class="font-bold text-slate-800"><?= $d['nama_pelanggan'] ?></span>
                             </td>
                             <td class="px-5 py-4">
-                                <span class="font-bold text-slate-800">Rp. 25.000</span>
+                                <span class="font-bold text-slate-800">Rp <?= number_format($d['total_transaksi'], 0, ",", ".") ?></span>
                             </td>
-                            <td class="px-5 py-4">
-                                <span class="font-bold text-red-600">0</span>
-                            </td>
-                            <td class="px-5 py-4">
-                                <span class="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-primary text-xs font-bold text-white">
-                                    Lunas
-                                </span>
-                            </td>
-                            <td class="px-5 py-4">
-                                <span class="font-bold text-slate-800">Elon Musk</span>
-                            </td>
-                            <td class="px-5 py-4 w-36 whitespace-nowrap">
-                                <div class="flex items-center justify-center gap-2">
-                                    <button type="button" onclick="editMenu(1)" class="w-10 h-10 rounded-lg bg-gray-100 text-slate-500 flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Edit menu">
-                                        <i class="bx bxs-note"></i>
-                                    </button>
-                                    <button type="button" onclick="hapusMenu(1)" class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Hapus menu">
-                                        <i class="bx bxs-wallet-note"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        <!-- YANG DI BAWAH INI CONTOH JIKA VALUE NYA KOSONG. -->
-
-                            <!-- <td colspan="5">
+                        </tr>
+                    <?php endwhile; ?>
+                        <?php else: ?>
+                        <tr>
+                            <td colspan="5">
                                 <div class="flex flex-col items-center justify-center py-12 px-4 text-center bg-gray-50">
                                     <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4 border border-gray-200/80">
                                         <i class="bx bx-credit-card text-4xl text-gray-300"></i>
                                     </div>
-                                    <h3 class="text-base font-black text-slate-800 mb-1">Metode Belum Tersedia</h3>
+                                    <h3 class="text-base font-black text-slate-800 mb-1">Hutang Belum Ada</h3>
                                     <p class="text-xs text-gray-400 max-w-sm mb-5">
-                                        Belum ada metode pembayaran yang ditambahkan atau hasil pencarian tidak cocok.
+                                        Belum ada hutang atau hasil pencarian tidak cocok.
                                     </p>
-                                    <button type="button" @click="TambahMetode = true" class="px-4 py-3 bg-primary text-white text-sm font-bold rounded-lg hover:opacity-90 transition-all flex items-center gap-2">
-                                        <i class="bx bxs-plus text-base"></i>
-                                        <span>Tambah Metode</span>
-                                    </button>
                                 </div>
-                            </td> -->
+                            </td>
                         </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -162,34 +134,43 @@
                 <nav aria-label="Pagination">
                     <ul class="inline-flex items-center gap-1.5 p-1.5 rounded-lg border-2 border-gray-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm font-medium">
 
+                       <li>
+                           <?php if($currentPage > 1): ?>
+                           <a href="?<?= http_build_query(array_merge($_GET, ['page' => $currentPage - 1])) ?>"
+                               class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                               Previous
+                           </a>
+                           <?php else: ?>
+                           <span
+                               class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-400 dark:text-slate-500 opacity-50 cursor-not-allowed pointer-events-none">
+                               Previous
+                           </span>
+                           <?php endif; ?>
+                       </li>
+                        
+                        <?php for($i = 1; $i <= $totalPage; $i++): ?>
                         <li>
-                            <a href="?page=1"
-                                class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-400 dark:text-slate-500 opacity-50 cursor-not-allowed pointer-events-none">
-                                Previous
+                            <a href="?<?= http_build_query(array_merge($_GET, ['page' => $i])) ?>"
+                                class="flex items-center justify-center w-9 h-9 rounded-lg <?= $i == $currentPage ? 'bg-primary text-white font-bold shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors' ?>">
+                                <?= $i  ?>
                             </a>
                         </li>
-
+                        <?php endfor; ?>
+                        
                         <li>
-                            <a href="?page=1"
-                                class="flex items-center justify-center w-9 h-9 rounded-lg bg-primary text-white font-bold shadow-sm">
-                                1
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="?page=2"
-                                class="flex items-center justify-center w-9 h-9 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
-                                2
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="?page=2"
+                            <?php if($currentPage < $totalPage): ?>
+                            <a href="?<?= http_build_query(array_merge($_GET, ['page' => $currentPage + 1])) ?>"
                                 class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
                                 Next
                             </a>
+                            <?php else: ?>
+                            <span
+                                class="flex items-center justify-center px-3.5 h-9 rounded-lg text-slate-400 dark:text-slate-500 opacity-50 cursor-not-allowed pointer-events-none">
+                                Next
+                            </span>
+                            <?php endif; ?>
                         </li>
-
+                            
                     </ul>
                 </nav>
             </div>

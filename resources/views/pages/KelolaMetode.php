@@ -96,8 +96,7 @@
                             name="cari"
                             type="search"
                             id="search-dropdown"
-                            oninput="this.form.submit()"
-                            class="flex-1 px-1 py-1 bg-transparent text-slate-900 dark:text-slate-100 text-sm placeholder:text-gray-400 focus:outline-none font-medium min-w-0"
+                            class="input-delay flex-1 px-1 py-1 bg-transparent text-slate-900 dark:text-slate-100 text-sm placeholder:text-gray-400 focus:outline-none font-medium min-w-0"
                             placeholder="Cari metode..."
                             value="<?= htmlspecialchars($_GET['cari'] ?? '')?>"
                             >
@@ -208,13 +207,12 @@
                                     "subtitle" => "Tambahkan metode pembayaran baru untuk pembayaran.",
                                     "icon" => "bxs-credit-card",
                                     "iconBg" => "bg-primary",
-                                    "action" => "/metode-pembayaran/store",
                                     "method" => "POST",
-                                    "buttonText" => "Simpan Metode",
+                                    "buttonText" => "Tambahkan",
                                     "buttonIcon" => "bxs-save",
                                     "buttonColor" => "bg-primary hover:bg-blue-700",
                                     "nameBtn" => "aksi",
-                                    "value" => "tambah"  
+                                    "value" => "tambah"
                                 ]) ?>);
                                  modalTambah();'
                                 class="px-4 py-3 bg-primary text-white text-sm font-bold rounded-lg hover:opacity-90 transition-all flex items-center gap-2">

@@ -6,6 +6,7 @@ switch ($route) {
 
     case 'dashboard':
         
+        include __DIR__ . '/../app/Dashboard.Controller.php';
         $page = __DIR__ . '/../resources/views/pages/Dashboard.php';
 
         break;
@@ -46,11 +47,12 @@ switch ($route) {
         
         include  __DIR__ . '../../app/Metode.Controller.php';
         $page = __DIR__ . '/../resources/views/pages/KelolaMetode.php';
-
-        break;
-
-    case 'hutang':
         
+        break;
+        
+    case 'hutang':
+            
+        include  __DIR__ . '../../app/Hutang.Controller.php';
         $page = __DIR__ . '/../resources/views/pages/Hutang.php';
 
         break;
@@ -64,23 +66,25 @@ switch ($route) {
     case 'anggota':
         include  __DIR__ . '../../app/Anggota.Controller.php';
         $page = __DIR__ . '/../resources/views/pages/Anggota.php';
-
+        
         break;
-
+        
     case 'hak/akses':
-        
+            
         $page = __DIR__ . '/../resources/views/pages/HakAkses.php';
-
+            
         break;
-
+            
     case 'laporan':
-        
+                
+        include  __DIR__ . '../../app/Laporan.Controller.php';
         $page = __DIR__ . '/../resources/views/pages/Laporan.php';
-
-        break;
-
-    case 'pengaturan':
         
+        break;
+        
+    case 'pengaturan':
+            
+        include  __DIR__ . '../../app/Pengaturan.Controller.php';
         $page = __DIR__ . '/../resources/views/pages/Pengaturan.php';
 
         break;

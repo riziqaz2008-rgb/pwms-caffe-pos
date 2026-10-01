@@ -35,7 +35,7 @@
                         <h2 class="text-3xl md:text-4xl font-black text-gray-900 leading-tight">
                             Selamat datang,
                             <span class="text-primary">
-                                Super Admin!
+                                <?= $dataAnggota['nama'] ?>!
                             </span>
                         </h2>
                         <p class="text-sm md:text-base text-gray-500 mt-3 max-w-2xl leading-relaxed">
@@ -71,7 +71,7 @@
                             Total Pendapatan
                         </p>
                         <h2 class="text-3xl font-black text-gray-900">
-                            Rp1.280.320
+                            <?= formatRupiahLaporan($totalPendapatan) ?>
                         </h2>
                         <div class="flex items-center gap-1.5 mt-3">
                             <i class="bx bxs-trending-up text-lg text-primary"></i>
@@ -92,7 +92,7 @@
                             Transaksi Hari Ini
                         </p>
                         <h2 class="text-3xl font-black text-gray-900">
-                            42
+                            <?= $totalTransaksi ?>
                         </h2>
                         <p class="text-xs font-medium text-gray-400 mt-3">
                             Transaksi berhasil dicatat
@@ -110,7 +110,7 @@
                             Total Menu
                         </p>
                         <h2 class="text-3xl font-black text-gray-900">
-                            18
+                            <?= totalmenuaktif() ?>
                         </h2>
                         <p class="text-xs font-medium text-gray-400 mt-3">
                             Menu aktif tersedia

@@ -1,3 +1,6 @@
+<?php
+$kr = $dataUser['kode_role'];
+?>
 <section id="SideBar">
     <div x-show="sidebarOpen" @click="sidebarOpen = false" class="fixed inset-0 z-40 bg-black/50 transition-opacity lg:hidden" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"></div>
     <aside id="MainBodySideBar" class="fixed inset-y-0 left-0 z-50 bg-white border-e border-gray-200/50 h-screen overflow-hidden transition-all duration-500 ease-[cubic-bezier(.22,1,.36,1)] lg:sticky lg:top-0" :class="sidebarOpen ? 'translate-x-0 w-full sm:w-72' : '-translate-x-full w-72 lg:translate-x-0 lg:w-24'">
@@ -9,7 +12,7 @@
                 <div class="hidden group-hover:flex items-center">
                     <i class="bx bxs-dock-left text-xl"></i>
                 </div>    
-                <div x-show="sidebarOpen" class="font-black ms-3">Caffe<span class="text-primary">PW</span></div>
+                <div x-show="sidebarOpen" class="font-black ms-3">POS</div>
             </div>
             <ul class="flex flex-col items-start h-screen my-5 px-5 mb-4">
                 <div class="w-full">
@@ -38,6 +41,7 @@
                             </span>
                         </a>
                     </li>
+                    <?php if(in_array($kr, ['super_admin','admin'])): ?>
                     <li>
                         <button type="button" @click="if (!sidebarOpen) { sidebarOpen = true; Menu = true; } else { Menu = !Menu; }" class="relative w-full justify-between flex items-center px-4 py-4 rounded-lg cursor-pointer <?= $route === "menu" || $route === "menu/kategori" ? 'bg-gray-50 text-primary font-bold' : 'text-gray-400/80 hover:bg-black/5 duration-300 transition-all ease-in-out' ?>">
                             <div class="flex items-center gap-4">
@@ -80,7 +84,8 @@
                                Metode
                            </span>
                         </a>
-                    </li>    
+                    </li>   
+                    <?php endif; ?> 
                     <li>
                         <a href="?route=hutang" class="relative flex justify-start items-center px-4 py-4 rounded-lg gap-4 mb-8 <?= $route === "hutang" ? 'bg-gray-50 text-primary font-bold' : 'text-gray-400/80 hover:bg-black/5 duration-300 transition-all ease-in-out' ?>">
                             <?php if ($route === 'hutang'): ?>
@@ -96,6 +101,7 @@
                     System
                 </div>
                 <div class="w-full">
+                    <?php if(in_array($kr, ['super_admin','admin'])): ?>
                     <li>
                         <button type="button" @click="if (!sidebarOpen) { sidebarOpen = true; Pengguna = true; } else { Pengguna = !Pengguna; }" class="relative w-full justify-between flex items-center px-4 py-4 rounded-lg cursor-pointer <?= $route === "pelanggan" || $route === "anggota" ? 'bg-gray-50 text-primary font-bold' : 'text-gray-400/80 hover:bg-black/5 duration-300 transition-all ease-in-out' ?>">
                             <div class="flex items-center gap-4">
@@ -128,6 +134,7 @@
                             </div>
                         </div>
                     </li>
+                    <?php endif; ?>
                     <li>
                         <a href="?route=laporan" class="relative flex justify-start items-center px-4 py-4 rounded-lg gap-4 <?= $route === "laporan" ? 'bg-gray-50 text-primary font-bold' : 'text-gray-400/80 hover:bg-black/5 duration-300 transition-all ease-in-out' ?>">
                             <?php if ($route === 'laporan'): ?>
@@ -140,6 +147,7 @@
                         </a>
                     </li>
                 </div>            
+                <?php if(in_array($kr, ['super_admin','admin'])): ?>
                 <div>
                     <li>
                         <a href="?route=pengaturan" class="relative flex justify-start items-center px-4 py-4 rounded-lg gap-4 <?= $route === "pengaturan" ? 'bg-gray-50 text-primary font-bold' : 'text-gray-400/80 hover:bg-black/5 duration-300 transition-all ease-in-out' ?>">
@@ -151,20 +159,30 @@
                                 Pengaturan
                             </span>
                         </a>
+                    </li>                  
+                    <li>
+                        <a href="logout.php" class="flex sm:hidden relative justify-center items-center px-4 py-4 bg-rose-600 text-white rounded-lg gap-4 mt-10">                           
+                            <i class="bx bxs-door-open text-xl"></i>
+                            <span x-show="sidebarOpen" x-transition class="font-semibold whitespace-nowrap">
+                                Logout
+                            </span>
+                        </a>
                     </li>
                 </div>
+                <?php endif; ?>
             </ul>  
-            <div class="w-full bg-white sticky bottom-0 py-6 ps-3.5">
-                <div class="hidden xl:flex items-center">
+            <div class="flex items-center w-full bg-white sticky bottom-0 py-6 ps-3.5">
+                <div class="hidden sm:flex items-center">
                     <span class="inline-block h-3.5 bg-gray-300 ml-3 align-middle"></span>
-                    <button type="button" class="w-11 h-11 rounded-full overflow-hidden ring-2 ring-primary bg-primary flex items-center justify-center cursor-pointer transition-all duration-200 active:scale-95 hover:border-blue-600 focus:outline-none">
-                       <span class="font-black text-white">AR</span>
+                    <button type="button" class="group w-11 h-11 rounded-full overflow-hidden ring-2 ring-primary hover:ring-rose-600 bg-primary hover:bg-rose-600 flex items-center justify-center cursor-pointer transition-all duration-300 ease-in-out active:scale-95 hover:border-blue-600 focus:outline-none">
+                       <span class="font-black text-white group-hover:hidden"><?= $hprofil ?></span>
+                       <a href="../partials/logout.php" class="font-black text-white text-xl hidden group-hover:inline"><i class="bx bxs-door-open-alt"></i></a>
                     </button> 
                     <div class="flex flex-col text-left ms-4">
-                        <span x-show="sidebarOpen" class="text-[10px] font-black text-primary uppercase tracking-widest leading-none">Super Admin</span>
-                        <span x-show="sidebarOpen" class="text-sm font-black text-slate-700 mt-1.5 leading-none">Achmad Riziq Al Azzim</span>
+                        <span x-show="sidebarOpen" class="text-[10px] font-black text-primary uppercase tracking-widest leading-none"><?= $dataUser['nama_role'] ?></span>
+                        <span x-show="sidebarOpen" class="text-sm font-black text-slate-700 mt-1.5 leading-none"><?= $dataAnggota['nama'] ?></span>
                     </div>
-                </div>
+                </div>             
             </div>
         </div>
     </aside>

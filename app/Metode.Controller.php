@@ -70,7 +70,7 @@ function tambah($d){
         ];
     }
 
-    $qcn = query("SELECT * FROM metode WHERE nama_metode='$nama'");
+    $qcn = query("SELECT * FROM metode WHERE nama_metode='$nama' AND id_tipe='$tipe'");
     $cn = mysqli_fetch_assoc($qcn);
     if(mysqli_num_rows($qcn) > 0){
         return [

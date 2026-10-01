@@ -81,10 +81,10 @@
             <?php if(mysqli_num_rows($data)): ?>
                 <?php while($d = mysqli_fetch_assoc($data)): ?>
                     <tr>
-                        <td class="px-5 py-4"><?= $no++ ?></td>
-                        <td class="px-5 py-4"><?= $d['nama_pelanggan'] ?></td>
-                        <td class="px-5 py-4"><?= $d['telepon'] ?></td>
-                        <td class="px-5 py-4">
+                        <td class="px-5 py-4 font-medium"><?= $no++ ?></td>
+                        <td class="px-5 py-4 font-medium"><?= $d['nama_pelanggan'] ?></td>
+                        <td class="px-5 py-4 font-medium"><?= $d['telepon'] ?></td>
+                        <td class="px-5 py-4 font-medium">
                             <div class="flex items-center justify-center gap-2">
                                 <button type="button" 
                                 onclick='showGlobalModal(<?= json_encode([

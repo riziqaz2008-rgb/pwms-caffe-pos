@@ -7,7 +7,7 @@
                     <i class="bx bxs-store text-xl text-white"></i>
                 </div>
                 <h1 class="flex lg:hidden font-black ml-3">
-                    Caffe <span class="text-primary">PW</span>
+                    POS
                 </h1>
             </button>
 
@@ -18,8 +18,8 @@
         <div class="flex items-center">
             <div class="hidden lg:flex items-center space-x-4">
                 <div class="flex flex-col text-left">
-                    <span class="text-[10px] font-black text-primary uppercase tracking-widest leading-none">Super Admin</span>
-                    <span class="text-base font-black text-slate-900 mt-1.5 leading-none">Achmad Riziq Al Azzim</span>
+                    <span class="text-[10px] font-black text-primary uppercase tracking-widest leading-none"><?= $dataUser['nama_role'] ?></span>
+                    <span class="text-base font-black text-slate-900 mt-1.5 leading-none"><?= $dataAnggota['nama'] ?></span>
                 </div>
             </div>
         </div>
@@ -34,7 +34,7 @@
                     Outlet
                 </span>
                 <span class="text-sm font-black text-gray-900">
-                    PW Caffe & Resto
+                    <?= $nama_usaha ?>
                 </span>
             </div>
         </div> 
