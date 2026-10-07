@@ -279,6 +279,7 @@ function editMenu($d){
 
 function hapusMenu($d){
     global $conn;
+
     $id = (int) ($d['id'] ?? 0);
     if($id <= 0){
         return [
@@ -287,28 +288,48 @@ function hapusMenu($d){
         ];
     }
     $data = query("
-        SELECT foto
+        SELECT foto, nama
         FROM menu
         WHERE id_menu = $id
     ");
+
     if(mysqli_num_rows($data) == 0){
         return [
             'bg' => 'error',
             'pesan' => 'Data menu tidak ditemukan.'
         ];
     }
+
     $menu = mysqli_fetch_assoc($data);
     $foto = $menu['foto'] ?? '';
+    $nama = $menu['nama'] ?? 'Menu';
+
+    $cek = query("
+        SELECT id_menu
+        FROM detail_transaksi
+        WHERE id_menu = $id
+        LIMIT 1
+    ");
+
+    if(mysqli_num_rows($cek) > 0){
+        return [
+            'bg' => 'warning',
+            'pesan' => "Menu tidak dapat dihapus karena masih digunakan pada data transaksi atau laporan."
+        ];
+    }
+
     $q = query("
         DELETE FROM menu
         WHERE id_menu = $id
     ");
+
     if(!$q){
         return [
             'bg' => 'error',
             'pesan' => 'Menu gagal dihapus. Harap coba lagi.'
         ];
     }
+    
     if(!empty($foto)){
 
         $folder = 'public/images/';
@@ -318,6 +339,7 @@ function hapusMenu($d){
             unlink($fileFoto);
         }
     }
+
     return [
         'bg' => 'success',
         'pesan' => 'Menu berhasil dihapus.'

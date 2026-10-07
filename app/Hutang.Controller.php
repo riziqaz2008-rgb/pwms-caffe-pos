@@ -189,3 +189,76 @@ if (!mysqli_stmt_execute($stmt)) {
 
 
 $data = mysqli_stmt_get_result($stmt);
+
+function bayarHutang($d){
+    global $conn;
+    $idTransaksi = (int) ($d['id'] ?? 0);
+
+    if ($idTransaksi <= 0) {
+        return [
+            'status' => false,
+            'bg' => 'danger',
+            'pesan' => 'ID Transaksi tidak valid.'
+        ];
+    } else {
+
+    $stmt = mysqli_prepare(
+        $conn,
+        "UPDATE transaksi
+         SET status_pembayaran = 2,
+             uang_diterima = total,
+             kembalian = 0
+         WHERE id_transaksi = ?
+           AND status_transaksi = 1
+           AND status_pembayaran = 1
+           AND id_metode IS NULL"
+    );
+
+    mysqli_stmt_bind_param(
+        $stmt,
+        "i",
+        $idTransaksi
+    );
+
+    if (mysqli_stmt_execute($stmt)) {
+
+        if (mysqli_stmt_affected_rows($stmt) > 0) {
+            return [
+                'status' => true,
+                'bg' => 'success',
+                'pesan' => 'Transaksi hutang berhasil jadi lunas.'
+            ];
+        } else {
+            return [
+                'status' => false,
+                'bg' => 'warning',
+                'pesan' => 'Transaksi tidak ditemukan / bukan hutang / sudah lunas.'
+            ];
+        }
+
+    } else {
+        return [
+            'status' => false,
+            'bg' => 'danger',
+            'pesan' => 'Terjadi kesalahan.'
+        ];
+    }
+
+        mysqli_stmt_close($stmt);
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    $aksi = $_POST['aksi'] ?? '';
+
+    if ($aksi === 'bayar_hutang') {
+        $hasil = bayarHutang($_POST);
+        $_SESSION['toast'] = $hasil;
+        header("Location: ?route=hutang");
+        exit;
+    }
+}
+
+$hasil = $_SESSION['toast'] ?? null;
+unset($_SESSION['toast']);

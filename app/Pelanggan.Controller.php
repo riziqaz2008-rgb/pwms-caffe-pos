@@ -121,13 +121,25 @@ function edit($d){
 }
 
 function hapus($d){
+    global $conn;
+    
     $id = (int)$d['id'];
 
     $c = query("SELECT * FROM pelanggan WHERE id_pelanggan='$id'");
+    $cn = mysqli_fetch_assoc($c);
+
     if(mysqli_num_rows($c) == 0){
         return [
             'bg' => 'info',
             'pesan' => 'ID pelanggan tidak ditemukan.',
+        ];
+    }
+    
+    $ct = query("SELECT * FROM transaksi WHERE id_pelanggan='$id'");
+    if(mysqli_num_rows($ct) > 0){
+        return [
+            'bg' => 'info',
+            'pesan' => 'Pelanggan '.$cn['nama_pelanggan'].' tidak dapat dihapus karena masih digunakan pada data transaksi atau laporan.'
         ];
     }
 

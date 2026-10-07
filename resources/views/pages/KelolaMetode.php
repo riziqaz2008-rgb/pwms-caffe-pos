@@ -143,6 +143,7 @@
                         </td>
                         <td class="px-5 py-4 w-36 whitespace-nowrap">
                             <div class="flex items-center justify-center gap-2">
+                                <?php if($d['kode_tipe'] !== 'tunai'): ?>
                                 <button type="button" 
                                 onclick='showGlobalModal(<?= json_encode([
                                     "title" => "Edit Metode Pembayaran",
@@ -162,6 +163,7 @@
                                 >
                                     <i class="bx bxs-pencil"></i>
                                 </button>
+
                                 <button type="button" 
                                 onclick="showConfirmForm({
                                     title: 'Hapus Metode',
@@ -185,6 +187,9 @@
                                 class="w-10 h-10 rounded-lg bg-red-500 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Hapus menu">
                                     <i class="bx bxs-trash"></i>
                                 </button>
+                                <?php else: ?>
+                                    -
+                                <?php endif; ?>
                             </div>
                         </td>
                     </tr>

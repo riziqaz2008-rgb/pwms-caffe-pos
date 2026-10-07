@@ -126,6 +126,7 @@
                         </td>
                         <td class="px-5 py-4">
                             <div class="flex items-center justify-center gap-2">
+                                <?php if($d['kode_role'] !== 'super_admin'): ?>
                                 <button type="button" 
                                 onclick='showGlobalModal(<?= json_encode([
                                     "title" => "Edit Anggota",
@@ -146,6 +147,7 @@
                                 >
                                     <i class="bx bxs-pencil"></i>
                                 </button>
+
                                 <button type="button" 
                                 onclick="showConfirmForm({
                                     title: 'Hapus Pelanggan',
@@ -169,6 +171,9 @@
                                 class="w-10 h-10 rounded-lg bg-red-500 text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Hapus menu">
                                     <i class="bx bxs-trash"></i>
                                 </button>
+                                <?php else: ?>
+                                    -
+                                <?php endif; ?>
                             </div>
                         </td>
                     </tr>

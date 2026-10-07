@@ -1,12 +1,14 @@
 <?php
 function pengaturan($d){
+    global $conn;
+    global $p;
     $namaUsaha = trim($d['nama'] ?? '');
     $telepon   = trim($d['telepon'] ?? '');
     $email     = trim($d['email'] ?? '');
     $jam       = trim($d['jam'] ?? '');
     $alamat    = trim($d['alamat'] ?? '');
     
-    if ($namaUsaha === '' || $telepon === '' || $alamat === '') {
+    if ($namaUsaha === '' || $alamat === '') {
     
         return [
             'status' => false,
@@ -24,7 +26,7 @@ function pengaturan($d){
                  email = ?,
                  jam = ?,
                  alamat = ?
-             WHERE id_pengaturan = ?"
+             WHERE id = ?"
         );
     
         mysqli_stmt_bind_param(
@@ -35,7 +37,7 @@ function pengaturan($d){
             $email,
             $jam,
             $alamat,
-            $p['id_pengaturan']
+            $p['id']
         );
     
         if (mysqli_stmt_execute($stmt)) {

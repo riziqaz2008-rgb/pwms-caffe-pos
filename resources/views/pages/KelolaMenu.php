@@ -581,7 +581,7 @@
                             </div>
                         </div>
                         <div class="flex flex-col gap-1.5 w-full group col-span-1 lg:col-span-2 xl:col-span-3 min-w-0">
-                            <label for="deskripsi" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 ml-1">Deskripsi & Catatan</label>
+                            <label for="deskripsi" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 ml-1">Deskripsi (Opsional)</label>
                             <div class="relative flex w-full h-full">
                                 <div class="absolute left-3.5 top-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors duration-200">
                                     <i class="bx bxs-info-octagon text-xl sm:text-lg"></i>
@@ -590,14 +590,14 @@
                             </div>
                         </div>
                         <div x-data="{ imageUrl: null }" class="flex flex-col gap-1.5 w-full col-span-1 lg:col-span-2 xl:col-span-3 min-w-0">
-                            <label class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 ml-1">Foto Menu</label>
+                            <label class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 ml-1">Foto Menu (Opsional)</label>
                             <label for="gambarBarang" class="relative border-2 border-dashed border-gray-200/90 hover:border-primary group transition-all duration-200 rounded-lg p-6 sm:p-8 flex flex-col items-center justify-center cursor-pointer text-center bg-slate-50/40 hover:bg-slate-50 overflow-hidden min-h-[160px]">
                                 <div x-show="!imageUrl" class="flex flex-col items-center justify-center gap-3">
                                     <div class="globalModalIconContainer w-12 h-12 text-white bg-primary rounded-lg flex items-center justify-center shadow-sm">
                                         <i class="bx bxs-images text-2xl text-white"></i>
                                     </div>
                                     <div>
-                                        <p class="font-bold text-sm text-slate-800">Upload Foto Menu</p>
+                                        <p class="font-bold text-sm text-slate-800">Upload Foto Menu (Opsional)</p>
                                         <p class="text-gray-400 text-xs mt-0.5">JPG, PNG, WEBP (Maks. 2MB)</p>
                                     </div>
                                 </div>

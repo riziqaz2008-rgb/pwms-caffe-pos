@@ -160,7 +160,7 @@
     width: 50mm;
 } */
 
-@media print {
+/* @media print {
     @page {
         size: 80mm auto;
         margin: 0;
@@ -191,4 +191,59 @@
         font-size: 11px;
         color: #000;
     }
+} */
+
+.struk {
+    width: 72mm;
+    margin: 0 auto;
+    padding: 3mm 0;
+
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+
+    color: #000;
+}
+
+
+@media print {
+
+    @page {
+        size: 80mm auto;
+        margin: 0;
+    }
+
+
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+
+    body * {
+        visibility: hidden !important;
+    }
+
+
+    #strukPrint,
+    #strukPrint * {
+        visibility: visible !important;
+    }
+
+
+    #strukPrint {
+
+        display: block !important;
+
+        position: absolute;
+
+        left: 0;
+        top: 0;
+
+        width: 80mm;
+
+        margin: 0;
+        padding: 3mm 4mm;
+
+    }
+
 }

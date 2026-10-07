@@ -16,6 +16,7 @@
     $dataUser = mysqli_fetch_assoc($uid);
 
     $hprofil = strtoupper(substr($dataAnggota['nama'], 0, 1));
+    $kr = $dataUser['kode_role'];
 
     ob_start();
     include $page;
@@ -26,7 +27,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Kedaiku | PW</title>   
+        <title><?= $nama_usaha ?? '' ?> | POS</title>   
 
         <!-- STYLE ICON -->
         <link rel="icon" type="image/png" href="/assets/svg/cursor.svg">        

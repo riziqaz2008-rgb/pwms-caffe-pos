@@ -1,5 +1,5 @@
 <?php
-$role = fetchAllAssoc("SELECT * FROM roles");
+$role = fetchAllAssoc("SELECT * FROM roles WHERE kode_role <> 'super_admin'");
 
 $cari = trim($_GET['cari'] ?? '');
 $rolef = (int)($_GET['rolef'] ?? 0);
@@ -120,6 +120,7 @@ function tambah($d){
 
 function edit($d){
     global $conn;
+
     $id = $d['id'];
     $nama = $d['nama'];
     $telp = $d['telepon'];
@@ -156,13 +157,25 @@ function edit($d){
 }
 
 function hapus($d){
+    global $conn;
+    
     $id = (int)$d['id'];
 
-    $c = query("SELECT * FROM users WHERE id_users='$id'");
-    if(mysqli_num_rows($c) == 0){
+    $qc = query("SELECT * FROM users u LEFT JOIN roles r ON u.id_role = r.id_role WHERE u.id_user='$id'");
+    $c = mysqli_fetch_assoc($qc);
+    $kr = $c['kode_role'];
+
+    if(mysqli_num_rows($qc) == 0){
         return [
             'bg' => 'info',
-            'pesan' => 'ID pelanggan tidak ditemukan.',
+            'pesan' => 'Anggota tidak ditemukan.',
+        ];
+    }
+        
+    if($kr == 'super_admin'){
+        return [
+            'bg' => 'info',
+            'pesan' => 'Akun super admin tidak dapat dihapus.',
         ];
     }
 

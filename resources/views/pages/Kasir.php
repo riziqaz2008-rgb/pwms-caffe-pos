@@ -184,7 +184,9 @@
                     </div>
 
                     <?php if (($_GET['layoutMode'] ?? 'grid') == 'table'): ?>
-                    <?php if(mysqli_num_rows($data)): ?>
+                    <?php if(mysqli_num_rows($data)):
+
+                    ?>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left">
                                 <thead>
@@ -199,7 +201,15 @@
                                 </thead>
 
                                 <tbody class="divide-y divide-gray-100">
-                                    <?php while($d = mysqli_fetch_assoc($data)): ?>
+                                    <?php while($d = mysqli_fetch_assoc($data)):
+                                    if($d['menu_tersedia'] === 0){
+                                        $w = "text-gray-400";
+                                        $wf = "text-gray-400";
+                                    } else{
+                                        $wf = "text-gray-900";
+                                        $w = "text-primary";
+                                    }
+                                    ?>
                                     <tr class="group hover:bg-gray-50 transition-all">
                                         <td class="px-5 py-4 font-bold text-gray-500"><?= $no++ ?></td>
 
@@ -217,19 +227,20 @@
                                         </td>
 
                                         <td class="px-5 py-4">
-                                            <span class="font-bold text-slate-800"><?= $d['nama'] ?></span>
+                                            <span class="font-bold <?= $w ?>"><?= $d['nama'] ?></span>
                                         </td>
 
                                         <td>
-                                            <span class="inline-flex items-center px-6 py-2 rounded-lg text-primary text-sm font-bold">
+                                            <span class="inline-flex items-center px-6 py-2 rounded-lg <?= $wf ?> text-sm font-bold">
                                                 <?= $d['nama_kategori'] ?>
                                             </span>
                                         </td>
 
                                         <td class="px-5 py-4">
-                                            <span class="font-bold text-slate-800">Rp <?= number_format($d['harga'], 0, ',', '.') ?></span>
+                                            <span class="font-bold <?= $w ?>">Rp <?= number_format($d['harga'], 0, ',', '.') ?></span>
                                         </td>
 
+                                        <?php if($d['menu_tersedia'] !== 0): ?>
                                         <td class="px-5 py-4">
                                             <div class="flex items-center justify-center gap-2">
                                                <button
@@ -241,6 +252,7 @@
                                                 </button>
                                             </div>
                                         </td>
+                                        <?php endif; ?>
                                     </tr>
                                     <?php endwhile; ?>
                                 </tbody>
@@ -250,7 +262,15 @@
                     <?php else: ?>
                         <?php if(mysqli_num_rows($data)): ?>
                             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                                <?php while($d = mysqli_fetch_assoc($data)): ?>
+                                <?php while($d = mysqli_fetch_assoc($data)):
+                                if($d['menu_tersedia'] === 0){
+                                    $w = "bg-slate-700";
+                                    $wf = "text-gray-400";
+                                } else{
+                                    $wf = "text-gray-900";
+                                    $w = "bg-primary";
+                                }
+                                ?>
                                 <div class="flex flex-row sm:flex-col group bg-white border border-gray-200 rounded-lg overflow-hidden transition-all duration-200">
                                     <div class="relative w-36 h-36 shrink-0 sm:w-full sm:h-48 overflow-hidden bg-gray-100">
                                         <?php if (!empty($d['foto'])): ?>
@@ -265,13 +285,13 @@
                                             </div>
                                         <?php endif; ?>
                                         <div class="absolute top-2.5 left-2.5 sm:top-3 sm:left-3">
-                                            <span class="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg bg-primary text-[10px] sm:text-xs font-black text-white">
+                                            <span class="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg <?= $w ?> text-[10px] sm:text-xs font-black text-white">
                                                 <?= $d['nama_kategori'] ?>
                                             </span>
                                         </div>
                                     </div>
                                     <div class="p-4 sm:p-5 flex-1 min-w-0 flex flex-col justify-between">
-                                        <h3 class="font-black text-gray-900 text-base sm:text-lg line-clamp-2 leading-snug">
+                                        <h3 class="font-black <?= $wf ?> text-base sm:text-lg line-clamp-2 leading-snug">
                                             <?= htmlspecialchars($d['nama']) ?>
                                         </h3>
 
@@ -280,11 +300,12 @@
                                                 <span class="text-[10px] uppercase tracking-wider font-bold text-gray-400 block mb-0.5">
                                                     Harga
                                                 </span>
-                                                <span class="text-base sm:text-lg font-black text-gray-900 whitespace-nowrap">
+                                                <span class="text-base sm:text-lg font-black <?= $wf ?> whitespace-nowrap">
                                                     Rp <?= number_format($d['harga'], 0, '', '.') ?>
                                                 </span>
                                             </div>
 
+                                            <?php if($d['menu_tersedia'] !== 0): ?>
                                             <div class="flex gap-x-2.5">
                                                  <button
                                                         type="button"
@@ -294,6 +315,7 @@
                                                         <i class="bx bxs-plus"></i>
                                                     </button>
                                             </div>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
                                 </div>
@@ -919,6 +941,54 @@
                             class="w-full sm:w-auto flex items-center justify-center bg-white border-2 border-gray-200 hover:ring-2 hover:ring-primary text-gray-900 font-bold px-8 py-4 rounded-lg cursor-pointer transition-all active:scale-95"
                         >
                             Batal
+                        </button>
+
+                        <button
+                            type="button"
+                            @click="
+                                idTransaksiMenunggu !== null
+                                    ? konfirmasiPembayaranMenunggu(
+                                        idTransaksiMenunggu,
+                                        total,
+                                        metode,
+                                        bank,
+                                        ewallet,
+                                        card,
+                                        nominal,
+                                        true
+                                    )
+                                    : konfirmasiPembayaran(
+                                        StepJenisPesanan,
+                                        idPelanggan,
+                                        namaPelanggan,
+                                        metode,
+                                        bank,
+                                        ewallet,
+                                        card,
+                                        nominal,
+                                        true
+                                    )
+                            "
+                            :disabled="
+                                metode === '' ||
+                                (metode === 'Tunai' && Number(nominal) < Number(total)) ||
+                                (metode === 'Transfer' && bank === '') ||
+                                (metode === 'E-Wallet' && ewallet === '') ||
+                                (metode === 'Card' && card === '')
+                            "
+                            :class="
+                                metode === '' ||
+                                (metode === 'Tunai' && Number(nominal) < Number(total)) ||
+                                (metode === 'Transfer' && bank === '') ||
+                                (metode === 'E-Wallet' && ewallet === '') ||
+                                (metode === 'Card' && card === '')
+                                    ? 'opacity-30 cursor-not-allowed'
+                                    : 'hover:bg-hover-primary active:scale-95 cursor-pointer'
+                            "
+                            class="w-full sm:w-auto flex items-center justify-center bg-white border-2 border-gray-200 hover:border-2 hover:border-primary text-gray-900 hover:text-white font-bold px-8 py-4 gap-2 rounded-lg transition-all shadow-md"
+                        >
+                            <i class="bx bxs-receipt text-xl"></i>
+                            <span>KONFIRMASI & CETAK STRUK</span>
                         </button>
 
                         <button             
@@ -1666,7 +1736,8 @@ function updatePayment(totalOverride = null) {
     bank,
     ewallet,
     card,
-    nominal
+    nominal,
+    cetak = false
 ) {
     if (!metode) {
         showToast({
@@ -1770,6 +1841,10 @@ function updatePayment(totalOverride = null) {
         pesan: result.pesan,
         bg: result.bg
     });
+
+    if (cetak) {
+        cetakStruk(result);
+    }
 
     resetTransaksi();
     console.log('TRANSAKSI BERHASIL', result);
@@ -2015,7 +2090,8 @@ async function konfirmasiPembayaranMenunggu(
     bank,
     ewallet,
     card,
-    nominal
+    nominal,
+    cetak = false
 ) {
     if (!idTransaksi) {
         showToast({
@@ -2147,6 +2223,10 @@ async function konfirmasiPembayaranMenunggu(
             bg: result.bg
         });
 
+        if (cetak) {
+            cetakStruk(result);
+        }
+
         resetTransaksi();
         setTimeout(() => {
             window.location.reload();
@@ -2240,5 +2320,30 @@ async function konfirmasiJadikanPiutang(idTransaksiPiutang, pelangganPiutang) {
             bg: 'danger'
         });
     }
+}
+
+function cetakStruk(result) {
+
+    const idTransaksi = result.data?.id_transaksi;
+
+    if (!idTransaksi) {
+
+        showToast({
+            pesan: 'Transaksi berhasil, tetapi ID transaksi tidak ditemukan.',
+            bg: 'warning'
+        });
+
+        return;
+    }
+
+    const url =
+        '?route=struk&id=' +
+        encodeURIComponent(idTransaksi);
+
+    window.open(
+        url,
+        '_blank',
+        'width=450,height=700'
+    );
 }
 </script>

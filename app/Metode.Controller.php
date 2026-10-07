@@ -1,5 +1,5 @@
 <?php
-$tipe = fetchAllAssoc("SELECT * FROM tipe");
+$tipe = fetchAllAssoc("SELECT * FROM tipe WHERE kode_tipe <> 'tunai'");
 $totalMetode = mysqli_fetch_assoc(query("SELECT COUNT(*) AS total FROM metode"))['total'];
 $totalMetodeAktif = mysqli_fetch_assoc(query("SELECT COUNT(*) AS total FROM metode WHERE status=1"))['total'];
 
@@ -127,11 +127,28 @@ function edit($d){
 function hapus($d){
     $id = (int)$d['id'];
 
-    $c = query("SELECT * FROM metode WHERE id_metode='$id'");
-    if(mysqli_num_rows($c) == 0){
+    $qc = query("SELECT * FROM metode WHERE id_metode='$id'");
+    $c = mysqli_fetch_assoc($qc);
+    
+    if(mysqli_num_rows($qc) == 0){
         return [
             'bg' => 'info',
             'pesan' => 'ID metode tidak ditemukan.',
+        ];
+    }
+
+    if($c['kode_tipe'] == 'tunai'){
+        return [
+            'bg' => 'info',
+            'pesan' => 'Metode tunai tidak dapat dihapus.',
+        ];
+    }
+
+    $ct = query("SELECT * FROM transaksi WHERE id_metode='$id'");
+    if(mysqli_num_rows($ct) > 0){
+        return [
+            'bg' => 'info',
+            'pesan' => 'Metode '.$c['nama_metode'].' tidak dapat dihapus karena masih digunakan pada data transaksi atau laporan.'
         ];
     }
 

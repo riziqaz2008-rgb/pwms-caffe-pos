@@ -73,6 +73,7 @@
                     <th class="text-left font-bold px-5 py-4">#</th>
                     <th class="text-left font-bold px-5 py-4">Nama</th>
                     <th class="text-left font-bold px-5 py-4">No Telepon</th>
+                    <th class="text-left font-bold px-5 py-4">Catatan</th>
                     <th class="text-center font-bold px-5 py-4">Aksi</th>
                 </tr>
             </thead>
@@ -83,6 +84,7 @@
                         <td class="px-5 py-4 font-medium"><?= $no++ ?></td>
                         <td class="px-5 py-4 font-medium"><?= $d['nama_pelanggan'] ?></td>
                         <td class="px-5 py-4 font-medium"><?= $d['telepon'] ?></td>
+                        <td class="px-5 py-4 font-medium"><?= $d['catatan'] ?></td>
                         <td class="px-5 py-4 font-medium">
                             <div class="flex items-center justify-center gap-2">
                                 <button type="button" 
@@ -101,7 +103,7 @@
                                  modalEdit(this)
                                  '
                                 class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all" title="Edit menu"
-                                data-id="<?= htmlspecialchars($d['id_pelanggan']) ?>" data-nama="<?= htmlspecialchars($d['nama_pelanggan']) ?>" data-telp="<?= htmlspecialchars($d['telepon']) ?>">
+                                data-id="<?= htmlspecialchars($d['id_pelanggan']) ?>" data-nama="<?= htmlspecialchars($d['nama_pelanggan']) ?>" data-telp="<?= htmlspecialchars($d['telepon']) ?>" data-catatan="<?= htmlspecialchars($d['catatan']) ?>">
                                     <i class="bx bxs-pencil"></i>
                                 </button>
                                 <button type="button" 
@@ -256,6 +258,17 @@
                             <input type="text" name="telepon" inputmode="numeric" pattern="[0-9]{12}" minlength="12" maxlength="12" id="telepon" placeholder="Contoh: 081234567890" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all" required>
                             </div>
                         </div>
+                        <div class="flex flex-col gap-1.5 w-full">
+                            <label for="catatan" class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1">
+                            Nama Pelanggan (Opsional)
+                            </label>
+                            <div class="relative flex items-center w-full group">
+                            <div class="absolute left-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors">
+                                <i class="bx bxs-note text-xl" aria-hidden="true"></i>
+                            </div>
+                            <input type="text" name="catatan" id="catatan" placeholder="Masukkan catatan pelanggan" class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all">
+                            </div>
+                        </div>
                     </div>
                     <div class="flex flex-col-reverse sm:flex-row items-center justify-end pt-5 mt-6 border-t border-gray-100 dark:border-slate-800 gap-3">
                         <button type="button" onclick="closeGlobalModal()" class="w-full sm:w-auto bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold px-6 py-3 rounded-lg text-sm transition-all">
@@ -278,5 +291,6 @@
       $('#id').val(btn.dataset.id);
       $('#nama').val(btn.dataset.nama);
       $('#telepon').val(btn.dataset.telp);
+      $('#catatan').val(btn.dataset.catatan);
     }
 </script>

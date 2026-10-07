@@ -89,6 +89,23 @@ switch ($route) {
 
         break;
 
+    case 'profile':
+            
+        include  __DIR__ . '../../app/Profile.Controller.php';
+        $page = __DIR__ . '/../resources/views/pages/Profile.php';
+
+        break;
+
+    case 'struk':
+        include __DIR__ . '/../app/Struk.Controller.php';
+        $page = __DIR__ . '/../resources/views/pages/Struk.php';
+        break;
+
+    case 'api/struk':
+
+        include __DIR__ . '/../app/Struk.Controller.php';
+        
+        break;
 
     default:
 

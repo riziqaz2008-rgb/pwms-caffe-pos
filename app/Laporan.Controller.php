@@ -17,13 +17,6 @@ $where = "";
 $params = [];
 $types = "";
 
-
-/*
-|--------------------------------------------------------------------------
-| Pencarian
-|--------------------------------------------------------------------------
-*/
-
 if ($cari !== '') {
 
     $where .= "
@@ -45,13 +38,6 @@ if ($cari !== '') {
     $types .= "ssss";
 }
 
-
-/*
-|--------------------------------------------------------------------------
-| Filter metode pembayaran
-|--------------------------------------------------------------------------
-*/
-
 if ($pembayaran !== '') {
 
     $where .= " AND t.id_metode = ?";
@@ -66,12 +52,6 @@ if ($statusPembayaranFilter !== '') {
     $types .= "i";
 }
 
-
-/*
-|--------------------------------------------------------------------------
-| Filter kategori
-|--------------------------------------------------------------------------
-*/
 
 if ($kategori !== '') {
 
@@ -90,11 +70,6 @@ if ($kategori !== '') {
     $types .= "i";
 }
 
-/*
-|--------------------------------------------------------------------------
-| Filter tanggal mulai
-|--------------------------------------------------------------------------
-*/
 
 if ($tanggalMulai !== '') {
 
@@ -105,12 +80,6 @@ if ($tanggalMulai !== '') {
 }
 
 
-/*
-|--------------------------------------------------------------------------
-| Filter tanggal sampai
-|--------------------------------------------------------------------------
-*/
-
 if ($tanggalSampai !== '') {
 
     $where .= " AND DATE(t.tanggal) <= ?";
@@ -119,12 +88,6 @@ if ($tanggalSampai !== '') {
     $types .= "s";
 }
 
-
-/*
-|--------------------------------------------------------------------------
-| Hitung total data
-|--------------------------------------------------------------------------
-*/
 
 $sqlCount = "
     SELECT COUNT(*) AS total
@@ -160,23 +123,11 @@ $totalData = (int) ($rowCount['total'] ?? 0);
 mysqli_stmt_close($stmtCount);
 
 
-/*
-|--------------------------------------------------------------------------
-| Total halaman
-|--------------------------------------------------------------------------
-*/
-
 $totalPage = max(
     1,
     (int) ceil($totalData / $limit)
 );
 
-
-/*
-|--------------------------------------------------------------------------
-| Jika halaman melebihi halaman terakhir
-|--------------------------------------------------------------------------
-*/
 
 if ($currentPage > $totalPage) {
     $currentPage = $totalPage;
@@ -184,12 +135,6 @@ if ($currentPage > $totalPage) {
     $offset = ($currentPage - 1) * $limit;
 }
 
-
-/*
-|--------------------------------------------------------------------------
-| Ambil data laporan
-|--------------------------------------------------------------------------
-*/
 
 $sql = "
     SELECT
@@ -280,12 +225,6 @@ function statusTransaksiLaporan(?int $status): string
 }
 
 
-/*
-|--------------------------------------------------------------------------
-| HELPER STATUS PEMBAYARAN
-|--------------------------------------------------------------------------
-*/
-
 function statusPembayaranLaporan(?int $status): string
 {
     return match ($status) {
@@ -296,12 +235,6 @@ function statusPembayaranLaporan(?int $status): string
 }
 
 
-/*
-|--------------------------------------------------------------------------
-| HELPER TIPE PESANAN
-|--------------------------------------------------------------------------
-*/
-
 function tipePesananLaporan(?int $tipe): string
 {
     return match ($tipe) {
@@ -311,12 +244,6 @@ function tipePesananLaporan(?int $tipe): string
     };
 }
 
-
-/*
-|--------------------------------------------------------------------------
-| Data metode pembayaran
-|--------------------------------------------------------------------------
-*/
 
 $metode = fetchAllAssoc("
     SELECT
@@ -333,12 +260,6 @@ $metode = fetchAllAssoc("
 ");
 
 
-/*
-|--------------------------------------------------------------------------
-| Data kategori
-|--------------------------------------------------------------------------
-*/
-
 $kategoriData = fetchAllAssoc("
     SELECT
         id_kategori,
@@ -349,12 +270,6 @@ $kategoriData = fetchAllAssoc("
 
 $kategori = $kategoriData;
 
-
-/*
-|--------------------------------------------------------------------------
-| Statistik laporan
-|--------------------------------------------------------------------------
-*/
 
 $sqlStatistik = "
     SELECT
@@ -396,12 +311,6 @@ $totalTransaksi = (int) ($statistik['total_transaksi'] ?? 0);
 mysqli_stmt_close($stmtStatistik);
 
 
-/*
-|--------------------------------------------------------------------------
-| Total menu terjual
-|--------------------------------------------------------------------------
-*/
-
 $sqlMenuTerjual = "
     SELECT
         COALESCE(SUM(dt.qty), 0) AS total_menu
@@ -442,16 +351,6 @@ $totalMenuTerjual = (int) ($rowMenuTerjual['total_menu'] ?? 0);
 
 mysqli_stmt_close($stmtMenuTerjual);
 
-
-/*
-|--------------------------------------------------------------------------
-| Detail transaksi
-|--------------------------------------------------------------------------
-|
-| Karena tabel utama dipagination, detail hanya diambil untuk transaksi
-| yang tampil pada halaman saat ini.
-|--------------------------------------------------------------------------
-*/
 
 $detailLaporan = [];
 
@@ -503,7 +402,7 @@ if (!empty($data)) {
 }
 
 function bayarHutang($d){
-
+    global $conn;
     $idTransaksi = (int) ($d['id'] ?? 0);
 
     if ($idTransaksi <= 0) {

@@ -1,6 +1,3 @@
-<?php
-$kr = $dataUser['kode_role'];
-?>
 <section id="SideBar">
     <div x-show="sidebarOpen" @click="sidebarOpen = false" class="fixed inset-0 z-40 bg-black/50 transition-opacity lg:hidden" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"></div>
     <aside id="MainBodySideBar" class="fixed inset-y-0 left-0 z-50 bg-white border-e border-gray-200/50 h-screen overflow-hidden transition-all duration-500 ease-[cubic-bezier(.22,1,.36,1)] lg:sticky lg:top-0" :class="sidebarOpen ? 'translate-x-0 w-full sm:w-72' : '-translate-x-full w-72 lg:translate-x-0 lg:w-24'">
@@ -160,16 +157,27 @@ $kr = $dataUser['kode_role'];
                             </span>
                         </a>
                     </li>                  
-                    <li>
-                        <a href="logout.php" class="flex sm:hidden relative justify-center items-center px-4 py-4 bg-rose-600 text-white rounded-lg gap-4 mt-10">                           
-                            <i class="bx bxs-door-open text-xl"></i>
-                            <span x-show="sidebarOpen" x-transition class="font-semibold whitespace-nowrap">
-                                Logout
-                            </span>
-                        </a>
-                    </li>
                 </div>
                 <?php endif; ?>
+                <li>
+                    <a href="?route=profile" class="relative flex justify-start items-center px-4 py-4 rounded-lg gap-4 <?= $route === "profile" ? 'bg-gray-50 text-primary font-bold' : 'text-gray-400/80 hover:bg-black/5 duration-300 transition-all ease-in-out' ?>">
+                        <?php if ($route === 'profile'): ?>
+                            <span class="absolute left-0 w-1.5 h-7 bg-primary rounded-r-full"></span>
+                        <?php endif; ?>
+                        <i class="bx bxs-user text-xl"></i>
+                        <span x-show="sidebarOpen" x-transition class="font-semibold whitespace-nowrap">
+                            Profil Saya
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="logout.php" class="flex sm:hidden relative justify-center items-center px-4 py-4 bg-rose-600 text-white rounded-lg gap-4 mt-10">                           
+                        <i class="bx bxs-door-open text-xl"></i>
+                        <span x-show="sidebarOpen" x-transition class="font-semibold whitespace-nowrap">
+                            Logout
+                        </span>
+                    </a>
+                </li>
             </ul>  
             <div class="flex items-center w-full bg-white sticky bottom-0 py-6 ps-3.5">
                 <div class="hidden sm:flex items-center">

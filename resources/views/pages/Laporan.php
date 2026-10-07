@@ -1,10 +1,4 @@
 <?php
-/*
-|--------------------------------------------------------------------------
-| HELPER VIEW
-|--------------------------------------------------------------------------
-*/
-
 function formatRupiahLaporan($nominal): string
 {
     return 'Rp ' . number_format((int) $nominal, 0, ',', '.');
@@ -82,7 +76,17 @@ function formatWaktuLaporan($tanggal): string
             },
 
             printStruk() {
-                window.print();
+                const id = this.selectedData.id_transaksi;
+            
+                if (!id) {
+                    return;
+                }
+            
+                window.open(
+                    '?route=struk&id=' + encodeURIComponent(id),
+                    '_blank',
+                    'width=450,height=700'
+                );
             }
         }"
 
@@ -151,13 +155,7 @@ function formatWaktuLaporan($tanggal): string
         </div>
 
 
-        <!-- =========================================================
-             STATISTIK
-        ========================================================== -->
-
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-10 mb-8">
-
-            <!-- TOTAL PENDAPATAN -->
 
             <div class="bg-white border-e border-gray-200/80 rounded-lg px-3 py-6">
 
@@ -190,8 +188,6 @@ function formatWaktuLaporan($tanggal): string
             </div>
 
 
-            <!-- TOTAL TRANSAKSI -->
-
             <div class="bg-white border-e border-gray-200/80 rounded-lg px-3 py-6">
 
                 <div class="flex items-center justify-between">
@@ -222,8 +218,6 @@ function formatWaktuLaporan($tanggal): string
 
             </div>
 
-
-            <!-- TOTAL MENU TERJUAL -->
 
             <div class="bg-white rounded-lg px-3 py-6 sm:col-span-2 lg:col-span-1">
 
@@ -258,10 +252,6 @@ function formatWaktuLaporan($tanggal): string
         </div>
 
 
-        <!-- =========================================================
-             DAFTAR PENJUALAN
-        ========================================================== -->
-
         <div class="my-6 bg-white border-t border-gray-200/80 sm:p-5 dark:bg-slate-950 min-w-0">
 
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
@@ -284,8 +274,6 @@ function formatWaktuLaporan($tanggal): string
 
                 </div>
 
-
-                <!-- SEARCH -->
 
                 <div class="relative w-full lg:w-96">
 
@@ -341,10 +329,6 @@ function formatWaktuLaporan($tanggal): string
             </div>
 
 
-            <!-- =====================================================
-                 TABLE
-            ====================================================== -->
-
             <div class="overflow-x-auto overflow-y-auto max-h-[700px] p-1">
 
                 <table
@@ -393,7 +377,6 @@ function formatWaktuLaporan($tanggal): string
 
                         <?php if (empty($data)): ?>
 
-                            <!-- EMPTY STATE -->
 
                             <tr>
 
@@ -450,14 +433,10 @@ function formatWaktuLaporan($tanggal): string
                                     class="group bg-white dark:bg-slate-950 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors duration-200"
                                 >
 
-                                    <!-- NO -->
-
                                     <td class="px-5 py-4 font-bold text-gray-500">
                                         <?= $no++ ?>
                                     </td>
 
-
-                                    <!-- KODE -->
 
                                     <td class="px-5 py-4">
 
@@ -469,8 +448,6 @@ function formatWaktuLaporan($tanggal): string
 
                                     </td>
 
-
-                                    <!-- TANGGAL -->
 
                                     <td class="px-5 py-4">
 
@@ -489,8 +466,6 @@ function formatWaktuLaporan($tanggal): string
                                     </td>
 
 
-                                    <!-- TOTAL -->
-
                                     <td class="px-5 py-4">
 
                                         <span class="font-bold text-primary">
@@ -499,8 +474,6 @@ function formatWaktuLaporan($tanggal): string
 
                                     </td>
 
-
-                                    <!-- PEMBAYARAN -->
 
                                     <td class="px-5 py-4">
 
@@ -511,27 +484,8 @@ function formatWaktuLaporan($tanggal): string
                                     </td>
 
 
-                                    <!-- STATUS -->
-
                                     <td class="px-5 py-4">
 
-                                        <!-- <?php if ((int) $d['status_pembayaran'] === 2): ?>
-
-                                            <span
-                                                class="inline-flex items-center px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-600 text-xs font-bold"
-                                            >
-                                                Lunas
-                                            </span>
-
-                                        <?php else: ?>
-
-                                            <span
-                                                class="inline-flex items-center px-3 py-1.5 rounded-full bg-amber-50 text-amber-600 text-xs font-bold"
-                                            >
-                                                Belum Lunas
-                                            </span>
-
-                                        <?php endif; ?> -->
 
                                         <?php
                                         if ($d['status_pembayaran'] === 2) {
@@ -543,14 +497,11 @@ function formatWaktuLaporan($tanggal): string
                                         }
                                         ?>
                                         <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg <?= $ws ?> text-xs font-bold text-white">
-                                            <!-- <span class="w-1.5 h-1.5 rounded-full bg-white"></span> -->
                                             <?= $s ?>
                                         </span>
 
                                     </td>
 
-
-                                    <!-- AKSI -->
 
                                     <td class="px-5 py-4">
 
@@ -559,7 +510,6 @@ function formatWaktuLaporan($tanggal): string
                                             role="group"
                                         >
 
-                                            <!-- DETAIL -->
 
                                             <button
                                                 type="button"
@@ -602,6 +552,7 @@ function formatWaktuLaporan($tanggal): string
 
                                         </div>
 
+                                        <?php if(in_array($kr, ['super_admin','admin'])): ?>
                                         <div
                                             class="inline-flex gap-2"
                                             role="group"
@@ -635,6 +586,7 @@ function formatWaktuLaporan($tanggal): string
                                             </button>
 
                                         </div>
+                                        <?php endif; ?>
 
                                     </td>
 
@@ -665,7 +617,6 @@ function formatWaktuLaporan($tanggal): string
             
                     <ul class="inline-flex items-center gap-1.5 p-1.5 rounded-lg border-2 border-gray-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm font-medium">
             
-                        <!-- Previous -->
                         <li>
             
                             <?php if ($currentPage > 1): ?>
@@ -694,7 +645,6 @@ function formatWaktuLaporan($tanggal): string
                         </li>
                             
                             
-                        <!-- Nomor halaman -->
                         <?php
 
                         $startPage = max(1, $currentPage - 2);
@@ -703,7 +653,6 @@ function formatWaktuLaporan($tanggal): string
                         ?>
 
                             
-                        <!-- Halaman pertama -->
                         <?php if ($startPage > 1): ?>
                         
                             <?php
@@ -731,8 +680,7 @@ function formatWaktuLaporan($tanggal): string
                             
                         <?php endif; ?>
                             
-                            
-                        <!-- Halaman sekitar halaman aktif -->
+                        
                         <?php for ($i = $startPage; $i <= $endPage; $i++): ?>
                         
                             <?php
@@ -757,7 +705,6 @@ function formatWaktuLaporan($tanggal): string
                         <?php endfor; ?>
                         
                         
-                        <!-- Halaman terakhir -->
                         <?php if ($endPage < $totalPage): ?>
                         
                             <?php if ($endPage < $totalPage - 1): ?>
@@ -787,7 +734,6 @@ function formatWaktuLaporan($tanggal): string
                         <?php endif; ?>
                             
                             
-                        <!-- Next -->
                         <li>
                             
                             <?php if ($currentPage < $totalPage): ?>
@@ -825,10 +771,6 @@ function formatWaktuLaporan($tanggal): string
         </div>
 
 
-        <!-- =========================================================
-             MODAL FILTER
-        ========================================================== -->
-
         <div>
 
             <div
@@ -838,7 +780,6 @@ function formatWaktuLaporan($tanggal): string
                 class="fixed inset-0 z-[999] flex justify-center items-center w-full p-4 sm:p-6 overflow-y-auto"
             >
 
-                <!-- BACKDROP -->
 
                 <div
                     x-show="FilterRiwayatTransaksi"
@@ -853,7 +794,6 @@ function formatWaktuLaporan($tanggal): string
                 ></div>
 
 
-                <!-- MODAL -->
 
                 <div
                     x-show="FilterRiwayatTransaksi"
@@ -870,7 +810,6 @@ function formatWaktuLaporan($tanggal): string
                         class="relative bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-lg p-5 sm:p-8 shadow-xl max-h-[calc(100vh-2rem)] overflow-y-auto"
                     >
 
-                        <!-- HEADER -->
 
                         <div class="mb-6 sm:mb-8 flex justify-between items-start sm:items-center gap-4">
 
@@ -909,8 +848,6 @@ function formatWaktuLaporan($tanggal): string
                         </div>
 
 
-                        <!-- FORM -->
-
                         <form
                             action=""
                             method="GET"
@@ -926,7 +863,6 @@ function formatWaktuLaporan($tanggal): string
 
                             <div class="grid grid-cols-1 gap-5">
 
-                                <!-- METODE PEMBAYARAN -->
 
                                 <div class="flex flex-col gap-1.5 w-full">
 
@@ -1032,8 +968,6 @@ function formatWaktuLaporan($tanggal): string
                                 </div>
 
 
-                                <!-- KATEGORI -->
-
                                 <div class="flex flex-col gap-1.5 w-full">
 
                                     <label
@@ -1085,8 +1019,6 @@ function formatWaktuLaporan($tanggal): string
                                 </div>
 
 
-                                <!-- TANGGAL -->
-
                                 <div class="flex flex-col gap-1.5 w-full">
 
                                     <label
@@ -1098,7 +1030,6 @@ function formatWaktuLaporan($tanggal): string
 
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
 
-                                        <!-- MULAI -->
 
                                         <div class="relative flex items-center w-full group">
 
@@ -1118,8 +1049,6 @@ function formatWaktuLaporan($tanggal): string
 
                                         </div>
 
-
-                                        <!-- SAMPAI -->
 
                                         <div class="relative flex items-center w-full group">
 
@@ -1145,8 +1074,6 @@ function formatWaktuLaporan($tanggal): string
 
                             </div>
 
-
-                            <!-- FOOTER -->
 
                             <div
                                 class="w-full flex flex-col-reverse sm:flex-row justify-end mt-6 sm:mt-8 pt-5 border-t border-gray-100 dark:border-slate-800 gap-3"
@@ -1187,10 +1114,6 @@ function formatWaktuLaporan($tanggal): string
         </div>
 
 
-        <!-- =========================================================
-             MODAL DETAIL TRANSAKSI
-        ========================================================== -->
-
         <div>
 
             <div
@@ -1199,8 +1122,6 @@ function formatWaktuLaporan($tanggal): string
                 @keydown.escape.window="ViewRiwayatTransaksi = false"
                 class="fixed inset-0 z-[999] flex justify-center items-center w-full p-4 sm:p-6 overflow-y-auto print:p-0 print:static print:block"
             >
-
-                <!-- BACKDROP -->
 
                 <div
                     x-show="ViewRiwayatTransaksi"
@@ -1214,8 +1135,6 @@ function formatWaktuLaporan($tanggal): string
                     @click="ViewRiwayatTransaksi = false"
                 ></div>
 
-
-                <!-- CONTAINER -->
 
                 <div
                     x-show="ViewRiwayatTransaksi"
@@ -1232,8 +1151,6 @@ function formatWaktuLaporan($tanggal): string
                     <div
                         class="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl max-h-[calc(100vh-2rem)] overflow-y-auto print:overflow-visible print:max-h-none print:border-none print:p-0 print:bg-white print:text-black"
                     >
-
-                        <!-- HEADER -->
 
                         <div class="mb-6 sm:mb-8 flex justify-between items-start sm:items-center gap-4">
 
@@ -1273,35 +1190,6 @@ function formatWaktuLaporan($tanggal): string
 
 
                         <div class="max-w-md mx-auto print:max-w-none">
-
-                            <!-- IDENTITAS TOKO -->
-
-                            <!-- <div
-                                class="text-center pb-4 mb-4 border-b border-dashed border-slate-200 dark:border-slate-800 print:border-black"
-                            >
-
-                                <h3
-                                    class="text-slate-900 dark:text-white font-black text-base tracking-wider uppercase print:text-black print:text-sm"
-                                >
-                                    PW CAFFE
-                                </h3>
-
-                                <p
-                                    class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 print:text-black print:text-[10px]"
-                                >
-                                    Jl. A. Wahab Syahranie No.Gang 9
-                                </p>
-
-                                <p
-                                    class="text-xs text-slate-500 dark:text-slate-400 print:text-black print:text-[10px]"
-                                >
-                                    Telp. 081234567890
-                                </p>
-
-                            </div> -->
-
-
-                            <!-- METADATA -->
 
                             <div
                                 class="py-1 text-xs sm:text-sm space-y-1.5 border-b border-dashed border-slate-200 dark:border-slate-800 print:border-black print:py-2 print:text-[10px]"
@@ -1349,8 +1237,6 @@ function formatWaktuLaporan($tanggal): string
 
                             </div>
 
-
-                            <!-- ITEM -->
 
                             <div class="my-4 print:my-2">
 
@@ -1459,8 +1345,6 @@ function formatWaktuLaporan($tanggal): string
                             </div>
 
 
-                            <!-- SUMMARY -->
-
                             <div
                                 class="pt-3 border-t border-dashed border-slate-200 dark:border-slate-800 space-y-1.5 text-xs sm:text-sm print:border-black print:pt-2 print:text-[10px]"
                             >
@@ -1552,23 +1436,8 @@ function formatWaktuLaporan($tanggal): string
 
                             </div>
 
-
-                            <!-- FOOTER STRUK -->
-
-                            <div
-                                class="hidden print:block text-center mt-4 pt-2 border-t border-dashed border-black text-[9px]"
-                            >
-
-                                <p class="font-bold">
-                                    *** TERIMA KASIH ***
-                                </p>
-
-                            </div>
-
                         </div>
 
-
-                        <!-- FOOTER BUTTON -->
 
                         <div
                             class="flex justify-end gap-3 mt-8 pt-4 border-t border-slate-100 dark:border-slate-800 print:hidden"
@@ -1604,7 +1473,7 @@ function formatWaktuLaporan($tanggal): string
                                             }
                                         ]
                                     });"
-                                    class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-green-500 text-white text-sm font-bold hover:bg-green-600 active:scale-95 transition"
+                                    class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-green-500 text-white text-sm font-bold cursor-pointer hover:bg-green-600 active:scale-95 transition"
                                 >
                                     <i class="bx bx-check-circle text-lg"></i>
                                     Lunasi
@@ -1633,146 +1502,6 @@ function formatWaktuLaporan($tanggal): string
 
             </div>
 
-        </div>
-
-
-        <div
-            id="strukPrint"
-            class="hidden print:block"
-        >
-            <div class="struk">
-
-                <div class="text-center">
-                    <h1 class="font-bold text-lg">
-                        <?= htmlspecialchars($p['nama_usaha'] ?? 'Nama Usaha') ?>
-                    </h1>
-
-                    <p>
-                        <?= htmlspecialchars($p['alamat'] ?? '') ?>
-                    </p>
-
-                    <p>
-                        <?= htmlspecialchars($p['telepon'] ?? '') ?>
-                    </p>
-                </div>
-
-                <div class="border-t border-dashed border-black my-3"></div>
-
-                <div class="text-sm">
-                    <div class="flex justify-between">
-                        <span>Transaksi</span>
-                        <span x-text="selectedData.kode_transaksi"></span>
-                    </div>
-
-                    <div class="flex justify-between">
-                        <span>Tanggal</span>
-                        <span x-text="selectedData.tanggal"></span>
-                    </div>
-
-                    <div class="flex justify-between">
-                        <span>Pelanggan</span>
-                        <span x-text="selectedData.pelanggan || '-'"></span>
-                    </div>
-
-                    <div class="flex justify-between">
-                        <span>Tipe</span>
-                        <span x-text="formatTipePesanan(selectedData.tipe_pesanan)"></span>
-                    </div>
-                </div>
-
-                <div class="border-t border-dashed border-black my-3"></div>
-
-                <div class="space-y-2">
-
-                    <template
-                        x-for="item in selectedData.items"
-                        :key="item.id_menu"
-                    >
-                        <div>
-
-                            <div class="flex justify-between">
-                                <span
-                                    class="font-medium"
-                                    x-text="item.nama_menu"
-                                ></span>
-
-                                <span
-                                    x-text="formatRupiah(item.total)"
-                                ></span>
-                            </div>
-
-                            <div class="text-xs">
-                                <span
-                                    x-text="formatRupiah(item.harga) + ' x ' + item.qty"
-                                ></span>
-                            </div>
-
-                            <template x-if="item.diskon > 0">
-                                <div class="text-xs">
-                                    Diskon -
-                                    <span x-text="formatRupiah(item.diskon)"></span>
-                                </div>
-                            </template>
-
-                            <template x-if="item.catatan">
-                                <div class="text-xs">
-                                    Catatan:
-                                    <span x-text="item.catatan"></span>
-                                </div>
-                            </template>
-
-                        </div>
-                    </template>
-
-                </div>
-
-                <div class="border-t border-dashed border-black my-3"></div>
-
-                <div class="text-sm">
-
-                    <div class="flex justify-between">
-                        <span>Subtotal</span>
-                        <span x-text="formatRupiah(selectedData.subtotal)"></span>
-                    </div>
-
-                    <div class="flex justify-between">
-                        <span>Diskon</span>
-                        <span x-text="'-' + formatRupiah(selectedData.total_diskon)"></span>
-                    </div>
-
-                    <div class="flex justify-between font-bold text-base mt-1">
-                        <span>Total</span>
-                        <span x-text="formatRupiah(selectedData.total)"></span>
-                    </div>
-
-                    <div class="flex justify-between mt-2">
-                        <span>Pembayaran</span>
-                        <span x-text="selectedData.pembayaran"></span>
-                    </div>
-
-                    <template x-if="selectedData.pembayaran !== 'Hutang'">
-                        <div class="flex justify-between">
-                            <span>Dibayar</span>
-                            <span x-text="formatRupiah(selectedData.uang_diterima)"></span>
-                        </div>
-                    </template>
-
-                    <template x-if="selectedData.kembalian > 0">
-                        <div class="flex justify-between">
-                            <span>Kembalian</span>
-                            <span x-text="formatRupiah(selectedData.kembalian)"></span>
-                        </div>
-                    </template>
-
-                </div>
-
-                <div class="border-t border-dashed border-black my-3"></div>
-
-                <div class="text-center text-xs">
-                    <p>Terima kasih atas kunjungan Anda.</p>
-                </div>
-
-            </div>
         </div>
 
     </div>

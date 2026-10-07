@@ -40,7 +40,7 @@
                         </h2>
                         <p class="text-sm md:text-base text-gray-500 mt-3 max-w-2xl leading-relaxed">
                             Kelola menu, pantau transaksi, dan lihat perkembangan
-                            penjualan melalui dashboard PWMS-POS.
+                            penjualan.
                         </p>
                         <div class="flex flex-wrap items-center gap-3 mt-6">
                             <a href="?route=kasir"
