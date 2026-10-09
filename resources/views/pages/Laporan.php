@@ -44,6 +44,8 @@ function formatWaktuLaporan($tanggal): string
 
             selectedData: {
                 id_transaksi: null,
+                nama_user: null,
+                nama_pelunas: null,
                 kode_transaksi: '',
                 status_transaksi: '',
                 status_pembayaran: '',
@@ -83,9 +85,7 @@ function formatWaktuLaporan($tanggal): string
                 }
             
                 window.open(
-                    '?route=struk&id=' + encodeURIComponent(id),
-                    '_blank',
-                    'width=450,height=700'
+                    '?route=struk&id=' + encodeURIComponent(id)
                 );
             }
         }"
@@ -155,7 +155,7 @@ function formatWaktuLaporan($tanggal): string
         </div>
 
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-10 mb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-10 mb-8">
 
             <div class="bg-white border-e border-gray-200/80 rounded-lg px-3 py-6">
 
@@ -163,7 +163,7 @@ function formatWaktuLaporan($tanggal): string
 
                     <div class="w-12 h-12 rounded-lg bg-primary flex items-center justify-center">
 
-                        <i class="bx bxs-chart-sine text-xl text-white"></i>
+                        <i class="bx bxs-wallet text-xl text-white"></i>
 
                     </div>
 
@@ -172,11 +172,41 @@ function formatWaktuLaporan($tanggal): string
                 <div class="mt-5">
 
                     <p class="text-xs font-bold text-gray-400 uppercase tracking-wide">
-                        Total Pendapatan
+                        Total Pendapatan Bersih
                     </p>
 
                     <h3 class="text-xl sm:text-2xl font-black text-gray-900 mt-1.5">
-                        <?= formatRupiahLaporan($totalPendapatan) ?>
+                        <?= formatRupiahLaporan($totalPendapatanBersih) ?>
+                    </h3>
+
+                    <p class="text-xs text-gray-400 mt-1.5">
+                        dari seluruh transaksi
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="bg-white border-e border-gray-200/80 rounded-lg px-3 py-6">
+
+                <div class="flex items-center justify-between">
+
+                    <div class="w-12 h-12 rounded-lg bg-primary flex items-center justify-center">
+
+                        <i class="bx bxs-cart text-xl text-white"></i>
+
+                    </div>
+
+                </div>
+
+                <div class="mt-5">
+
+                    <p class="text-xs font-bold text-gray-400 uppercase tracking-wide">
+                        Total Pendapatan Kotor
+                    </p>
+
+                    <h3 class="text-xl sm:text-2xl font-black text-gray-900 mt-1.5">
+                        <?= formatRupiahLaporan($totalPendapatanKotor) ?>
                     </h3>
 
                     <p class="text-xs text-gray-400 mt-1.5">
@@ -516,6 +546,8 @@ function formatWaktuLaporan($tanggal): string
                                                 @click="
                                                     openDetail({
                                                         id_transaksi: <?= (int) $d['id_transaksi'] ?>,
+                                                        nama_user: <?= htmlspecialchars(json_encode($d['nama_user']), ENT_QUOTES, 'UTF-8') ?>,
+                                                        nama_pelunas: <?= htmlspecialchars(json_encode($d['nama_pelunas']), ENT_QUOTES, 'UTF-8') ?>,
                                                         kode_transaksi: <?= htmlspecialchars(json_encode($d['kode_transaksi']), ENT_QUOTES, 'UTF-8') ?>,
                                                         status_transaksi: <?= htmlspecialchars(json_encode($statusTransaksi), ENT_QUOTES, 'UTF-8') ?>,
                                                         status_pembayaran: <?= htmlspecialchars(json_encode($statusPembayaran), ENT_QUOTES, 'UTF-8') ?>,
@@ -1018,6 +1050,58 @@ function formatWaktuLaporan($tanggal): string
 
                                 </div>
 
+                                <?php if(in_array($kr, ['super_admin','admin'])): ?>
+                                <div class="flex flex-col gap-1.5 w-full">
+
+                                    <label
+                                        class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-400 ml-1"
+                                    >
+                                        Pengguna
+                                    </label>
+
+                                    <div class="relative flex items-center w-full group">
+
+                                        <div
+                                            class="absolute left-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors duration-200"
+                                        >
+                                            <i class="bx bxs-user text-xl sm:text-lg"></i>
+                                        </div>
+
+
+                                        <select
+                                            name="pengguna"
+                                            class="w-full pl-10 sm:pl-11 pr-10 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border-2 border-gray-200/80 dark:border-slate-700 focus:outline-none focus:ring focus:ring-primary focus:border-primary appearance-none transition-all cursor-pointer"
+                                        >
+
+                                            <option value="">
+                                                Semua Pengguna
+                                            </option>
+
+                                            <?php foreach ($penggunaData as $d): ?>
+
+                                                <option
+                                                    value="<?= (int) $d['id_user'] ?>"
+                                                    <?= (int) $pengguna === (int) $d['id_user'] ? 'selected' : '' ?>
+                                                >
+                                                    <?= htmlspecialchars($d['nama']) ?>
+                                                </option>
+
+                                            <?php endforeach; ?>
+
+                                        </select>
+
+
+                                        <div
+                                            class="absolute right-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors duration-200"
+                                        >
+                                            <i class="bx bxs-chevron-down text-lg"></i>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <?php endif; ?>
+
 
                                 <div class="flex flex-col gap-1.5 w-full">
 
@@ -1204,6 +1288,19 @@ function formatWaktuLaporan($tanggal): string
                                     <span
                                         class="font-bold text-slate-800 dark:text-slate-200 print:text-black"
                                         x-text="selectedData.kode_transaksi || '-'"
+                                    ></span>
+
+                                </div>
+
+                                <div class="flex justify-between gap-4">
+
+                                    <span class="text-slate-500 dark:text-slate-400 font-medium print:text-black">
+                                        Kasir
+                                    </span>
+
+                                    <span
+                                        class="font-bold text-slate-800 dark:text-slate-200 print:text-black"
+                                        x-text="selectedData.nama_user || '-'"
                                     ></span>
 
                                 </div>
@@ -1430,6 +1527,19 @@ function formatWaktuLaporan($tanggal): string
                                     <span
                                         class="font-bold text-slate-900 dark:text-white print:text-black"
                                         x-text="'Rp ' + Number(selectedData.kembalian || 0).toLocaleString('id-ID')"
+                                    ></span>
+
+                                </div>
+
+                                <div class="flex justify-between gap-4 font-bold text-black dark:text-white mt-3" x-if="selectedData.is_hutang">
+
+                                    <span class="print:text-black">
+                                        Dilunasi
+                                    </span>
+
+                                    <span
+                                        class="print:text-black"
+                                        x-text="selectedData.nama_pelunas || '-'"
                                     ></span>
 
                                 </div>

@@ -66,6 +66,14 @@ function formatWaktuStruk($tanggal): string
             </span>
         </div>
 
+        <div class="flex justify-between">
+            <span>Tanggal</span>
+
+            <span>
+                <?= htmlspecialchars(($data['nama_user'])) ?>
+            </span>
+        </div>
+
 
         <div class="flex justify-between">
             <span>Pelanggan</span>

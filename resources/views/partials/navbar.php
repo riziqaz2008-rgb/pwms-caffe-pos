@@ -31,9 +31,9 @@
             </div>
         </div>
 
-        <div class="hidden lg:flex justify-end items-center gap-3">
-            <div class="p-3 rounded-full bg-primary flex items-center justify-center">
-                <i class="bx bxs-user text-xl text-white"></i>
+        <div class="hidden lg:flex justify-end items-center gap-2">
+            <div class="p-3 rounded-full w-10 h-10 bg-primary flex items-center justify-center">
+                <span class="text-xl text-white"><?= $hprofil ?></span>
             </div>
             <div class="flex flex-col">                
                 <span class="text-[10px] font-black text-primary uppercase tracking-widest leading-none"><?= $dataUser['nama_role'] ?></span>

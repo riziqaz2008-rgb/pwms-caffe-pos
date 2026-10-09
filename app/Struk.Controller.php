@@ -14,6 +14,7 @@ if ($idTransaksi <= 0) {
 $sql = "
     SELECT
         t.id_transaksi,
+        a.nama AS nama_user,
         t.kode_transaksi,
         t.tanggal,
         t.tipe_pesanan,
@@ -39,6 +40,12 @@ $sql = "
 
     LEFT JOIN metode m
         ON m.id_metode = t.id_metode
+
+    LEFT JOIN users u
+        ON t.id_user = u.id_user
+
+    LEFT JOIN anggota a
+        ON u.id_anggota = a.id_anggota
 
     WHERE t.id_transaksi = ?
 

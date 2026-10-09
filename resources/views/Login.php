@@ -15,7 +15,7 @@ if(isset($_POST['login'])){
         exit;
     }
 
-    $stmt = $conn->prepare("SELECT u.id_user, a.id_anggota FROM users u LEFT JOIN anggota a ON a.id_anggota = u.id_anggota WHERE username=? AND password=?");
+    $stmt = $conn->prepare("SELECT * FROM users u LEFT JOIN anggota a ON a.id_anggota = u.id_anggota LEFT JOIN roles r ON u.id_role = r.id_role WHERE username=? AND password=?");
     $stmt->bind_param("ss", $u, $p);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -24,6 +24,7 @@ if(isset($_POST['login'])){
     if ($data) {
         $_SESSION['id_user'] = $data['id_user'];
         $_SESSION['id_anggota'] = $data['id_anggota'];
+        $_SESSION['role'] = $data['kode_role'];
         header("Location: layouts/app.php");
         exit;
     } else {
@@ -116,7 +117,7 @@ if(isset($_POST['login'])){
                         <?php unset($_SESSION['error']); ?>
                     <?php endif; ?>
 
-                    <form action="" method="POST">
+                    <form action="" method="POST" autocomplete="off">
 
                         <div class="flex flex-col gap-5">
 
@@ -140,7 +141,6 @@ if(isset($_POST['login'])){
                                         id="username"
                                         name="username"
                                         placeholder="Masukkan username"
-                                        autocomplete="username"
                                         class="w-full pl-12 pr-4 py-3.5 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-xl border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
                                         required
                                     >
@@ -173,7 +173,6 @@ if(isset($_POST['login'])){
                                         id="password"
                                         name="password"
                                         placeholder="Masukkan password"
-                                        autocomplete="current-password"
                                         class="w-full pl-12 pr-12 py-3.5 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-xl border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
                                         required
                                     >

@@ -178,20 +178,7 @@
                         </span>
                     </a>
                 </li>
-            </ul>  
-            <div class="flex items-center w-full bg-white sticky bottom-0 py-6 ps-3.5">
-                <div class="hidden sm:flex items-center">
-                    <span class="inline-block h-3.5 bg-gray-300 ml-3 align-middle"></span>
-                    <button type="button" class="group w-11 h-11 rounded-full overflow-hidden ring-2 ring-primary hover:ring-rose-600 bg-primary hover:bg-rose-600 flex items-center justify-center cursor-pointer transition-all duration-300 ease-in-out active:scale-95 hover:border-blue-600 focus:outline-none">
-                       <span class="font-black text-white group-hover:hidden"><?= $hprofil ?></span>
-                       <a href="../partials/logout.php" class="font-black text-white text-xl hidden group-hover:inline"><i class="bx bxs-door-open-alt"></i></a>
-                    </button> 
-                    <div class="flex flex-col text-left ms-4">
-                        <span x-show="sidebarOpen" class="text-[10px] font-black text-primary uppercase tracking-widest leading-none"><?= $dataUser['nama_role'] ?></span>
-                        <span x-show="sidebarOpen" class="text-sm font-black text-slate-700 mt-1.5 leading-none"><?= $dataAnggota['nama'] ?></span>
-                    </div>
-                </div>             
-            </div>
+            </ul>
         </div>
     </aside>
 </section>

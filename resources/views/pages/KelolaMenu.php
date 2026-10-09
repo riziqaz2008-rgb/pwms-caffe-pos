@@ -427,7 +427,7 @@
                             <div class="flex flex-col items-center justify-center py-12 px-4 text-center">
                                 <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4 border border-gray-200/80">
                                     <i class="bx bxs-dish text-4xl text-gray-300"></i>
-                        </div>
+                                </div>
                                 <h3 class="text-base font-black text-slate-800 mb-1">
                                     Menu Belum Tersedia
                                 </h3>

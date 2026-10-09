@@ -4,8 +4,6 @@ function pengaturan($d){
     global $p;
     $namaUsaha = trim($d['nama'] ?? '');
     $telepon   = trim($d['telepon'] ?? '');
-    $email     = trim($d['email'] ?? '');
-    $jam       = trim($d['jam'] ?? '');
     $alamat    = trim($d['alamat'] ?? '');
     
     if ($namaUsaha === '' || $alamat === '') {
@@ -23,19 +21,15 @@ function pengaturan($d){
             "UPDATE pengaturan
              SET nama_usaha = ?,
                  telepon = ?,
-                 email = ?,
-                 jam = ?,
                  alamat = ?
              WHERE id = ?"
         );
     
         mysqli_stmt_bind_param(
             $stmt,
-            "sssssi",
+            "sssi",
             $namaUsaha,
             $telepon,
-            $email,
-            $jam,
             $alamat,
             $p['id']
         );

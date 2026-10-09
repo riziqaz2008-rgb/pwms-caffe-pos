@@ -9,8 +9,12 @@ $offset = ($currentPage - 1) * $limit;
 $pembayaran = $_GET['pembayaran'] ?? '';
 $statusPembayaranFilter = $_GET['status_pembayaran'] ?? '';
 $kategori = $_GET['kategori'] ?? '';
+$pengguna = $_GET['pengguna'] ?? '';
 $tanggalMulai = $_GET['tanggal_mulai'] ?? '';
 $tanggalSampai = $_GET['tanggal_sampai'] ?? '';
+
+$idUserLogin = (int) ($_SESSION['id_user'] ?? 0);
+$roleLogin = $_SESSION['role'] ?? '';
 
 $where = "";
 
@@ -68,6 +72,44 @@ if ($kategori !== '') {
 
     $params[] = (int) $kategori;
     $types .= "i";
+}
+
+if ($roleLogin === 'kasir') {
+
+    $where .= " AND t.id_user = ?";
+
+    $params[] = $idUserLogin;
+    $types .= "i";
+
+} elseif ($roleLogin === 'admin') {
+
+    $where .= "
+        AND EXISTS (
+            SELECT 1
+            FROM users ux
+            LEFT JOIN roles rx ON ux.id_role = rx.id_role
+            WHERE ux.id_user = t.id_user
+            AND rx.kode_role <> 'super_admin'
+        )
+    ";
+
+    if ($pengguna !== '') {
+
+        $where .= " AND t.id_user = ?";
+
+        $params[] = (int) $pengguna;
+        $types .= "i";
+    }
+
+} elseif ($roleLogin === 'super_admin') {
+
+    if ($pengguna !== '') {
+
+        $where .= " AND t.id_user = ?";
+
+        $params[] = (int) $pengguna;
+        $types .= "i";
+    }
 }
 
 
@@ -139,6 +181,9 @@ if ($currentPage > $totalPage) {
 $sql = "
     SELECT
         t.id_transaksi,
+        u.id_user,
+        a.nama AS nama_user,
+        ap.nama AS nama_pelunas,
         t.kode_transaksi,
         t.tanggal,
         t.tipe_pesanan,
@@ -162,6 +207,18 @@ $sql = "
 
     LEFT JOIN metode m
         ON m.id_metode = t.id_metode
+
+    LEFT JOIN users u
+        ON t.id_user = u.id_user
+
+    LEFT JOIN anggota a
+        ON u.id_anggota = a.id_anggota
+
+    LEFT JOIN users up
+        ON t.id_user = up.id_user
+
+    LEFT JOIN anggota ap
+        ON up.id_anggota = ap.id_anggota
 
     WHERE 1=1
     $where
@@ -270,10 +327,63 @@ $kategoriData = fetchAllAssoc("
 
 $kategori = $kategoriData;
 
+if ($roleLogin === 'super_admin') {
+
+    $penggunaData = fetchAllAssoc("
+        SELECT
+            u.id_user,
+            a.nama
+        FROM users u
+
+        LEFT JOIN anggota a
+            ON u.id_anggota = a.id_anggota
+
+        ORDER BY a.nama ASC
+    ");
+
+} elseif ($roleLogin === 'admin') {
+
+    $penggunaData = fetchAllAssoc("
+        SELECT
+            u.id_user,
+            a.nama
+        FROM users u
+
+        LEFT JOIN anggota a
+            ON u.id_anggota = a.id_anggota
+
+        LEFT JOIN roles r
+            ON u.id_role = r.id_role
+
+        WHERE r.kode_role <> 'super_admin'
+
+        ORDER BY a.nama ASC
+    ");
+
+} else {
+
+    $penggunaData = fetchAllAssoc("
+        SELECT
+            u.id_user,
+            a.nama
+        FROM users u
+
+        LEFT JOIN anggota a
+            ON u.id_anggota = a.id_anggota
+
+        WHERE u.id_user = $idUserLogin
+
+        ORDER BY a.nama ASC
+    ");
+}
+
+$pengguna = $penggunaData;
+
 
 $sqlStatistik = "
     SELECT
-        COALESCE(SUM(t.uang_diterima), 0) AS total_pendapatan,
+        COALESCE(SUM(t.total), 0) AS total_pendapatan_bersih,
+        COALESCE(SUM(t.uang_diterima), 0) AS total_pendapatan_kotor,
         COUNT(t.id_transaksi) AS total_transaksi
 
     FROM transaksi t
@@ -305,7 +415,8 @@ $resultStatistik = mysqli_stmt_get_result($stmtStatistik);
 
 $statistik = mysqli_fetch_assoc($resultStatistik);
 
-$totalPendapatan = (int) ($statistik['total_pendapatan'] ?? 0);
+$totalPendapatanBersih  = (int) ($statistik['total_pendapatan_bersih'] ?? 0);
+$totalPendapatanKotor = (int) ($statistik['total_pendapatan_kotor'] ?? 0);
 $totalTransaksi = (int) ($statistik['total_transaksi'] ?? 0);
 
 mysqli_stmt_close($stmtStatistik);
@@ -403,7 +514,18 @@ if (!empty($data)) {
 
 function bayarHutang($d){
     global $conn;
+
+    $idUser = (int) ($_SESSION['id_user'] ?? 0);
     $idTransaksi = (int) ($d['id'] ?? 0);
+
+    $qc = query("SELECT * FROM users WHERE id_user='$idUser'");
+    if ($idUser <= 0 || mysqli_num_rows($qc) == 0) {
+        return [
+            'status' => false,
+            'pesan' => 'User tidak valid.',
+            'bg' => 'warning'
+        ];
+    }
 
     if ($idTransaksi <= 0) {
         return [
@@ -418,7 +540,8 @@ function bayarHutang($d){
         "UPDATE transaksi
          SET status_pembayaran = 2,
              uang_diterima = total,
-             kembalian = 0
+             kembalian = 0,
+             id_pelunas = $idUser
          WHERE id_transaksi = ?
            AND status_transaksi = 1
            AND status_pembayaran = 1

@@ -50,7 +50,7 @@
                     <span class="text-xs font-bold text-gray-400">metode</span>
                 </div>
             </div>
-            <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-primary text-white dark:text-emerald-400 group-hover:scale-110 transition-transform duration-300 shrink-0">
+            <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-primary text-white dark:text-emerald-400 transition-transform duration-300 shrink-0">
                 <i class="bx bxs-wallet-alt text-2xl"></i>
             </div>
         </div>
@@ -63,7 +63,7 @@
                     <span class="text-xs font-bold text-gray-400">aktif</span>
                 </div>
             </div>
-            <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-primary text-white dark:text-emerald-400 group-hover:scale-110 transition-transform duration-300 shrink-0">
+            <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-primary text-white dark:text-emerald-400 transition-transform duration-300 shrink-0">
                 <i class="bx bxs-check-circle text-2xl"></i>
             </div>
         </div>

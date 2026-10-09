@@ -1,12 +1,61 @@
 <?php
 date_default_timezone_set('Asia/Makassar');
 
+function generateKodeTransaksi(mysqli $conn): string
+{
+    $tanggal = date('Ymd');
+
+    $prefix = "TRX-{$tanggal}-";
+
+    $sql = "
+        SELECT kode_transaksi
+        FROM transaksi
+        WHERE kode_transaksi LIKE ?
+        ORDER BY id_transaksi DESC
+        LIMIT 1
+    ";
+
+    $stmt = mysqli_prepare($conn, $sql);
+
+    $like = $prefix . '%';
+
+    mysqli_stmt_bind_param($stmt, 's', $like);
+    mysqli_stmt_execute($stmt);
+
+    $result = mysqli_stmt_get_result($stmt);
+    $row = mysqli_fetch_assoc($result);
+
+    mysqli_stmt_close($stmt);
+
+    if (!$row) {
+        $nomor = 1;
+    } else {
+        $kodeTerakhir = $row['kode_transaksi'];
+
+        $bagianNomor = substr($kodeTerakhir, -4);
+
+        $nomor = ((int) $bagianNomor) + 1;
+    }
+
+    return $prefix . str_pad($nomor, 4, '0', STR_PAD_LEFT);
+}
+
 function simpanPesananMenunggu($data)
 {
     global $conn;
 
+    $idUser = (int) ($_SESSION['id_user'] ?? 0);
     $transaksi = $data['transaksi'] ?? [];
     $items = $data['items'] ?? [];
+
+    $qc = query("SELECT * FROM users WHERE id_user='$idUser'");
+    if ($idUser <= 0 || mysqli_num_rows($qc) == 0) {
+        return [
+            'status' => false,
+            'pesan' => 'User tidak valid.',
+            'bg' => 'warning'
+        ];
+    }
 
     if (empty($items)) {
         return [
@@ -140,8 +189,7 @@ function simpanPesananMenunggu($data)
     $uangDiterima = 0;
     $kembalian = 0;
 
-    $kodeTransaksi =
-        'TRX-' . date('YmdHis');
+    $kodeTransaksi = generateKodeTransaksi($conn);
 
     mysqli_begin_transaction($conn);
 
@@ -279,11 +327,21 @@ function simpanTransaksi($data)
 {
     global $conn;
 
+    $idUser = (int) ($_SESSION['id_user'] ?? 0);
     $transaksi = $data['transaksi'] ?? [];
     $items = $data['items'] ?? [];
     $pembayaran = $data['pembayaran'] ?? [];
 
     $metode = $pembayaran['metode'] ?? '';
+
+    $qc = query("SELECT * FROM users WHERE id_user='$idUser'");
+    if ($idUser <= 0 || mysqli_num_rows($qc) == 0) {
+        return [
+            'status' => false,
+            'pesan' => 'User tidak valid.',
+            'bg' => 'warning'
+        ];
+    }
 
     if (empty($items)) {
         return [
@@ -546,7 +604,7 @@ function simpanTransaksi($data)
         'Takeaway' => 2
     };
 
-    $kodeTransaksi = 'TRX-' . date('YmdHis');
+    $kodeTransaksi = generateKodeTransaksi($conn);
 
     $statusTransaksi = 1; // 1 = selesai
 
@@ -566,15 +624,16 @@ function simpanTransaksi($data)
                 status_pembayaran,
                 id_metode,
                 uang_diterima,
-                kembalian
-            ) VALUES (?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                kembalian,
+                id_user
+            ) VALUES (?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ";
         
         $stmt = mysqli_prepare($conn, $sql);
         
        mysqli_stmt_bind_param(
             $stmt,
-            "siisiiiiiiii",
+            "siisiiiiiiiii",
             $kodeTransaksi,
             $tipePesananDb,
             $idPelanggan,
@@ -586,7 +645,8 @@ function simpanTransaksi($data)
             $statusPembayaran,
             $idMetode,
             $uangDiterima,
-            $kembalian
+            $kembalian,
+            $idUser
         );
         
         if (!mysqli_stmt_execute($stmt)) {

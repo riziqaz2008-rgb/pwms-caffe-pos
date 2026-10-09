@@ -184,81 +184,95 @@
                     </div>
 
                     <?php if (($_GET['layoutMode'] ?? 'grid') == 'table'): ?>
-                    <?php if(mysqli_num_rows($data)):
+                        <?php if(mysqli_num_rows($data)): ?>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left">
+                                    <thead>
+                                        <tr class="bg-slate-50">
+                                            <th class="px-4 py-3 text-[11px] font-black text-gray-400 uppercase tracking-wider">No</th>
+                                            <th class="px-4 py-3 text-[11px] font-black text-gray-400 uppercase tracking-wider">Foto</th>
+                                            <th class="px-4 py-3 text-[11px] font-black text-gray-400 uppercase tracking-wider">Nama</th>
+                                            <th class="px-4 py-3 text-[11px] font-black text-gray-400 uppercase tracking-wider">Kategori</th>
+                                            <th class="px-4 py-3 text-[11px] font-black text-gray-400 uppercase tracking-wider">Harga</th>
+                                            <th class="px-4 py-3 text-[11px] font-black text-gray-400 uppercase tracking-wider text-right">Aksi</th>
+                                        </tr>
+                                    </thead>
 
-                    ?>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left">
-                                <thead>
-                                    <tr class="bg-slate-50">
-                                        <th class="px-4 py-3 text-[11px] font-black text-gray-400 uppercase tracking-wider">No</th>
-                                        <th class="px-4 py-3 text-[11px] font-black text-gray-400 uppercase tracking-wider">Foto</th>
-                                        <th class="px-4 py-3 text-[11px] font-black text-gray-400 uppercase tracking-wider">Nama</th>
-                                        <th class="px-4 py-3 text-[11px] font-black text-gray-400 uppercase tracking-wider">Kategori</th>
-                                        <th class="px-4 py-3 text-[11px] font-black text-gray-400 uppercase tracking-wider">Harga</th>
-                                        <th class="px-4 py-3 text-[11px] font-black text-gray-400 uppercase tracking-wider text-right">Aksi</th>
-                                    </tr>
-                                </thead>
+                                    <tbody class="divide-y divide-gray-100">
+                                        <?php while($d = mysqli_fetch_assoc($data)):
+                                        if($d['menu_tersedia'] === 0){
+                                            $w = "text-gray-400";
+                                            $wf = "text-gray-400";
+                                        } else{
+                                            $wf = "text-gray-900";
+                                            $w = "text-primary";
+                                        }
+                                        ?>
+                                        <tr class="group hover:bg-gray-50 transition-all">
+                                            <td class="px-5 py-4 font-bold text-gray-500"><?= $no++ ?></td>
 
-                                <tbody class="divide-y divide-gray-100">
-                                    <?php while($d = mysqli_fetch_assoc($data)):
-                                    if($d['menu_tersedia'] === 0){
-                                        $w = "text-gray-400";
-                                        $wf = "text-gray-400";
-                                    } else{
-                                        $wf = "text-gray-900";
-                                        $w = "text-primary";
-                                    }
-                                    ?>
-                                    <tr class="group hover:bg-gray-50 transition-all">
-                                        <td class="px-5 py-4 font-bold text-gray-500"><?= $no++ ?></td>
+                                            <td class="px-5 py-4">
+                                                <div class="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center shrink-0 overflow-hidden">
+                                                    <?php if (!empty($d['foto'])): ?>
+                                                        <img
+                                                            src="public/images/<?= htmlspecialchars($d['foto']); ?>"
+                                                            class="w-full h-full object-cover"
+                                                            alt="<?= htmlspecialchars($d['nama']); ?>">
+                                                    <?php else: ?>
+                                                        <i class="bx bxs-bowl-hot text-xl text-gray-400"></i>
+                                                    <?php endif; ?>
+                                                </div>
+                                            </td>
 
-                                        <td class="px-5 py-4">
-                                            <div class="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center shrink-0 overflow-hidden">
-                                                <?php if (!empty($d['foto'])): ?>
-                                                    <img
-                                                        src="public/images/<?= htmlspecialchars($d['foto']); ?>"
-                                                        class="w-full h-full object-cover"
-                                                        alt="<?= htmlspecialchars($d['nama']); ?>">
-                                                <?php else: ?>
-                                                    <i class="bx bxs-bowl-hot text-xl text-gray-400"></i>
-                                                <?php endif; ?>
-                                            </div>
-                                        </td>
+                                            <td class="px-5 py-4">
+                                                <span class="font-bold <?= $w ?>"><?= $d['nama'] ?></span>
+                                            </td>
 
-                                        <td class="px-5 py-4">
-                                            <span class="font-bold <?= $w ?>"><?= $d['nama'] ?></span>
-                                        </td>
+                                            <td>
+                                                <span class="inline-flex items-center px-6 py-2 rounded-lg <?= $wf ?> text-sm font-bold">
+                                                    <?= $d['nama_kategori'] ?>
+                                                </span>
+                                            </td>
 
-                                        <td>
-                                            <span class="inline-flex items-center px-6 py-2 rounded-lg <?= $wf ?> text-sm font-bold">
-                                                <?= $d['nama_kategori'] ?>
-                                            </span>
-                                        </td>
+                                            <td class="px-5 py-4">
+                                                <span class="font-bold <?= $w ?>">Rp <?= number_format($d['harga'], 0, ',', '.') ?></span>
+                                            </td>
 
-                                        <td class="px-5 py-4">
-                                            <span class="font-bold <?= $w ?>">Rp <?= number_format($d['harga'], 0, ',', '.') ?></span>
-                                        </td>
-
-                                        <?php if($d['menu_tersedia'] !== 0): ?>
-                                        <td class="px-5 py-4">
-                                            <div class="flex items-center justify-center gap-2">
-                                               <button
-                                                    type="button"
-                                                    onclick='addMenu(<?= json_encode($d, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>)'
-                                                    class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all cursor-pointer"
-                                                >
-                                                    <i class="bx bxs-plus"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                        <?php endif; ?>
-                                    </tr>
-                                    <?php endwhile; ?>
-                                </tbody>
-                            </table>
-                        </div>
-                            <?php endif; ?>
+                                            <?php if($d['menu_tersedia'] !== 0): ?>
+                                            <td class="px-5 py-4">
+                                                <div class="flex items-center justify-center gap-2">
+                                                   <button
+                                                        type="button"
+                                                        onclick='addMenu(<?= json_encode($d, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>)'
+                                                        class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center hover:opacity-90 active:scale-95 transition-all cursor-pointer"
+                                                    >
+                                                        <i class="bx bxs-plus"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                            <?php endif; ?>
+                                        </tr>
+                                        <?php endwhile; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="6">
+                                    <div class="flex flex-col items-center justify-center py-12 px-4 text-center bg-gray-50">
+                                        <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4 border border-gray-200/80">
+                                            <i class="bx bxs-dish text-4xl text-gray-300"></i>
+                                        </div>
+                                        <h3 class="text-base font-black text-slate-800 mb-1">
+                                            Menu Belum Tersedia
+                                        </h3>
+                                        <p class="text-xs text-gray-400 max-w-sm mb-5">
+                                            Belum ada data menu yang ditambahkan atau hasil pencarian tidak cocok.
+                                        </p>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
                     <?php else: ?>
                         <?php if(mysqli_num_rows($data)): ?>
                             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -320,6 +334,18 @@
                                     </div>
                                 </div>
                                 <?php endwhile; ?>
+                            </div>
+                        <?php else: ?>
+                            <div class="flex flex-col items-center justify-center py-12 px-4 text-center">
+                                <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4 border border-gray-200/80">
+                                    <i class="bx bxs-dish text-4xl text-gray-300"></i>
+                                </div>
+                                <h3 class="text-base font-black text-slate-800 mb-1">
+                                    Menu Belum Tersedia
+                                </h3>
+                                <p class="text-xs text-gray-400 max-w-sm mb-5">
+                                    Belum ada data menu yang ditambahkan atau hasil pencarian tidak cocok.
+                                </p>
                             </div>
                         <?php endif; ?>
                     <?php endif; ?>
@@ -635,37 +661,6 @@
                             </div>
 
                         </div>
-
-                        <!-- <span class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 mb-2">
-                            Total Tagihan
-                        </span>
-                        <h2 class="paymentTotal text-4xl sm:text-5xl font-black text-primary tracking-tighter" id="">
-                            Rp0
-                        </h2>  -->
-
-                        <!-- <div class="flex items-center w-full mt-6">
-                            <div class="flex items-center flex-1">
-                                <span class="flex items-center justify-center w-12 h-12 bg-primary text-white rounded-full shrink-0">
-                                    <i class="bx bx-store text-xl"></i>
-                                </span>
-
-                                <div class="h-1 flex-1 mx-4 bg-primary rounded-full"></div>
-                            </div>
-
-                            <div class="flex items-center flex-1">
-                                <span class="flex items-center justify-center w-12 h-12 bg-transparent border-2 border-gray-300 rounded-full shrink-0">
-                                    <i class="bx bx-user-id-card"></i>
-                                </span>
-
-                                <div class="h-1 flex-1 mx-4 bg-gray-300 rounded-full"></div>
-                            </div>
-
-                            <div class="flex items-center">
-                                <span class="flex items-center justify-center w-12 h-12 bg-transparent border-2 border-gray-300 rounded-full shrink-0">
-                                    <i class="bx bx-wallet"></i>
-                                </span>
-                            </div>
-                        </div> -->
                     </div>
                     
 
@@ -1262,7 +1257,6 @@
 
 <script>
     const value = document.querySelector('input[name="jenis_pemesanan"]').value;
-    // console.log(value);
     function tdisk(b){
       const item = b.closest('.item-order');
       const igdisk = item.querySelector('.ig-diskon');
@@ -1328,6 +1322,7 @@
             return total + Number(item.diskon || 0);
         }, 0);
         document.getElementById('diskon').textContent = 'Rp' + td.toLocaleString('id-ID');
+        updatePayment();
     }
 
     function dotsMenu(b){
@@ -1353,9 +1348,6 @@
             });
         }
         renderOrder();
-
-        // console.log('ORDER', order);
-        // console.log('SUM', getOrderSummary());
     }
 
     function increaseQty(index){
@@ -1553,7 +1545,7 @@
             subtotal += harga * qty;
             totalDiskon += diskon;
         });
-        const total = Math.max(0, subtotal - totalDiskon)
+        const total = Math.max(0, subtotal - totalDiskon);
         return {
             subtotal,
             totalDiskon,
@@ -1673,8 +1665,6 @@ function updatePayment(totalOverride = null) {
         }
 
         const summary = getOrderSummary();
-        // console.log('Order:', order);
-        // console.log('Sum Pemba:', summary);
 
         const nominalInput = document.getElementById('nominal');
         if(nominalInput){
@@ -1816,9 +1806,6 @@ function updatePayment(totalOverride = null) {
         dataPembayaran
     );
 
-    // console.log('DATA TRANSAKSI:', transaksi);
-
-    // SELANJUTNYA FETCH KE PHP
     const formData = new FormData();
 
     formData.append('aksi', 'simpanTransaksi');
@@ -1847,7 +1834,7 @@ function updatePayment(totalOverride = null) {
     }
 
     resetTransaksi();
-    console.log('TRANSAKSI BERHASIL', result);
+    // console.log('TRANSAKSI BERHASIL', result);
 }
 
 function buildTransaksi(dataPesanan, dataPembayaran) {
@@ -2341,9 +2328,7 @@ function cetakStruk(result) {
         encodeURIComponent(idTransaksi);
 
     window.open(
-        url,
-        '_blank',
-        'width=450,height=700'
+        url
     );
 }
 </script>

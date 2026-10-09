@@ -73,11 +73,11 @@ function tambahmenu($d){
         $tmpFoto  = $_FILES['gambarBarang']['tmp_name'];
         $ukuran   = $_FILES['gambarBarang']['size'];
 
-        if($ukuran > 2 * 1024 * 1024){
+        if($ukuran > 5 * 1024 * 1024){
 
             return [
                 'bg' => 'error',
-                'pesan' => 'Ukuran foto maksimal 2MB.'
+                'pesan' => 'Ukuran foto maksimal 3MB.'
             ];
         }
         $ext = strtolower(pathinfo($namaFoto, PATHINFO_EXTENSION));

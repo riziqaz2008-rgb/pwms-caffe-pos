@@ -58,28 +58,6 @@
                                     value="<?= htmlspecialchars($p['telepon']) ?>"
                                     >
                             </div>
-                            <div>
-                                <label class="block text-sm font-bold text-[#12131a] mb-2">
-                                    Email
-                                </label>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-sm font-medium text-[#12131a] outline-none focus:ring-primary focus:ring-2 transition"
-                                    value="<?= htmlspecialchars($p['email']) ?>"
-                                    >
-                            </div>
-                            <div>
-                                <label class="block text-sm font-bold text-[#12131a] mb-2">
-                                    Jam Operasional
-                                </label>
-                                <input
-                                    type="text"
-                                    name="jam"
-                                    class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-sm font-medium text-[#12131a] outline-none focus:ring-primary focus:ring-2 transition"
-                                    value="<?= htmlspecialchars($p['jam']) ?>"
-                                    >
-                            </div>
                             <div class="md:col-span-2">
                                 <label class="block text-sm font-bold text-[#12131a] mb-2">
                                     Alamat Usaha <span class="text-red-500" aria-hidden="true">*</span>

@@ -22,7 +22,7 @@ function profile($d){
         return [
             'status' => false,
             'bg' => 'warning',
-            'pesan' => 'Field harap diisi.'
+            'pesan' => 'Semua data harap diisi.'
         ];
 
     }

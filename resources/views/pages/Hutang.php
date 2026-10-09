@@ -30,7 +30,7 @@
                         <span class="text-xs font-bold text-gray-400">piutang</span>
                     </div>
                 </div>
-                <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-primary text-white group-hover:scale-110 transition-transform duration-300 shrink-0">
+                <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-primary text-white transition-transform duration-300 shrink-0">
                     <i class="bx bxs-wallet-note text-2xl"></i>
                 </div>
             </div>
@@ -43,7 +43,7 @@
                         <span class="text-xs font-bold text-gray-400">Belum</span>
                     </div>
                 </div>
-                <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-primary text-white dark:text-amber-400 group-hover:scale-110 transition-transform duration-300 shrink-0">
+                <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-primary text-white dark:text-amber-400 transition-transform duration-300 shrink-0">
                     <i class="bx bxs-alert-triangle text-2xl"></i>
                 </div>
             </div>
@@ -89,6 +89,7 @@
                             <th class="text-left font-bold px-5 py-4">Tanggal</th>
                             <th class="text-left font-bold px-5 py-4">Pelanggan</th>
                             <th class="text-left font-bold px-5 py-4">Total</th>
+                            <th class="text-left font-bold px-5 py-4">Kasir</th>
                             <th class="text-left font-bold px-5 py-4">Aksi</th>
                         </tr>
                     </thead>
@@ -110,6 +111,9 @@
                             </td>
                             <td class="px-5 py-4">
                                 <span class="font-bold text-slate-800">Rp <?= number_format($d['total_transaksi'], 0, ",", ".") ?></span>
+                            </td>
+                            <td class="px-5 py-4">
+                                <span class="font-bold text-slate-800"><?= $d['nama_user'] ?></span>
                             </td>
                             <td class="px-5 py-4">
                                 <button

@@ -128,6 +128,7 @@ if ($currentPage > $totalPage) {
 $sql = "
     SELECT
         t.id_transaksi,
+        a.nama AS nama_user,
         t.kode_transaksi,
         t.tanggal,
         p.nama_pelanggan,
@@ -137,6 +138,12 @@ $sql = "
 
     LEFT JOIN pelanggan p
         ON t.id_pelanggan = p.id_pelanggan
+
+    LEFT JOIN users u
+        ON t.id_user = u.id_user
+
+    LEFT JOIN anggota a
+        ON u.id_anggota = a.id_anggota
 
     WHERE t.status_transaksi = 1
       AND t.status_pembayaran = 1
@@ -192,7 +199,18 @@ $data = mysqli_stmt_get_result($stmt);
 
 function bayarHutang($d){
     global $conn;
+
+    $idUser = (int) ($_SESSION['id_user'] ?? 0);
     $idTransaksi = (int) ($d['id'] ?? 0);
+
+    $qc = query("SELECT * FROM users WHERE id_user='$idUser'");
+    if ($idUser <= 0 || mysqli_num_rows($qc) == 0) {
+        return [
+            'status' => false,
+            'pesan' => 'User tidak valid.',
+            'bg' => 'warning'
+        ];
+    }
 
     if ($idTransaksi <= 0) {
         return [
@@ -207,7 +225,8 @@ function bayarHutang($d){
         "UPDATE transaksi
          SET status_pembayaran = 2,
              uang_diterima = total,
-             kembalian = 0
+             kembalian = 0,
+             id_pelunas = $idUser
          WHERE id_transaksi = ?
            AND status_transaksi = 1
            AND status_pembayaran = 1

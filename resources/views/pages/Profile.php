@@ -52,13 +52,14 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-bold text-[#12131a] mb-2">
-                                    Nomor Telepon
+                                    Nomor Telepon <span class="text-red-500" aria-hidden="true">*</span>
                                 </label>
                                 <input
                                     type="text"
                                     name="telepon"
                                     class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-sm font-medium text-[#12131a] outline-none focus:ring-primary focus:ring-2 transition"
                                     value="<?= htmlspecialchars($dataAnggota['telepon']) ?>"
+                                    required
                                     >
                             </div>
                         </div>
@@ -67,24 +68,26 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
                                 <label class="block text-sm font-bold text-[#12131a] mb-2">
-                                    Username
+                                    Username <span class="text-red-500" aria-hidden="true">*</span>
                                 </label>
                                 <input
                                     type="text"
                                     name="username"
                                     class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-sm font-medium text-[#12131a] outline-none focus:ring-primary focus:ring-2 transition"
                                     value="<?= htmlspecialchars($dataUser['username']) ?>"
+                                    required
                                     >
                             </div>
                             <div>
                                 <label class="block text-sm font-bold text-[#12131a] mb-2">
-                                    Password
+                                    Password <span class="text-red-500" aria-hidden="true">*</span>
                                 </label>
                                 <input
                                     type="password"
                                     name="password"
                                     class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-sm font-medium text-[#12131a] outline-none focus:ring-primary focus:ring-2 transition"
                                     value="<?= htmlspecialchars($dataUser['password']) ?>"
+                                    required
                                     >
                             </div>
                         </div>

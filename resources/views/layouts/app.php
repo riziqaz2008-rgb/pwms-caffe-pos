@@ -75,7 +75,6 @@
                     </div>
                 </div>
 
-                <!-- INI TOAST JIR -->
                 <div id="liveToast" class="fixed top-28 right-5 z-[9991] flex items-center w-full max-w-xs p-4 rounded-lg shadow-lg text-white hidden opacity-0 transition-all duration-300 transform translate-y-2 bg-emerald-600" role="alert">
                     <i id="toastIcon" class="bx bxs-check-circle text-xl text-white"></i>
                     <div id="pesanToast" class="ms-2.5 text-white text-sm font-bold border-s border-white/30 ps-3.5"></div>
@@ -87,7 +86,6 @@
                     </button>
                 </div>
 
-                <!-- INI MODAL KONFIRMASI TANPA FORM -->
                 <div id="confirmModal" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-[9999] items-center justify-center p-4 overflow-y-auto">
                     <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
                     <div id="confirmBox" class="relative w-full max-w-md p-6 sm:p-8 bg-white dark:bg-slate-900 rounded-3xl shadow-2xl text-center z-10">
@@ -103,7 +101,6 @@
                     </div>
                 </div>
 
-                <!-- INI MODAL KONFIRMASI FORM -->
                 <div id="confirmModalId" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-[9999] items-center justify-center p-4 overflow-y-auto">
                     <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
                     <div id="confirmFormBox" class="relative z-10 w-full max-w-md p-6 sm:p-8 bg-white dark:bg-slate-900 rounded-3xl shadow-2xl">
@@ -153,7 +150,6 @@
                 });
             });
 
-            // INI GLOBAL TOAST JS YE..
 
             // function showToast(message, type = 'success') {
             function showToast(d) {
@@ -208,7 +204,6 @@
                 }, 3000);
             }
 
-        // INI ANU ADALAH POKOKNYA INI MODAL KONFIRMASI GLOBAL
 
         const confirmModal = document.getElementById('confirmModal');
         let confirmAction = null;
@@ -343,31 +338,6 @@
         
         confirmModal.querySelector('.fixed.inset-0')
             .addEventListener('click', closeConfirm);
-
-
-
-            // INI MODAL ID LOGIKA JS MODAL YG ADA FORM NYA
-
-            // Contoh
-            // showConfirmForm({
-            //     title: 'Hapus Pelanggan',
-            //     message: 'Apakah Anda yakin ingin hapus pelanggan tersebut?.',
-            //     actionText: 'Ya, hapus',
-            //     type: 'danger',
-            //     nameAksi: 'hapus',
-            //     inputs: [
-            //         {
-            //             name: 'aksi',
-            //             type: 'hidden',
-            //             value: 'hapus'
-            //         },
-            //         {
-            //             name: 'id',
-            //             type: 'hidden',
-            //             type: id data
-            //         }
-            //     ]
-            // });
 
     const confirmModalId = document.getElementById('confirmModalId');
 
@@ -528,8 +498,6 @@
         confirmModalId
             .querySelector('.fixed.inset-0')
             .addEventListener('click', closeConfirmForm);
-
-            // INI MODAL UTAMA GLOBAL YANG ADA FORM NYA
 
             function showGlobalModal(data){
                 const modal=document.getElementById('global-modal');
